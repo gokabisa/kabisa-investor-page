@@ -68,6 +68,16 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);m
 
 <div class="admin-body">
   <div id="admin-loading" class="admin-loading">Verifying access...</div>
+  <div id="admin-sign-in" style="display:none;max-width:400px;margin:0 auto;padding-top:40px">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;margin-bottom:24px;letter-spacing:2px;color:var(--solar)">ADMIN SIGN IN</div>
+    <div id="clerk-admin-sign-in"></div>
+  </div>
+  <div id="admin-denied" style="display:none;text-align:center;padding-top:60px">
+    <div style="font-size:48px;margin-bottom:16px">&#128683;</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:12px;letter-spacing:2px">ACCESS DENIED</div>
+    <p style="color:rgba(255,255,255,.4);font-size:14px">Your account does not have admin privileges.</p>
+    <button onclick="adminSignOut()" style="margin-top:24px;background:var(--solar);color:#000;border:none;padding:10px 24px;font-weight:600;cursor:pointer">Sign Out</button>
+  </div>
   <div id="admin-content" style="display:none">
     <div class="stats-row" id="stats-row"></div>
     <div class="filter-bar" id="filter-bar"></div>
@@ -95,14 +105,30 @@ let currentFilter = '';
 let clerkToken = '';
 
 async function checkAdminAccess() {
-  if (!window.Clerk) { window.location.href = '/#sign-in'; return false; }
+  if (!window.Clerk) { document.getElementById('admin-loading').textContent = 'Clerk failed to load.'; return false; }
   await window.Clerk.load();
-  if (!window.Clerk.user) { window.location.href = '/#sign-in'; return false; }
-  const role = window.Clerk.user.publicMetadata?.role;
-  if (role !== 'admin') {
-    window.location.href = '/#home';
+
+  if (!window.Clerk.user) {
+    // Not signed in — show sign-in widget right here
+    document.getElementById('admin-loading').style.display = 'none';
+    document.getElementById('admin-sign-in').style.display = 'block';
+    window.Clerk.mountSignIn(document.getElementById('clerk-admin-sign-in'), {
+      afterSignInUrl: window.location.href
+    });
+    // Listen for sign-in completion
+    window.Clerk.addListener(function(event) {
+      if (window.Clerk.user) { window.location.reload(); }
+    });
     return false;
   }
+
+  const role = window.Clerk.user.publicMetadata?.role;
+  if (role !== 'admin') {
+    document.getElementById('admin-loading').style.display = 'none';
+    document.getElementById('admin-denied').style.display = 'block';
+    return false;
+  }
+
   document.getElementById('admin-user').textContent = window.Clerk.user.primaryEmailAddress?.emailAddress || '';
   clerkToken = await window.Clerk.session.getToken();
   return true;
