@@ -1068,7 +1068,16 @@ async function loadInvestorStatus() {
       headers: { 'Authorization': 'Bearer ' + token }
     });
     if (!res.ok) {
-      el.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.5)">No application found. <a href="#investors-gate" style="color:var(--solar)">Submit a request</a> to get started.</p>';
+      el.innerHTML = '<div style="text-align:center;padding:20px">' +
+        '<div style="font-size:48px;margin-bottom:16px">&#9989;</div>' +
+        '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;margin-bottom:12px;letter-spacing:2px">ACCOUNT CREATED</div>' +
+        '<p style="color:rgba(255,255,255,0.55);font-size:14px;line-height:1.6;max-width:360px;margin:0 auto 24px">Your account is set up. Our investor relations team is reviewing your application.</p>' +
+        '<div style="background:rgba(255,255,255,0.04);padding:20px;text-align:left;max-width:360px;margin:0 auto">' +
+        '<div style="font-size:11px;color:rgba(255,255,255,0.35);font-family:Barlow Condensed,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">What happens next</div>' +
+        '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:2">1. IR team reviews your profile (1-2 days)<br>2. NDA sent for e-signature<br>3. Portal access granted</div>' +
+        '</div>' +
+        '<p style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:16px">Questions? <a href="mailto:investors@kabisa.africa" style="color:var(--solar);text-decoration:none">investors@kabisa.africa</a></p>' +
+        '</div>';
       return;
     }
     const s = await res.json();
@@ -1110,14 +1119,21 @@ window.addEventListener('load', async () => {
   if (window.Clerk) {
     await window.Clerk.load();
 
-    // Redirect to Clerk hosted pages when on sign-up/sign-in hashes
     var h = window.location.hash;
-    if (h === '#sign-up') { window.Clerk.redirectToSignUp({ afterSignUpUrl: window.location.origin + '/#investor-status' }); return; }
-    if (h === '#sign-in') { window.Clerk.redirectToSignIn({ afterSignInUrl: window.location.origin + '/#investor-status' }); return; }
 
-    // Load status if on that page
-    if (window.location.hash === '#investor-status') {
-      loadInvestorStatus();
+    // If already signed in, skip auth pages and go to status
+    if (window.Clerk.user) {
+      if (h === '#sign-up' || h === '#sign-in') {
+        window.location.hash = 'investor-status';
+        return;
+      }
+      if (h === '#investor-status') {
+        loadInvestorStatus();
+      }
+    } else {
+      // Not signed in — redirect to Clerk hosted pages
+      if (h === '#sign-up') { window.Clerk.redirectToSignUp({ afterSignUpUrl: window.location.origin + '/#investor-status' }); return; }
+      if (h === '#sign-in') { window.Clerk.redirectToSignIn({ afterSignInUrl: window.location.origin + '/#investor-status' }); return; }
     }
   }
 });
@@ -1125,9 +1141,13 @@ window.addEventListener('hashchange', async () => {
   routeFromHash();
   if (window.Clerk) {
     var h = window.location.hash;
-    if (h === '#sign-up') { window.Clerk.redirectToSignUp({ afterSignUpUrl: window.location.origin + '/#investor-status' }); return; }
-    if (h === '#sign-in') { window.Clerk.redirectToSignIn({ afterSignInUrl: window.location.origin + '/#investor-status' }); return; }
-    if (h === '#investor-status') { loadInvestorStatus(); }
+    if (window.Clerk.user) {
+      if (h === '#sign-up' || h === '#sign-in') { window.location.hash = 'investor-status'; return; }
+      if (h === '#investor-status') { loadInvestorStatus(); }
+    } else {
+      if (h === '#sign-up') { window.Clerk.redirectToSignUp({ afterSignUpUrl: window.location.origin + '/#investor-status' }); return; }
+      if (h === '#sign-in') { window.Clerk.redirectToSignIn({ afterSignInUrl: window.location.origin + '/#investor-status' }); return; }
+    }
   }
 });
 </script>
