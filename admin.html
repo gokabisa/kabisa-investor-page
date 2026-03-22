@@ -68,10 +68,6 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);m
 
 <div class="admin-body">
   <div id="admin-loading" class="admin-loading">Verifying access...</div>
-  <div id="admin-sign-in" style="display:none;max-width:400px;margin:0 auto;padding-top:40px">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;margin-bottom:24px;letter-spacing:2px;color:var(--solar)">ADMIN SIGN IN</div>
-    <div id="clerk-admin-sign-in"></div>
-  </div>
   <div id="admin-denied" style="display:none;text-align:center;padding-top:60px">
     <div style="font-size:48px;margin-bottom:16px">&#128683;</div>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:12px;letter-spacing:2px">ACCESS DENIED</div>
@@ -109,16 +105,8 @@ async function checkAdminAccess() {
   await window.Clerk.load();
 
   if (!window.Clerk.user) {
-    // Not signed in — show sign-in widget right here
-    document.getElementById('admin-loading').style.display = 'none';
-    document.getElementById('admin-sign-in').style.display = 'block';
-    window.Clerk.mountSignIn(document.getElementById('clerk-admin-sign-in'), {
-      afterSignInUrl: window.location.href
-    });
-    // Listen for sign-in completion
-    window.Clerk.addListener(function(event) {
-      if (window.Clerk.user) { window.location.reload(); }
-    });
+    // Not signed in — redirect to Clerk's hosted sign-in, then back here
+    window.Clerk.redirectToSignIn({ afterSignInUrl: window.location.href });
     return false;
   }
 
