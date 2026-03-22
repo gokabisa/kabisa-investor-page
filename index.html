@@ -216,6 +216,13 @@ body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);
   #map-home, #map-corridors { min-height:360px !important; }
 }
 </style>
+<script
+  async
+  crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_c3VidGxlLWNvbmRvci01OS5jbGVyay5hY2NvdW50cy5kZXYk"
+  src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+  type="text/javascript"
+></script>
 </head>
 <body>
 
@@ -942,44 +949,46 @@ body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);
   </div>
 </div>
 
-<script>
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const t = document.getElementById('page-' + id);
-  if (t) { t.classList.add('active'); window.scrollTo(0,0); window.location.hash = id;
-    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    const m={'home':'nav-home','hubs-home':'nav-hubs','hubs-kigali':'nav-hubs','hubs-nairobi':'nav-hubs','corridors':'nav-corridors','investors-gate':'nav-investors','impact':'nav-impact','team':'nav-team','news':'nav-news','technology':'nav-tech','vehicles':'nav-vehicles','careers':'nav-about','team':'nav-about','news':'nav-about'};
-    if(m[id]){const el=document.getElementById(m[id]);if(el)el.classList.add('active');}
-    setTimeout(initReveal,100);
-  }
-}
-function routeFromHash(){showPage(window.location.hash.replace('#','')||'home');}
-function initReveal(){
-  const obs=new IntersectionObserver((entries)=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);obs.unobserve(e.target);}});},{threshold:0.08});
-  document.querySelectorAll('.page.active .reveal').forEach(el=>obs.observe(el));
-}
-function submitInvestorRequest(){
-  const first=document.getElementById('f-first').value.trim();
-  const email=document.getElementById('f-email').value.trim();
-  const org=document.getElementById('f-org').value.trim();
-  if(!first||!email||!org){alert('Please complete all required fields.');return;}
-  document.getElementById('gate-form-card').innerHTML=`
-    <div style="text-align:center;padding:60px 40px">
-      <div style="font-size:48px;margin-bottom:24px">✉️</div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;margin-bottom:12px">REQUEST RECEIVED</div>
-      <p style="font-size:14px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.6;max-width:360px;margin:0 auto 32px">Thank you, <strong>${first}</strong>. We'll review your request within 1–2 business days and send a DocuSign NDA to <strong>${email}</strong>.</p>
-      <div style="background:var(--gray2);padding:20px;margin-bottom:24px;text-align:left">
-        <div style="font-size:11px;color:rgba(255,255,255,0.4);font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">What happens next</div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:2">1. Kabisa IR reviews your profile<br>2. DocuSign NDA sent to ${email}<br>3. Post-signing: portal credentials issued<br>4. Full data room access granted</div>
+<!-- Sign Up Page -->
+<div class="page" id="page-sign-up">
+  <div class="investors-gate">
+    <div class="gate-card">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;margin-bottom:24px;letter-spacing:2px">CREATE YOUR ACCOUNT</div>
+      <div id="clerk-sign-up"></div>
+      <p style="text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4)">Already have an account? <a href="#sign-in" style="color:var(--solar);text-decoration:none">Sign in</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Sign In Page -->
+<div class="page" id="page-sign-in">
+  <div class="investors-gate">
+    <div class="gate-card">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;margin-bottom:24px;letter-spacing:2px">INVESTOR SIGN IN</div>
+      <div id="clerk-sign-in"></div>
+      <p style="text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4)">Need an account? <a href="#sign-up" style="color:var(--solar);text-decoration:none">Sign up</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Investor Status Page -->
+<div class="page" id="page-investor-status">
+  <div class="investors-gate">
+    <div class="gate-card" style="max-width:500px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;margin-bottom:24px;letter-spacing:2px">APPLICATION STATUS</div>
+      <div id="investor-status-content">
+        <p style="text-align:center;color:rgba(255,255,255,0.5)">Loading your status...</p>
       </div>
-      <p style="font-size:12px;color:rgba(255,255,255,0.3)">Enquiries: <a href="mailto:investors@kabisa.africa" style="color:var(--solar);text-decoration:none">investors@kabisa.africa</a></p>
-    </div>`;
-}
-window.addEventListener('load',()=>{routeFromHash();initReveal();});
-window.addEventListener('hashchange',routeFromHash);
-</script>
+      <div style="text-align:center;margin-top:24px">
+        <button class="btn-primary" id="btn-sign-out" style="display:none" onclick="handleSignOut()">Sign Out</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
+const API_BASE = 'http://localhost:3001/api/v1';
+
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const t = document.getElementById('page-' + id);
@@ -995,25 +1004,130 @@ function initReveal(){
   const obs=new IntersectionObserver((entries)=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);obs.unobserve(e.target);}});},{threshold:0.08});
   document.querySelectorAll('.page.active .reveal').forEach(el=>obs.observe(el));
 }
-function submitInvestorRequest(){
+
+async function submitInvestorRequest(){
   const first=document.getElementById('f-first').value.trim();
   const email=document.getElementById('f-email').value.trim();
   const org=document.getElementById('f-org').value.trim();
   if(!first||!email||!org){alert('Please complete all required fields.');return;}
-  document.getElementById('gate-form-card').innerHTML=`
-    <div style="text-align:center;padding:60px 40px">
-      <div style="font-size:48px;margin-bottom:24px">✉️</div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;margin-bottom:12px">REQUEST RECEIVED</div>
-      <p style="font-size:14px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.6;max-width:360px;margin:0 auto 32px">Thank you, <strong>${first}</strong>. We'll review your request within 1–2 business days and send a DocuSign NDA to <strong>${email}</strong>.</p>
-      <div style="background:var(--gray2);padding:20px;margin-bottom:24px;text-align:left">
-        <div style="font-size:11px;color:rgba(255,255,255,0.4);font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">What happens next</div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:2">1. Kabisa IR reviews your profile<br>2. DocuSign NDA sent to ${email}<br>3. Post-signing: portal credentials issued<br>4. Full data room access granted</div>
-      </div>
-      <p style="font-size:12px;color:rgba(255,255,255,0.3)">Enquiries: <a href="mailto:investors@kabisa.africa" style="color:var(--solar);text-decoration:none">investors@kabisa.africa</a></p>
-    </div>`;
+
+  try {
+    const res = await fetch(API_BASE + '/investor-requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName: first, email: email, organisation: org })
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (res.status === 409) {
+        // Already submitted — redirect to sign-up
+        window.location.hash = 'sign-up';
+        return;
+      }
+      alert(data.error || 'Something went wrong. Please try again.');
+      return;
+    }
+
+    document.getElementById('gate-form-card').innerHTML=`
+      <div style="text-align:center;padding:60px 40px">
+        <div style="font-size:48px;margin-bottom:24px">&#9993;&#65039;</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;margin-bottom:12px">REQUEST RECEIVED</div>
+        <p style="font-size:14px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.6;max-width:360px;margin:0 auto 32px">Thank you, <strong>${first}</strong>. We'll review your request within 1-2 business days.</p>
+        <div style="background:var(--gray2);padding:20px;margin-bottom:24px;text-align:left">
+          <div style="font-size:11px;color:rgba(255,255,255,0.4);font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">What happens next</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:2">1. Create your account below<br>2. Kabisa IR reviews your profile<br>3. NDA sent for e-signature<br>4. Portal access granted</div>
+        </div>
+        <a href="#sign-up" style="display:inline-block;background:var(--solar);color:#000;padding:14px 32px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;text-decoration:none">CREATE ACCOUNT</a>
+        <p style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:16px">Enquiries: <a href="mailto:investors@kabisa.africa" style="color:var(--solar);text-decoration:none">investors@kabisa.africa</a></p>
+      </div>`;
+  } catch(err) {
+    console.error('Submit error:', err);
+    alert('Network error. Please check your connection and try again.');
+  }
 }
-window.addEventListener('load',()=>{routeFromHash();initReveal();});
-window.addEventListener('hashchange',routeFromHash);
+
+async function handleSignOut() {
+  if (window.Clerk) {
+    await window.Clerk.signOut();
+    window.location.hash = 'home';
+  }
+}
+
+async function loadInvestorStatus() {
+  const el = document.getElementById('investor-status-content');
+  const btnSignOut = document.getElementById('btn-sign-out');
+  if (!window.Clerk || !window.Clerk.user) {
+    el.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.5)">Please <a href="#sign-in" style="color:var(--solar)">sign in</a> to view your status.</p>';
+    return;
+  }
+  btnSignOut.style.display = 'inline-block';
+  try {
+    const token = await window.Clerk.session.getToken();
+    const res = await fetch(API_BASE + '/investor/status', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (!res.ok) {
+      el.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.5)">No application found. <a href="#investors-gate" style="color:var(--solar)">Submit a request</a> to get started.</p>';
+      return;
+    }
+    const s = await res.json();
+    const steps = [
+      { label: 'Request Submitted', done: true },
+      { label: 'Account Created', done: ['CLERK_SIGNED_UP','APPROVED','NDA_SENT','NDA_SIGNED','ACCESS_GRANTED'].includes(s.status) },
+      { label: 'Approved by IR', done: ['APPROVED','NDA_SENT','NDA_SIGNED','ACCESS_GRANTED'].includes(s.status) },
+      { label: 'NDA Signed', done: ['NDA_SIGNED','ACCESS_GRANTED'].includes(s.status) },
+      { label: 'Portal Access', done: s.status === 'ACCESS_GRANTED' }
+    ];
+    let html = '<div style="max-width:320px;margin:0 auto">';
+    steps.forEach((step, i) => {
+      const color = step.done ? 'var(--solar)' : 'rgba(255,255,255,0.2)';
+      const icon = step.done ? '&#10003;' : (i + 1);
+      html += '<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06)">';
+      html += '<div style="width:32px;height:32px;border-radius:50%;background:' + color + ';display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:' + (step.done ? '#000' : 'rgba(255,255,255,0.4)') + '">' + icon + '</div>';
+      html += '<span style="font-size:14px;color:' + (step.done ? '#fff' : 'rgba(255,255,255,0.4)') + '">' + step.label + '</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+    if (s.status === 'ACCESS_GRANTED') {
+      html += '<div style="text-align:center;margin-top:24px"><a href="investor-portal.html" style="display:inline-block;background:var(--solar);color:#000;padding:14px 32px;font-family:\'Bebas Neue\',sans-serif;font-size:16px;letter-spacing:2px;text-decoration:none">ENTER PORTAL</a></div>';
+    }
+    if (s.status === 'REJECTED') {
+      html = '<div style="text-align:center;padding:20px"><p style="color:rgba(255,255,255,0.5)">Your application was not approved at this time.</p><p style="font-size:13px;color:rgba(255,255,255,0.3);margin-top:8px">Contact <a href="mailto:investors@kabisa.africa" style="color:var(--solar)">investors@kabisa.africa</a> for details.</p></div>';
+    }
+    el.innerHTML = html;
+  } catch(err) {
+    console.error('Status error:', err);
+    el.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.5)">Unable to load status. Please try again later.</p>';
+  }
+}
+
+// Initialize Clerk
+window.addEventListener('load', async () => {
+  routeFromHash();
+  initReveal();
+
+  if (window.Clerk) {
+    await window.Clerk.load();
+
+    // Mount sign-up and sign-in components
+    const signUpEl = document.getElementById('clerk-sign-up');
+    const signInEl = document.getElementById('clerk-sign-in');
+    if (signUpEl) window.Clerk.mountSignUp(signUpEl, { afterSignUpUrl: '/#investor-status', signInUrl: '/#sign-in' });
+    if (signInEl) window.Clerk.mountSignIn(signInEl, { afterSignInUrl: '/#investor-status', signUpUrl: '/#sign-up' });
+
+    // Load status if on that page
+    if (window.location.hash === '#investor-status') {
+      loadInvestorStatus();
+    }
+  }
+});
+window.addEventListener('hashchange', () => {
+  routeFromHash();
+  if (window.location.hash === '#investor-status') {
+    loadInvestorStatus();
+  }
+});
 </script>
 
 <script>

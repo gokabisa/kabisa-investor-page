@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kabisa — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--black:#0a0a0a;--white:#fff;--solar:#FFD400;--gray1:#111;--gray2:#1a1a1a;--gray3:#222;--green:#00C87A;--red:#ff4757;--blue:#4561DE}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);min-height:100vh}
+
+.admin-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:56px;background:rgba(10,10,10,.97);border-bottom:1px solid rgba(255,212,0,.12);backdrop-filter:blur(12px)}
+.admin-nav-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--solar)}
+.admin-nav-actions{display:flex;align-items:center;gap:16px}
+.admin-nav-actions button{background:none;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);padding:6px 16px;font-size:12px;cursor:pointer;transition:all .2s}
+.admin-nav-actions button:hover{border-color:var(--solar);color:var(--solar)}
+
+.admin-body{padding:80px 32px 32px}
+.admin-loading{text-align:center;padding:80px;color:rgba(255,255,255,.4);font-size:14px}
+
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:var(--gray2);padding:20px;border:1px solid rgba(255,255,255,.06)}
+.stat-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.35);font-family:'Barlow Condensed',sans-serif;margin-bottom:8px}
+.stat-value{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--solar)}
+
+.filter-bar{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.filter-btn{background:var(--gray2);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.5);padding:8px 16px;font-size:12px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.filter-btn:hover,.filter-btn.active{border-color:var(--solar);color:var(--solar)}
+
+.req-table{width:100%;border-collapse:collapse}
+.req-table th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.3);font-family:'Barlow Condensed',sans-serif;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.req-table td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;color:rgba(255,255,255,.7)}
+.req-table tr:hover td{background:rgba(255,212,0,.02)}
+
+.badge{display:inline-block;padding:3px 10px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;border-radius:2px}
+.badge-pending{background:rgba(255,212,0,.15);color:var(--solar)}
+.badge-signed-up{background:rgba(69,97,222,.15);color:var(--blue)}
+.badge-approved,.badge-nda-sent{background:rgba(0,200,122,.15);color:var(--green)}
+.badge-nda-signed,.badge-access-granted{background:rgba(0,200,122,.25);color:var(--green)}
+.badge-rejected{background:rgba(255,71,87,.15);color:var(--red)}
+
+.action-btn{background:none;border:1px solid;padding:4px 12px;font-size:11px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.btn-approve{border-color:var(--green);color:var(--green)}
+.btn-approve:hover{background:var(--green);color:#000}
+.btn-reject{border-color:var(--red);color:var(--red);margin-left:6px}
+.btn-reject:hover{background:var(--red);color:#fff}
+
+.empty-state{text-align:center;padding:60px;color:rgba(255,255,255,.3);font-size:14px}
+</style>
+<script
+  async
+  crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_c3VidGxlLWNvbmRvci01OS5jbGVyay5hY2NvdW50cy5kZXYk"
+  src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+  type="text/javascript"
+></script>
+</head>
+<body>
+
+<div class="admin-nav">
+  <div class="admin-nav-logo">KABISA ADMIN</div>
+  <div class="admin-nav-actions">
+    <span id="admin-user" style="font-size:12px;color:rgba(255,255,255,.4)"></span>
+    <button onclick="adminSignOut()">Sign Out</button>
+  </div>
+</div>
+
+<div class="admin-body">
+  <div id="admin-loading" class="admin-loading">Verifying access...</div>
+  <div id="admin-content" style="display:none">
+    <div class="stats-row" id="stats-row"></div>
+    <div class="filter-bar" id="filter-bar"></div>
+    <table class="req-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Organisation</th>
+          <th>Status</th>
+          <th>NDA</th>
+          <th>Submitted</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="req-tbody"></tbody>
+    </table>
+    <div id="empty-state" class="empty-state" style="display:none">No requests found.</div>
+  </div>
+</div>
+
+<script>
+const API_BASE = 'http://localhost:3001/api/v1';
+let currentFilter = '';
+let clerkToken = '';
+
+async function checkAdminAccess() {
+  if (!window.Clerk) { window.location.href = '/#sign-in'; return false; }
+  await window.Clerk.load();
+  if (!window.Clerk.user) { window.location.href = '/#sign-in'; return false; }
+  const role = window.Clerk.user.publicMetadata?.role;
+  if (role !== 'admin') {
+    window.location.href = '/#home';
+    return false;
+  }
+  document.getElementById('admin-user').textContent = window.Clerk.user.primaryEmailAddress?.emailAddress || '';
+  clerkToken = await window.Clerk.session.getToken();
+  return true;
+}
+
+async function adminSignOut() {
+  if (window.Clerk) await window.Clerk.signOut();
+  window.location.href = '/#home';
+}
+
+function badgeClass(status) {
+  const map = {
+    'PENDING': 'badge-pending',
+    'CLERK_SIGNED_UP': 'badge-signed-up',
+    'APPROVED': 'badge-approved',
+    'NDA_SENT': 'badge-nda-sent',
+    'NDA_SIGNED': 'badge-nda-signed',
+    'ACCESS_GRANTED': 'badge-access-granted',
+    'REJECTED': 'badge-rejected'
+  };
+  return map[status] || 'badge-pending';
+}
+
+function formatDate(d) {
+  if (!d) return '-';
+  return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function renderStats(requests) {
+  const counts = {};
+  requests.forEach(r => { counts[r.status] = (counts[r.status] || 0) + 1; });
+  const stats = [
+    { label: 'Total', value: requests.length },
+    { label: 'Pending', value: counts['PENDING'] || 0 },
+    { label: 'Signed Up', value: counts['CLERK_SIGNED_UP'] || 0 },
+    { label: 'NDA Sent', value: counts['NDA_SENT'] || 0 },
+    { label: 'Access Granted', value: counts['ACCESS_GRANTED'] || 0 },
+    { label: 'Rejected', value: counts['REJECTED'] || 0 }
+  ];
+  document.getElementById('stats-row').innerHTML = stats.map(s =>
+    '<div class="stat-card"><div class="stat-label">' + s.label + '</div><div class="stat-value">' + s.value + '</div></div>'
+  ).join('');
+}
+
+function renderFilters() {
+  const statuses = ['', 'PENDING', 'CLERK_SIGNED_UP', 'APPROVED', 'NDA_SENT', 'NDA_SIGNED', 'ACCESS_GRANTED', 'REJECTED'];
+  const labels = ['All', 'Pending', 'Signed Up', 'Approved', 'NDA Sent', 'NDA Signed', 'Access Granted', 'Rejected'];
+  document.getElementById('filter-bar').innerHTML = statuses.map((s, i) =>
+    '<button class="filter-btn' + (currentFilter === s ? ' active' : '') + '" onclick="setFilter(\'' + s + '\')">' + labels[i] + '</button>'
+  ).join('');
+}
+
+function renderTable(requests) {
+  const tbody = document.getElementById('req-tbody');
+  const empty = document.getElementById('empty-state');
+
+  if (requests.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = requests.map(r => {
+    let actions = '';
+    if (r.status === 'PENDING' || r.status === 'CLERK_SIGNED_UP') {
+      actions = '<button class="action-btn btn-approve" onclick="approveRequest(\'' + r.id + '\')">Approve</button>' +
+                '<button class="action-btn btn-reject" onclick="rejectRequest(\'' + r.id + '\')">Reject</button>';
+    }
+    return '<tr>' +
+      '<td><strong>' + r.firstName + '</strong></td>' +
+      '<td>' + r.email + '</td>' +
+      '<td>' + r.organisation + '</td>' +
+      '<td><span class="badge ' + badgeClass(r.status) + '">' + r.status.replace(/_/g, ' ') + '</span></td>' +
+      '<td><span class="badge ' + badgeClass('badge-' + r.ndaStatus) + '">' + (r.ndaStatus || 'NONE').replace(/_/g, ' ') + '</span></td>' +
+      '<td>' + formatDate(r.createdAt) + '</td>' +
+      '<td>' + actions + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+let allRequests = [];
+
+async function loadRequests() {
+  const url = currentFilter ? API_BASE + '/admin/requests?status=' + currentFilter : API_BASE + '/admin/requests';
+  const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + clerkToken } });
+  if (!res.ok) { console.error('Failed to load requests'); return; }
+  const requests = await res.json();
+  allRequests = requests;
+  renderStats(requests);
+  renderFilters();
+  renderTable(requests);
+}
+
+function setFilter(status) {
+  currentFilter = status;
+  renderFilters();
+  if (status) {
+    renderTable(allRequests.filter(r => r.status === status));
+  } else {
+    renderTable(allRequests);
+  }
+}
+
+async function approveRequest(id) {
+  if (!confirm('Approve this request? An NDA will be sent via DocuSeal.')) return;
+  const res = await fetch(API_BASE + '/admin/requests/' + id + '/approve', {
+    method: 'PATCH',
+    headers: { 'Authorization': 'Bearer ' + clerkToken }
+  });
+  if (res.ok) { await loadRequests(); }
+  else { const d = await res.json(); alert(d.error || 'Failed to approve'); }
+}
+
+async function rejectRequest(id) {
+  if (!confirm('Reject this request?')) return;
+  const res = await fetch(API_BASE + '/admin/requests/' + id + '/reject', {
+    method: 'PATCH',
+    headers: { 'Authorization': 'Bearer ' + clerkToken }
+  });
+  if (res.ok) { await loadRequests(); }
+  else { const d = await res.json(); alert(d.error || 'Failed to reject'); }
+}
+
+window.addEventListener('load', async function() {
+  const ok = await checkAdminAccess();
+  if (!ok) return;
+  document.getElementById('admin-loading').style.display = 'none';
+  document.getElementById('admin-content').style.display = 'block';
+  await loadRequests();
+});
+</script>
+</body>
+</html>

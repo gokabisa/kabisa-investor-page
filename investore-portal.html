@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kabisa — Investor Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--black:#000;--white:#fff;--solar:#FFD400;--solar-2:#FFC200;--solar-3:#F1A120;--voltage:#0E159A;--voltage-2:#1B39C0;--voltage-3:#4561DE;--green:#00C87A}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(0,0,0,.96);border-bottom:1px solid rgba(255,212,0,.15);backdrop-filter:blur(12px)}
+.nav-logo{display:flex;align-items:center;gap:8px;font-family:'Fjalla One',sans-serif;font-size:22px;letter-spacing:.05em;cursor:pointer}
+.chevron{width:18px;height:18px;clip-path:polygon(0 0,60% 0,100% 50%,60% 100%,0 100%,40% 50%);background:var(--solar);flex-shrink:0}
+.nav-links{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:4px;list-style:none;align-items:center}
+.nav-links a{color:rgba(255,255,255,.6);text-decoration:none;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;cursor:pointer;padding:8px 14px;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white)}
+.nav-links a.active{color:var(--solar);border-bottom-color:var(--solar)}
+
+.section{display:none;animation:fadeIn .3s ease;padding-top:64px}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* TICKER */
+.live-ticker{background:var(--voltage);padding:9px 0;overflow:hidden}
+.ticker-track{display:flex;gap:56px;animation:ticker 38s linear infinite;white-space:nowrap}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;display:flex;align-items:center;gap:7px}
+.t-dot{width:5px;height:5px;border-radius:50%;background:var(--solar);animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* HERO */
+.hero{min-height:62vh;display:flex;flex-direction:column;justify-content:center;padding:56px 60px 64px;background:radial-gradient(ellipse 60% 50% at 80% 30%,rgba(14,21,154,.32) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 20% 70%,rgba(255,212,0,.06) 0%,transparent 50%),var(--black);position:relative;overflow:hidden}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--solar);margin-bottom:22px}
+.kicker::before{content:'';width:24px;height:2px;background:var(--solar)}
+.hero h1{font-family:'Fjalla One',sans-serif;font-size:clamp(46px,5.5vw,88px);line-height:.95;letter-spacing:-.01em;max-width:820px}
+.accent{color:var(--solar)}
+.hero-sub{margin-top:24px;font-size:16px;color:rgba(255,255,255,.52);max-width:600px;line-height:1.75}
+
+.btn-primary{background:var(--solar);color:var(--black);border:none;cursor:pointer;padding:13px 30px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;transition:all .2s;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 50%,calc(100% - 11px) 100%,0 100%)}
+.btn-primary:hover{background:var(--solar-2);transform:translateX(2px)}
+
+/* SECTION HEADERS */
+.sh{margin-bottom:36px}
+.sh .sub{font-size:11px;color:rgba(255,255,255,.38);font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:5px}
+.sh .title{font-family:'Fjalla One',sans-serif;font-size:34px;letter-spacing:.01em}
+.sh .desc{font-size:13px;color:rgba(255,255,255,.45);margin-top:9px;max-width:640px;line-height:1.65}
+
+/* STATS STRIP */
+.stats-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07)}
+.stat-cell{padding:28px 32px;border-right:1px solid rgba(255,255,255,.07)}
+.stat-cell:last-child{border-right:none}
+.stat-number{font-family:'Fjalla One',sans-serif;font-size:40px;color:var(--solar);line-height:1}
+.stat-unit{font-family:'Fjalla One',sans-serif;font-size:18px;color:rgba(255,212,0,.58)}
+.stat-label{margin-top:5px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:rgba(255,255,255,.38)}
+.stat-delta{margin-top:4px;font-size:11px;color:var(--green);font-weight:600}
+
+/* IMPACT CARDS */
+.impact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:2px}
+.i-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:32px 28px;position:relative;overflow:hidden;transition:all .3s}
+.i-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--solar);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.i-card:hover::before{transform:scaleX(1)}
+.i-card:hover{background:rgba(255,212,0,.04)}
+.i-icon{font-size:22px;margin-bottom:12px}
+.i-val{font-family:'Fjalla One',sans-serif;font-size:44px;color:var(--white);line-height:1}
+.i-val .unit{font-size:18px;color:rgba(255,255,255,.4)}
+.i-label{margin-top:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.38)}
+.i-trend{margin-top:8px;font-size:12px;color:var(--green)}
+.i-bar{margin-top:14px;height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
+.i-fill{height:100%;background:linear-gradient(to right,var(--voltage-2),var(--solar));border-radius:2px;width:0;transition:width 1.2s ease}
+
+/* INVESTMENT ARCH */
+.e-box{width:100%;max-width:360px;padding:18px 24px;margin:0 auto;position:relative}
+.e-box.topco{background:var(--solar);color:var(--black);border:none}
+.e-box.mauritius{background:rgba(255,212,0,.07);border:1px solid rgba(255,212,0,.35)}
+.e-box.mauritius-hubs{background:rgba(14,21,154,.13);border:2px dashed rgba(69,97,222,.45)}
+.e-box.opco{background:rgba(14,21,154,.18);border:1px solid rgba(69,97,222,.35)}
+.e-name{font-family:'Fjalla One',sans-serif;font-size:16px;letter-spacing:.02em}
+.e-detail{font-size:10px;opacity:.58;font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-top:3px}
+.e-raised{display:flex;justify-content:space-between;margin-top:11px}
+.e-raised span{font-size:10px;opacity:.5}
+.e-raised strong{font-size:13px}
+.e-bar{margin-top:7px;height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
+.e-fill{height:100%;border-radius:2px;background:var(--solar);width:0;transition:width 1.2s ease}
+.topco .e-fill{background:rgba(0,0,0,.25)}
+.conn-v{width:2px;height:32px;background:rgba(255,212,0,.28);margin:0 auto}
+.conn-v.blue{background:rgba(69,97,222,.35)}
+.tree-col{display:flex;flex-direction:column;align-items:center}
+.arch-layout{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:44px;align-items:start}
+.spv-card{flex:1;min-width:130px;max-width:175px;background:rgba(14,21,154,.16);border:1px solid rgba(69,97,222,.25);padding:14px 16px;transition:all .25s}
+.spv-card:hover{background:rgba(69,97,222,.16);border-color:var(--voltage-3);transform:translateY(-2px)}
+.spv-flag{font-size:18px}
+.spv-country{font-family:'Fjalla One',sans-serif;font-size:16px;margin-top:3px}
+.spv-metrics{margin-top:10px;display:flex;flex-direction:column;gap:5px}
+.spv-m{display:flex;justify-content:space-between;font-size:10px}
+.spv-m .lbl{color:rgba(255,255,255,.38)}
+.spv-m .val{font-weight:700;font-size:11px}
+.prog-track{height:3px;background:rgba(255,255,255,.09);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;background:linear-gradient(to right,var(--voltage-2),var(--solar));width:0;transition:width 1.2s ease}
+
+/* CORRIDORS */
+.corridor-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);padding:36px;margin-bottom:20px}
+.corr-name{font-family:'Fjalla One',sans-serif;font-size:26px;margin-bottom:7px}
+.route-row{display:flex;align-items:center;gap:7px;margin:14px 0;font-size:11px;font-weight:600;color:rgba(255,255,255,.52);flex-wrap:wrap}
+.r-dot{width:7px;height:7px;border-radius:50%;border:2px solid var(--solar);flex-shrink:0}
+.r-line{flex:1;min-width:16px;height:1px;background:repeating-linear-gradient(to right,var(--solar) 0 4px,transparent 4px 8px)}
+.corr-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:14px;margin-top:16px;margin-bottom:24px}
+.cs{border-left:3px solid var(--voltage-3);padding-left:11px}
+.cs .n{font-family:'Fjalla One',sans-serif;font-size:22px;color:var(--solar)}
+.cs .l{font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em}
+.stop-list h4{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.32);margin-bottom:13px}
+.stop{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.stop-dot{width:9px;height:9px;border-radius:50%;background:var(--solar);flex-shrink:0;box-shadow:0 0 7px rgba(255,212,0,.4)}
+.stop-dot.dim{background:transparent;border:2px solid rgba(255,255,255,.18);box-shadow:none}
+.stop-dot.blue{background:var(--voltage-3);box-shadow:0 0 7px rgba(69,97,222,.45)}
+.stop-dot.orange{background:var(--solar-3);box-shadow:0 0 7px rgba(241,161,32,.4)}
+.stop-info{flex:1}
+.stop-name{font-size:12px;font-weight:600}
+.stop-sub{font-size:10px;color:rgba(255,255,255,.32);margin-top:2px}
+.stop-kw{font-family:'Fjalla One',sans-serif;font-size:12px;color:var(--solar)}
+
+/* STATUS BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 9px}
+.badge.active{background:rgba(0,200,122,.1);color:var(--green)}
+.badge.dev{background:rgba(255,212,0,.08);color:var(--solar)}
+.badge.planned{background:rgba(255,255,255,.04);color:rgba(255,255,255,.32)}
+.badge.tested{background:rgba(69,97,222,.12);color:var(--voltage-3)}
+
+/* IMPLEMENTATION STATUS TABLE */
+.impl-table{width:100%;border-collapse:collapse;margin-top:16px}
+.impl-table th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left}
+.impl-table td{font-size:12px;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+.impl-table tr:hover td{background:rgba(255,255,255,.02)}
+.impl-table .station-name{font-weight:600}
+.impl-table .station-country{font-size:10px;color:rgba(255,255,255,.38);margin-top:2px}
+.progress-bar-wrap{background:rgba(255,255,255,.06);height:4px;border-radius:2px;width:120px;overflow:hidden}
+.progress-bar-fill{height:100%;border-radius:2px;background:linear-gradient(to right,var(--voltage-2),var(--solar))}
+
+/* HUB DASHBOARD */
+.hub-dash-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);padding:28px;transition:all .3s;position:relative;overflow:hidden}
+.hub-dash-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(to right,var(--voltage),var(--solar));transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.hub-dash-card:hover::after{transform:scaleX(1)}
+.hub-flag{font-size:26px;margin-bottom:8px}
+.hub-city{font-family:'Fjalla One',sans-serif;font-size:22px}
+.hub-country{font-size:12px;color:var(--solar);font-weight:600;margin-bottom:12px}
+.hub-status{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 9px;margin-bottom:12px}
+.hub-status.op{background:rgba(0,200,122,.1);color:var(--green)}
+.hub-status.sc{background:rgba(255,212,0,.09);color:var(--solar)}
+.hub-status.pl{background:rgba(255,255,255,.04);color:rgba(255,255,255,.32)}
+.hub-metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.hm-block{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);padding:10px 12px}
+.hm-block .hm-val{font-family:'Fjalla One',sans-serif;font-size:20px;color:var(--solar)}
+.hm-block .hm-key{font-size:9px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+.hm-block.green .hm-val{color:var(--green)}
+.hm-block.blue .hm-val{color:var(--voltage-3)}
+
+/* DATA ROOM */
+.dr-doc{display:flex;gap:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);padding:18px;position:relative;transition:all .2s;align-items:flex-start;text-decoration:none;color:inherit}
+.dr-doc:hover{background:rgba(0,200,122,.04);border-color:rgba(0,200,122,.2);transform:translateY(-2px)}
+.dr-doc-icon{font-size:22px;flex-shrink:0;margin-top:2px}
+.dr-doc-body{flex:1}
+.dr-doc-title{font-size:12px;font-weight:700;margin-bottom:3px;color:var(--white)}
+.dr-doc-meta{font-size:10px;color:rgba(255,255,255,.32);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+.dr-doc-desc{font-size:11px;color:rgba(255,255,255,.42);line-height:1.6}
+.dr-doc-action{font-size:11px;color:var(--green);font-weight:700;flex-shrink:0;white-space:nowrap;margin-top:2px}
+.dr-tab{padding:11px 20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;cursor:pointer;border-bottom:2px solid transparent;color:rgba(255,255,255,.38);transition:all .2s;white-space:nowrap}
+.dr-tab:hover{color:rgba(255,255,255,.65)}
+.dr-tab.active{border-bottom-color:var(--solar);color:var(--solar)}
+.dr-folder{display:none}
+.dr-folder.active{display:block}
+.dr-folder-header{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+
+/* FAQ */
+.faq-item{border-bottom:1px solid rgba(255,255,255,.06)}
+.faq-q{padding:17px 0;font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:rgba(255,255,255,.82);transition:color .2s;gap:16px}
+.faq-q:hover{color:var(--solar)}
+.faq-arr{font-size:18px;color:var(--solar);font-weight:300;flex-shrink:0;transition:transform .25s;line-height:1}
+.faq-q.open .faq-arr{transform:rotate(45deg)}
+.faq-a{font-size:13px;color:rgba(255,255,255,.52);line-height:1.75;padding-bottom:18px;display:none}
+.faq-a strong{color:rgba(255,255,255,.82)}
+.faq-group{margin-bottom:38px}
+.faq-cat{transition:all .2s;cursor:pointer}
+.faq-cat:hover{color:rgba(255,255,255,.7)!important;background:rgba(255,255,255,.03)!important}
+
+/* SPV LINK BOXES */
+.spv-link-box{display:block;text-decoration:none;color:inherit;background:rgba(14,21,154,.14);border:1px solid rgba(69,97,222,.28);padding:22px 20px;transition:all .25s;cursor:pointer}
+.spv-link-box:hover{background:rgba(69,97,222,.2);border-color:var(--voltage-3);transform:translateY(-3px)}
+.spv-link-flag{font-size:26px;margin-bottom:8px}
+.spv-link-country{font-family:'Fjalla One',sans-serif;font-size:18px;margin-bottom:3px}
+.spv-link-sub{font-size:11px;color:rgba(255,255,255,.42)}
+.spv-link-cta{margin-top:12px;font-size:11px;font-weight:700;color:var(--voltage-3);text-transform:uppercase;letter-spacing:.07em}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:0 14px}
+  .nav-links a{padding:7px 8px;font-size:10px}
+  .hero{padding:40px 18px 48px;min-height:auto}
+  .section-pad{padding:48px 18px!important}
+  #inv-paths,#guide-grid,#compare-grid,.arch-layout{grid-template-columns:1fr!important}
+  #guide-grid>div:nth-child(2){display:none}
+  .hub-dash-grid{grid-template-columns:1fr 1fr!important}
+  .hub-metric-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .hub-dash-grid{grid-template-columns:1fr!important}
+  .stats-strip{grid-template-columns:1fr 1fr}
+  .hero h1{font-size:clamp(30px,7vw,52px)}
+  .route-row{display:none}
+}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:rgba(255,212,0,.22);border-radius:3px}
+</style>
+<script
+  async
+  crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_c3VidGxlLWNvbmRvci01OS5jbGVyay5hY2NvdW50cy5kZXYk"
+  src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+  type="text/javascript"
+></script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="showTab('portal')" style="gap:0;padding:4px 0">
+    <svg width="160" height="41" viewBox="0 0 2012 513" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
+      <path d="M1421.22 434.169H1374.37L1404.79 381.505L1326.86 459.405H1373.71L1343.32 512.069L1421.22 434.169Z" fill="white"/>
+      <path d="M1348.83 406.104C1348.83 396.484 1341.03 388.676 1331.41 388.676C1321.79 388.676 1313.98 396.484 1313.98 406.104C1313.98 415.725 1321.79 423.533 1331.41 423.533C1341.03 423.533 1348.83 415.725 1348.83 406.104Z" fill="white"/>
+      <path d="M1416.68 470.021C1407.06 470.021 1399.25 477.829 1399.25 487.45C1399.25 497.071 1407.06 504.879 1416.68 504.879C1426.3 504.879 1434.11 497.071 1434.11 487.45C1434.11 477.829 1426.3 470.021 1416.68 470.021Z" fill="white"/>
+      <path d="M1281.29 394.591C1274.42 389.99 1266.23 387.7 1256.69 387.7C1247.15 387.7 1238.95 389.99 1232.03 394.591C1225.16 399.153 1219.88 405.805 1216.18 414.569C1212.51 423.334 1210.66 433.91 1210.66 446.339C1210.62 458.808 1212.43 469.464 1216.12 478.328C1219.82 487.192 1225.12 493.964 1231.97 498.645C1238.87 503.325 1247.11 505.676 1256.67 505.716C1266.23 505.716 1274.46 503.385 1281.33 498.704C1288.2 494.024 1293.46 487.251 1297.13 478.388C1300.83 469.524 1302.68 458.848 1302.68 446.339C1302.72 433.91 1300.89 423.334 1297.17 414.629C1293.46 405.865 1288.16 399.193 1281.25 394.591H1281.29ZM1272.35 475.898C1268.44 482.471 1263.25 485.738 1256.71 485.738C1252.37 485.738 1248.59 484.284 1245.36 481.395C1242.13 478.467 1239.62 474.085 1237.85 468.269C1236.1 462.413 1235.24 455.103 1235.24 446.339C1235.28 433.392 1237.25 423.672 1241.14 417.179C1245.04 410.685 1250.22 407.439 1256.71 407.439C1261.05 407.439 1264.82 408.893 1268.01 411.781C1271.23 414.669 1273.72 418.991 1275.46 424.748C1277.23 430.504 1278.12 437.695 1278.12 446.339C1278.16 459.465 1276.23 469.325 1272.33 475.878L1272.35 475.898Z" fill="white"/>
+      <path d="M1035.6 407.12V428.472L1061.69 412.119H1062.37V503.206H1086.45V389.253H1063.8L1035.6 407.12Z" fill="white"/>
+      <path d="M1178.11 394.591C1171.24 389.99 1163.06 387.7 1153.52 387.7C1143.97 387.7 1135.77 389.99 1128.86 394.591C1121.99 399.153 1116.71 405.805 1113 414.569C1109.34 423.334 1107.48 433.91 1107.48 446.339C1107.44 458.808 1109.26 469.464 1112.94 478.328C1116.65 487.192 1121.95 493.964 1128.8 498.645C1135.69 503.325 1143.94 505.676 1153.5 505.716C1163.06 505.716 1171.28 503.385 1178.15 498.704C1185.03 494.024 1190.28 487.251 1193.95 478.388C1197.65 469.524 1199.51 458.848 1199.51 446.339C1199.55 433.91 1197.71 423.334 1193.99 414.629C1190.28 405.865 1184.97 399.193 1178.07 394.591H1178.11ZM1169.15 475.898C1165.25 482.471 1160.05 485.738 1153.52 485.738C1149.17 485.738 1145.39 484.284 1142.16 481.395C1138.94 478.467 1136.43 474.085 1134.65 468.269C1132.9 462.413 1132.04 455.103 1132.04 446.339C1132.08 433.392 1134.06 423.672 1137.94 417.179C1141.84 410.685 1147.02 407.439 1153.52 407.439C1157.86 407.439 1161.62 408.893 1164.81 411.781C1168.04 414.669 1170.53 418.991 1172.26 424.748C1174.03 430.504 1174.93 437.695 1174.93 446.339C1174.97 459.465 1173.04 469.325 1169.13 475.878L1169.15 475.898Z" fill="white"/>
+      <path d="M1580.13 389.253H1556.42V503.206H1580.13V389.253Z" fill="white"/>
+      <path d="M1871.25 416.521C1866.47 416.521 1862.25 417.896 1858.56 420.644C1854.9 423.353 1852.27 427.357 1850.72 432.655H1849.82V417.736H1826.83V503.206H1850.54V454.844C1850.54 451.358 1851.31 448.271 1852.87 445.602C1854.46 442.933 1856.61 440.862 1859.32 439.368C1862.07 437.854 1865.18 437.077 1868.66 437.077C1870.3 437.077 1872.09 437.197 1874.06 437.475C1876.03 437.734 1877.57 438.033 1878.68 438.372V417.338C1877.65 417.079 1876.43 416.88 1875.06 416.721C1873.68 416.561 1872.41 416.501 1871.21 416.501L1871.25 416.521Z" fill="white"/>
+      <path d="M1909.95 417.736H1886.25V503.206H1909.95V417.736Z" fill="white"/>
+      <path d="M1898.16 382.74C1894.64 382.74 1891.61 383.935 1889.1 386.306C1886.61 388.636 1885.37 391.445 1885.37 394.711C1885.37 397.978 1886.61 400.846 1889.1 403.216C1891.63 405.547 1894.64 406.722 1898.16 406.722C1901.69 406.722 1904.69 405.547 1907.18 403.216C1909.71 400.846 1910.97 397.998 1910.97 394.711C1910.97 391.425 1909.71 388.656 1907.18 386.306C1904.69 383.935 1901.69 382.74 1898.16 382.74Z" fill="white"/>
+      <path d="M1975.82 479.622C1974.41 481.734 1972.62 483.347 1970.42 484.462C1968.27 485.578 1965.84 486.135 1963.13 486.135C1959.47 486.135 1956.26 485.14 1953.51 483.128C1950.77 481.116 1948.63 478.208 1947.12 474.384C1945.63 470.559 1944.89 465.918 1944.89 460.481C1944.89 455.043 1945.65 450.522 1947.18 446.737C1948.69 442.953 1950.81 440.084 1953.51 438.112C1956.26 436.101 1959.47 435.105 1963.13 435.105C1967.48 435.105 1970.98 436.419 1973.65 439.049C1976.36 441.638 1978.03 445.084 1978.65 449.346H2001.02C2000.68 442.753 1998.89 436.997 1995.62 432.097C1992.36 427.197 1987.93 423.393 1982.32 420.684C1976.72 417.975 1970.19 416.621 1962.74 416.621C1954.09 416.621 1946.64 418.493 1940.37 422.238C1934.09 425.942 1929.25 431.121 1925.85 437.754C1922.48 444.347 1920.79 452.035 1920.79 460.799C1920.79 469.563 1922.46 477.093 1925.79 483.725C1929.15 490.358 1933.99 495.557 1940.25 499.301C1946.56 503.006 1954.09 504.859 1962.84 504.859C1970.44 504.859 1977.02 503.464 1982.6 500.676C1988.15 497.887 1992.51 494.043 1995.66 489.103C1998.85 484.124 2000.64 478.387 2001 471.854H1978.63C1978.19 474.862 1977.24 477.431 1975.8 479.582L1975.82 479.622Z" fill="white"/>
+      <path d="M1489.74 456.139H1538.48V436.28H1489.74V409.111H1542.42V389.253H1465.64V503.206H1542.64V483.347H1489.74V456.139Z" fill="white"/>
+      <path d="M1660.97 427.416C1657.33 423.811 1653.07 421.122 1648.17 419.349C1643.31 417.537 1638.07 416.621 1632.41 416.621C1624.03 416.621 1616.72 418.473 1610.48 422.178C1604.29 425.883 1599.49 431.061 1596.06 437.694C1592.65 444.327 1590.94 452.055 1590.94 460.839C1590.94 469.623 1592.65 477.67 1596.06 484.263C1599.47 490.836 1604.33 495.915 1610.64 499.501C1616.98 503.066 1624.54 504.839 1633.35 504.839C1640.4 504.839 1646.61 503.763 1651.99 501.612C1657.41 499.421 1661.83 496.373 1665.24 492.489C1668.68 488.566 1670.97 483.964 1672.09 478.686L1650.16 477.232C1649.34 479.383 1648.17 481.196 1646.59 482.69C1645.04 484.183 1643.17 485.279 1640.98 486.036C1638.79 486.773 1636.38 487.151 1633.75 487.151C1629.78 487.151 1626.36 486.315 1623.45 484.642C1620.56 482.968 1618.31 480.598 1616.72 477.511C1615.16 474.424 1614.39 470.778 1614.39 466.556V466.496H1672.59V459.983C1672.59 452.713 1671.57 446.379 1669.52 440.961C1667.49 435.503 1664.62 430.982 1660.95 427.376L1660.97 427.416ZM1614.45 451.856C1614.58 448.789 1615.34 445.98 1616.8 443.451C1618.35 440.662 1620.5 438.451 1623.25 436.838C1626.04 435.165 1629.22 434.328 1632.81 434.328C1636.4 434.328 1639.28 435.085 1641.87 436.619C1644.5 438.112 1646.57 440.164 1648.05 442.793C1649.54 445.422 1650.28 448.45 1650.28 451.856H1614.45Z" fill="white"/>
+      <path d="M1811.38 485.02C1810.26 485.2 1809.15 485.299 1808.03 485.299C1806.44 485.299 1805.02 485.06 1803.81 484.582C1802.61 484.104 1801.7 483.267 1801.02 482.072C1800.36 480.857 1800.02 479.144 1800.02 476.953V435.563H1816.1V417.756H1800.02V397.26H1776.32V417.736H1764.63V435.543H1776.32V480.061C1776.28 485.658 1777.46 490.299 1779.83 493.964C1782.2 497.629 1785.52 500.337 1789.79 502.09C1794.09 503.843 1799.09 504.6 1804.8 504.381C1807.87 504.261 1810.5 503.963 1812.65 503.425C1814.8 502.947 1816.48 502.509 1817.65 502.15L1813.93 484.502C1813.33 484.622 1812.47 484.781 1811.36 485L1811.38 485.02Z" fill="white"/>
+      <path d="M1712.64 438.112C1715.39 436.101 1718.6 435.105 1722.26 435.105C1726.6 435.105 1730.11 436.419 1732.78 439.049C1735.49 441.638 1737.16 445.084 1737.78 449.346H1760.15C1759.81 442.753 1758.02 436.997 1754.75 432.097C1751.48 427.197 1747.06 423.393 1741.44 420.684C1735.85 417.975 1729.31 416.621 1721.86 416.621C1713.22 416.621 1705.77 418.493 1699.5 422.238C1693.22 425.942 1688.38 431.121 1684.98 437.754C1681.59 444.347 1679.92 452.035 1679.92 460.799C1679.92 469.563 1681.59 477.093 1684.92 483.725C1688.28 490.358 1693.12 495.557 1699.38 499.301C1705.69 503.006 1713.22 504.859 1721.96 504.859C1729.57 504.859 1736.15 503.464 1741.72 500.676C1747.28 497.887 1751.64 494.043 1754.79 489.103C1757.98 484.124 1759.77 478.387 1760.13 471.854H1737.76C1737.32 474.862 1736.36 477.431 1734.91 479.582C1733.5 481.694 1731.7 483.307 1729.51 484.422C1727.36 485.538 1724.93 486.096 1722.22 486.096C1718.56 486.096 1715.33 485.1 1712.6 483.088C1709.85 481.076 1707.72 478.168 1706.21 474.344C1704.73 470.52 1703.98 465.879 1703.98 460.441C1703.98 455.003 1704.73 450.482 1706.27 446.697C1707.78 442.913 1709.89 440.045 1712.62 438.073L1712.64 438.112Z" fill="white"/>
+      <path d="M1920.2 59.8394H1957.26V68.7794H1944.16V102.859H1933.28V68.7794H1920.2V59.8394ZM2008.48 59.8394H1998.96L1988.32 88.2594L1977.6 59.8394H1964.74V102.859H1975.56V78.5594L1985.26 102.859H1991.34L2000.98 78.6194V102.859H2011.86V59.8394H2008.46H2008.48Z" fill="white"/>
+      <path d="M998.42 325.76H924.78L844.38 186.5L763.98 325.76H690.34L844.38 58.9399L998.42 325.76Z" fill="white"/>
+      <path d="M1384.36 63.5801H1320.82V325.8H1384.36V63.5801Z" fill="white"/>
+      <path d="M1461.28 242.36H1522.4C1525.14 268.68 1541.3 279.64 1570.48 279.64C1590.4 279.64 1609.96 271.96 1609.96 252.22C1609.96 231.38 1590.04 226.98 1556.4 218.22C1513.82 207.64 1468.82 193.74 1468.82 138.9C1468.82 84.06 1511.4 58.48 1566.36 58.48C1621.32 58.48 1660.8 84.08 1663.2 138.9H1603.8C1601.4 118.78 1586.98 107.46 1564.32 107.46C1543.02 107.46 1528.94 117.32 1528.94 131.94C1528.94 150.2 1547.84 154.6 1584.58 163.38C1630.26 174.72 1671.48 189.7 1671.48 245.62C1671.48 301.54 1627.52 330.8 1570.86 330.8C1505.6 330.8 1462.68 300.1 1461.3 242.34H1461.28V242.36Z" fill="white"/>
+      <path d="M602.92 325.74H688.36L557.24 194.64L688.36 63.52H602.92L510.32 156.12V63.54H446.78V325.76H510.32V233.18L602.92 325.76V325.74Z" fill="white"/>
+      <path d="M1246.12 233.16C1243.1 212.8 1232.76 191.3 1216.26 181.02C1225.76 165.16 1230.12 143 1227.26 123.08C1224.86 106.18 1215.54 92.2601 1203.08 81.5601C1189.58 70.1801 1171 63.6001 1135.56 63.6001H1035.6V325.82H1152.72C1183.86 325.82 1198.9 320.58 1214.06 310.9C1237.44 295.4 1250.48 262.34 1246.12 233.18H1246.1L1246.12 233.16ZM1097.7 114.92H1142.54C1160.98 114.92 1172.7 124.46 1172.7 140.98C1172.7 157.5 1160.28 167.38 1142.18 167.38H1097.7V114.94V114.92ZM1097.7 211.38H1153.08C1172.26 211.38 1187.16 222 1187.16 242.92C1187.16 261.62 1174.38 273.72 1153.78 273.72H1097.7V211.38Z" fill="white"/>
+      <path d="M2000.72 325.76H1927.08L1846.68 186.5L1766.28 325.76H1692.64L1846.68 58.9399L2000.72 325.76Z" fill="white"/>
+      <path d="M86.42 63.54H0.97998L132.1 194.64L0.97998 325.76H86.42L217.54 194.64L86.42 63.54Z" fill="#FFD400"/>
+      <path d="M188.64 0.04L103.16 0L297.82 194.64L103.16 389.3H188.58L383.26 194.64L188.64 0.04Z" fill="#FFD400"/>
+    </svg>
+  </div>
+  <ul class="nav-links">
+    <li><a id="nav-portal" class="active" onclick="showTab('portal')">Overview</a></li>
+    <li><a id="nav-dashboard" onclick="showTab('dashboard')">Dashboard</a></li>
+    <li><a id="nav-corridors" onclick="showTab('corridors')">Corridors</a></li>
+    <li><a id="nav-architecture" onclick="showTab('architecture')">Architecture</a></li>
+    <li><a id="nav-faq" onclick="showTab('faq')">FAQ</a></li>
+    <li><a id="nav-dataroom" onclick="showTab('dataroom')">Data Room</a></li>
+    <li style="margin-left:auto"><a onclick="portalSignOut()" style="color:rgba(255,255,255,.4);font-size:11px">Sign Out</a></li>
+  </ul>
+</nav>
+
+<!-- TICKER -->
+<div class="live-ticker" style="margin-top:64px">
+  <div class="ticker-track">
+    <span class="ticker-item"><span class="t-dot"></span>Live Network · Rwanda + Kenya</span>
+    <span class="ticker-item">🔌 25,847 Charging Sessions YTD</span>
+    <span class="ticker-item">⚡ 1.24 GWh Clean Energy Dispensed</span>
+    <span class="ticker-item">🚛 15 EV Trucks Active on Corridors</span>
+    <span class="ticker-item">🛣️ 3,000+ km Connected Road</span>
+    <span class="ticker-item">🌍 3 Corridors Tested · Dar–Kigali · Kigali–Mombasa · Addis–Nairobi</span>
+    <span class="ticker-item">💚 142 Tonnes CO₂ Offset</span>
+    <span class="ticker-item">📈 $51K/mo Charging Revenue · Dec 2025</span>
+    <span class="ticker-item"><span class="t-dot"></span>Live Network · Rwanda + Kenya</span>
+    <span class="ticker-item">🔌 25,847 Charging Sessions YTD</span>
+    <span class="ticker-item">⚡ 1.24 GWh Clean Energy Dispensed</span>
+    <span class="ticker-item">🚛 15 EV Trucks Active on Corridors</span>
+    <span class="ticker-item">🛣️ 3,000+ km Connected Road</span>
+    <span class="ticker-item">🌍 3 Corridors Tested · Dar–Kigali · Kigali–Mombasa · Addis–Nairobi</span>
+    <span class="ticker-item">💚 142 Tonnes CO₂ Offset</span>
+    <span class="ticker-item">📈 $51K/mo Charging Revenue · Dec 2025</span>
+  </div>
+</div>
+
+
+<!-- ════════════════ OVERVIEW ════════════════ -->
+<div id="portal" class="section active">
+  <div class="hero">
+    <div class="kicker">Investor Portal · Private &amp; Confidential</div>
+    <h1>Investing in East Africa's<br><span class="accent">Infrastructure of the Future</span></h1>
+    <p class="hero-sub">Kabisa is building the EV charging backbone across East Africa's most critical trade corridors — powering zero-emission freight from Mombasa to Kigali, Dar es Salaam to Kampala, and Addis Ababa to Nairobi. We are revenue-generating, infrastructure-first, and open to qualified investors.</p>
+  </div>
+
+  <!-- TWO INVESTMENT PATHS -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:0 60px" id="inv-paths">
+
+    <!-- Path 1: TopCo Co-Investment -->
+    <div style="background:rgba(255,212,0,.07);border:2px solid rgba(255,212,0,.32);padding:44px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(to right,var(--solar),var(--solar-3))"></div>
+      <div style="display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--solar);margin-bottom:18px;background:rgba(255,212,0,.1);border:1px solid rgba(255,212,0,.2);padding:5px 12px">Path 01 · Equity</div>
+      <div style="font-family:'Fjalla One',sans-serif;font-size:34px;margin-bottom:10px;line-height:1.05">TopCo<br><span style="color:var(--solar)">Co-Investment</span></div>
+      <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;max-width:400px;margin-bottom:28px">Invest directly into <strong style="color:rgba(255,255,255,.88)">Kabisa TopCo</strong> via a SAFE note. Participate in the full upside across both Hubs and Corridors — broad platform exposure across East Africa.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:28px">
+        <div style="border-left:3px solid var(--solar);padding-left:10px">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:22px;color:var(--solar)">$6M</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">SAFE Target</div>
+        </div>
+        <div style="border-left:3px solid var(--solar);padding-left:10px">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:22px;color:var(--solar)">20%</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Discount to Next Round</div>
+        </div>
+        <div style="border-left:3px solid var(--solar);padding-left:10px">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:22px;color:var(--solar)">$250K</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Minimum Ticket</div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="showTab('architecture')" style="font-size:12px;padding:10px 22px;clip-path:none">Learn More →</button>
+      <div style="position:absolute;bottom:16px;right:20px;font-size:28px;opacity:.07;font-family:'Fjalla One',sans-serif">SAFE</div>
+    </div>
+
+    <!-- Path 2: SPV Investments -->
+    <div style="background:rgba(14,21,154,.14);border:2px solid rgba(69,97,222,.32);padding:44px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(to right,var(--voltage-2),var(--voltage-3))"></div>
+      <div style="display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--voltage-3);margin-bottom:18px;background:rgba(69,97,222,.1);border:1px solid rgba(69,97,222,.22);padding:5px 12px">Path 02 · Debt + Equity SPV</div>
+      <div style="font-family:'Fjalla One',sans-serif;font-size:34px;margin-bottom:10px;line-height:1.05">Kabisa Corridors<br><span style="color:var(--voltage-3)">SPV Investment</span></div>
+      <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;max-width:400px;margin-bottom:24px">Invest into country-level SPVs under <strong style="color:rgba(255,255,255,.88)">Kabisa Corridors Ltd</strong>, the holding company for all corridor infrastructure across East Africa. Structured as debt or equity. Select your country:</p>
+      <!-- 4 SPV country links -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px">
+        <div class="spv-link-box" onclick="showSPV('rwanda')">
+          <div class="spv-link-flag">🇷🇼</div>
+          <div class="spv-link-country">Rwanda SPV</div>
+          <div class="spv-link-sub">$2M raise · Revenue generating</div>
+          <div class="spv-link-cta">View Terms →</div>
+        </div>
+        <div class="spv-link-box" onclick="showSPV('kenya')">
+          <div class="spv-link-flag">🇰🇪</div>
+          <div class="spv-link-country">Kenya SPV</div>
+          <div class="spv-link-sub">Scaling · Nairobi Hub active</div>
+          <div class="spv-link-cta">View Terms →</div>
+        </div>
+        <div class="spv-link-box" onclick="showSPV('tanzania')">
+          <div class="spv-link-flag">🇹🇿</div>
+          <div class="spv-link-country">Tanzania SPV</div>
+          <div class="spv-link-sub">$2.5M raise · Central Corridor</div>
+          <div class="spv-link-cta">View Terms →</div>
+        </div>
+        <div class="spv-link-box" onclick="showSPV('uganda')">
+          <div class="spv-link-flag">🇺🇬</div>
+          <div class="spv-link-country">Uganda SPV</div>
+          <div class="spv-link-sub">$2M raise · Northern Corridor</div>
+          <div class="spv-link-cta">View Terms →</div>
+        </div>
+      </div>
+      <div style="position:absolute;bottom:16px;right:20px;font-size:28px;opacity:.06;font-family:'Fjalla One',sans-serif">SPV</div>
+    </div>
+  </div>
+
+  <!-- SPV DETAIL PANELS (hidden by default) -->
+  <div id="spv-panel" style="display:none;padding:0 60px;margin-top:3px">
+    <div id="spv-rwanda" class="spv-detail" style="display:none;background:rgba(14,21,154,.1);border:1px solid rgba(69,97,222,.25);padding:36px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:24px">
+        <div><div style="font-size:11px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Kabisa Corridors Ltd · Country SPV</div><div style="font-family:'Fjalla One',sans-serif;font-size:28px">🇷🇼 Rwanda SPV</div></div>
+        <button onclick="closeSPV()" style="background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);padding:7px 16px;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;font-weight:600">✕ Close</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px">
+        <div style="border-left:3px solid var(--green);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--green)">$2M</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Total Raise</div></div>
+        <div style="border-left:3px solid var(--voltage-3);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--voltage-3)">$1M</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Debt (100% committed ✓)</div></div>
+        <div style="border-left:3px solid var(--solar);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--solar)">$1M</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Equity ($200K committed)</div></div>
+        <div style="border-left:3px solid var(--solar);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--solar)">$51K</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Monthly Revenue</div></div>
+        <div style="border-left:3px solid var(--solar);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--solar)">5</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Active Stations</div></div>
+      </div>
+      <p style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:20px">Rwanda is Kabisa's most mature market with 80% share of all public EV charging in-country. Debt tranche is fully committed; equity round is open. Capital is deployed directly into Rwanda charging infrastructure via the Rwanda SPV under Kabisa Corridors Ltd.</p>
+      <button class="btn-primary" onclick="showTab('dataroom')" style="clip-path:none;font-size:12px;padding:10px 22px">Access Term Sheet in Data Room →</button>
+    </div>
+    <div id="spv-kenya" class="spv-detail" style="display:none;background:rgba(14,21,154,.1);border:1px solid rgba(69,97,222,.25);padding:36px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:24px">
+        <div><div style="font-size:11px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Kabisa Corridors Ltd · Country SPV</div><div style="font-family:'Fjalla One',sans-serif;font-size:28px">🇰🇪 Kenya SPV</div></div>
+        <button onclick="closeSPV()" style="background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);padding:7px 16px;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;font-weight:600">✕ Close</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px">
+        <div style="border-left:3px solid var(--voltage-3);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--voltage-3)">$2M</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Indicative Raise</div></div>
+        <div style="border-left:3px solid var(--solar);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--solar)">140+</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">EVs Served</div></div>
+        <div style="border-left:3px solid var(--solar);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--solar)">2</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Active DC Points</div></div>
+      </div>
+      <p style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:20px">Kenya is Kabisa's second market, launched in 2025, anchored in Nairobi with mobile charging battery deployment. SPV term sheet being finalised — contact us to receive early access.</p>
+      <button class="btn-primary" onclick="showTab('dataroom')" style="clip-path:none;font-size:12px;padding:10px 22px">Access Term Sheet in Data Room →</button>
+    </div>
+    <div id="spv-tanzania" class="spv-detail" style="display:none;background:rgba(14,21,154,.1);border:1px solid rgba(69,97,222,.25);padding:36px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:24px">
+        <div><div style="font-size:11px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Kabisa Corridors Ltd · Country SPV</div><div style="font-family:'Fjalla One',sans-serif;font-size:28px">🇹🇿 Tanzania SPV</div></div>
+        <button onclick="closeSPV()" style="background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);padding:7px 16px;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;font-weight:600">✕ Close</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px">
+        <div style="border-left:3px solid var(--solar);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--solar)">$2.5M</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Total Raise</div></div>
+        <div style="border-left:3px solid var(--voltage-3);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--voltage-3)">$1M</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Debt Committed</div></div>
+        <div style="border-left:3px solid var(--solar);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--solar)">7</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Stations (3 active)</div></div>
+        <div style="border-left:3px solid var(--solar);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--solar)">12</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Corridor Trips Done</div></div>
+      </div>
+      <p style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:20px">Tanzania anchors the Central Corridor — Kabisa's most proven cross-border route with 12 complete EV truck trips. 3 stations operational in Dar, Dodoma, Singida and Kahama. Equity round open.</p>
+      <button class="btn-primary" onclick="showTab('dataroom')" style="clip-path:none;font-size:12px;padding:10px 22px">Access Term Sheet in Data Room →</button>
+    </div>
+    <div id="spv-uganda" class="spv-detail" style="display:none;background:rgba(14,21,154,.1);border:1px solid rgba(69,97,222,.25);padding:36px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:24px">
+        <div><div style="font-size:11px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Kabisa Corridors Ltd · Country SPV</div><div style="font-family:'Fjalla One',sans-serif;font-size:28px">🇺🇬 Uganda SPV</div></div>
+        <button onclick="closeSPV()" style="background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);padding:7px 16px;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;font-weight:600">✕ Close</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px">
+        <div style="border-left:3px solid var(--solar);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--solar)">$2M</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Total Raise</div></div>
+        <div style="border-left:3px solid var(--voltage-3);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--voltage-3)">$500K</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Debt Committed</div></div>
+        <div style="border-left:3px solid var(--solar);padding-left:12px"><div style="font-family:'Fjalla One',sans-serif;font-size:24px;color:var(--solar)">2</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em;margin-top:2px">Stations Planned</div></div>
+      </div>
+      <p style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:20px">Uganda is the Northern Corridor's critical pass-through market, linking Mombasa to Kigali. Early stage SPV — raising now to fund station buildout across Kampala, Jinja, Masaka and Mbarara.</p>
+      <button class="btn-primary" onclick="showTab('dataroom')" style="clip-path:none;font-size:12px;padding:10px 22px">Access Term Sheet in Data Room →</button>
+    </div>
+  </div>
+
+  <!-- HOW TOPCO VS SPV WORKS — brief guide at bottom of overview -->
+  <div style="background:rgba(255,255,255,.02);border-top:1px solid rgba(255,255,255,.07);padding:56px 60px;margin-top:3px" class="section-pad">
+    <div style="text-align:center;margin-bottom:44px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:rgba(255,255,255,.3);margin-bottom:8px">Which path is right for you?</div>
+      <div style="font-family:'Fjalla One',sans-serif;font-size:32px">Understanding the <span class="accent">Two Investment Vehicles</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 44px 1fr;gap:0;align-items:stretch;max-width:920px;margin:0 auto" id="guide-grid">
+      <div style="padding:30px;background:rgba(255,212,0,.04);border:1px solid rgba(255,212,0,.16)">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--solar);margin-bottom:12px">TopCo Co-Investment · SAFE</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:10px"><span style="color:var(--solar);flex-shrink:0">✓</span><span style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">Equity in the full Kabisa platform (Hubs + Corridors + all markets)</span></div>
+          <div style="display:flex;gap:10px"><span style="color:var(--solar);flex-shrink:0">✓</span><span style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">SAFE note · 20% discount to Series A priced round</span></div>
+          <div style="display:flex;gap:10px"><span style="color:var(--solar);flex-shrink:0">✓</span><span style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">No maturity date · no interest · converts at next round</span></div>
+          <div style="display:flex;gap:10px"><span style="color:var(--solar);flex-shrink:0">✓</span><span style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">Min. $250K · Ideal for VC, angels, family offices</span></div>
+          <div style="display:flex;gap:10px"><span style="color:var(--solar);flex-shrink:0">✓</span><span style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">$6M target · $1.2M committed to date</span></div>
+        </div>
+        <button class="btn-primary" style="margin-top:20px;clip-path:none;font-size:11px;padding:9px 18px" onclick="showTab('architecture')">See Full Architecture →</button>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 8px">
+        <div style="flex:1;width:1px;background:rgba(255,255,255,.07)"></div>
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.22);text-transform:uppercase;letter-spacing:.1em;writing-mode:vertical-rl;transform:rotate(180deg);padding:8px 0">or</div>
+        <div style="flex:1;width:1px;background:rgba(255,255,255,.07)"></div>
+      </div>
+      <div style="padding:30px;background:rgba(14,21,154,.08);border:1px solid rgba(69,97,222,.22)">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--voltage-3);margin-bottom:12px">Corridors SPV · Debt or Equity</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:10px"><span style="color:var(--voltage-3);flex-shrink:0">✓</span><span style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">Debt or equity in a country SPV (Rwanda, Kenya, Tanzania, Uganda)</span></div>
+          <div style="display:flex;gap:10px"><span style="color:var(--voltage-3);flex-shrink:0">✓</span><span style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">Capital deployed into physical charging infrastructure assets</span></div>
+          <div style="display:flex;gap:10px"><span style="color:var(--voltage-3);flex-shrink:0">✓</span><span style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">Debt = senior secured, asset-backed, fixed coupon</span></div>
+          <div style="display:flex;gap:10px"><span style="color:var(--voltage-3);flex-shrink:0">✓</span><span style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">Min. $50K debt / $25K equity · Ideal for DFIs, infra funds</span></div>
+          <div style="display:flex;gap:10px"><span style="color:var(--voltage-3);flex-shrink:0">✓</span><span style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">Multiple SPVs open now · Rwanda debt fully committed</span></div>
+        </div>
+        <button class="btn-primary" style="margin-top:20px;clip-path:none;background:var(--voltage-2);color:#fff;font-size:11px;padding:9px 18px" onclick="showTab('architecture')">See Full Architecture →</button>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:22px">
+      <span style="font-size:12px;color:rgba(255,255,255,.3)">Questions? Read the </span>
+      <span style="font-size:12px;color:var(--solar);cursor:pointer;font-weight:600" onclick="showTab('faq')">FAQ →</span>
+      <span style="font-size:12px;color:rgba(255,255,255,.3);margin-left:14px">or email </span>
+      <a href="mailto:invest@kabisa.africa" style="font-size:12px;color:var(--solar);font-weight:600">invest@kabisa.africa</a>
+    </div>
+  </div>
+
+</div><!-- end portal -->
+
+
+<!-- ════════════════ DASHBOARD ════════════════ -->
+<div id="dashboard" class="section">
+  <div style="padding:56px 60px" class="section-pad">
+    <div class="sh">
+      <div class="sub">Live Network Performance</div>
+      <div class="title">Kabisa <span class="accent">Dashboard</span></div>
+      <div class="desc">Real-time metrics across the charging network and hub operations. Data updated monthly. Last updated: <strong style="color:rgba(255,255,255,.7)">March 2026</strong></div>
+    </div>
+
+    <!-- NETWORK KPIs -->
+    <div class="stats-strip" style="margin-bottom:3px">
+      <div class="stat-cell">
+        <div class="stat-number">300<span class="stat-unit">+</span></div>
+        <div class="stat-label">EVs Sold — Rwanda</div>
+        <div class="stat-delta">↑ 3× vs 2024</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-number">1,900<span class="stat-unit">+</span></div>
+        <div class="stat-label">EVs on Network</div>
+        <div class="stat-delta">↑ 10–15% month-on-month</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-number">25<span class="stat-unit">k</span></div>
+        <div class="stat-label">Charging Sessions YTD</div>
+        <div class="stat-delta">↑ 15% MoM growth</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-number">$51<span class="stat-unit">K</span></div>
+        <div class="stat-label">Charging Rev / Month</div>
+        <div class="stat-delta">↑ 11.4× Jan–Dec 2025</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-number">3,000<span class="stat-unit">+</span></div>
+        <div class="stat-label">km Connected Road</div>
+        <div class="stat-delta">↑ 3 corridors tested</div>
+      </div>
+    </div>
+
+    <!-- IMPACT METRICS -->
+    <div style="margin-top:3px;margin-bottom:56px">
+      <div class="impact-grid">
+        <div class="i-card"><div class="i-icon">🚛</div><div class="i-val">15<span class="unit"> trucks</span></div><div class="i-label">Medium &amp; Heavy Duty Trucks Active</div><div class="i-trend">↑ Scaling to 100 by end-2026</div><div class="i-bar"><div class="i-fill" data-w="15"></div></div></div>
+        <div class="i-card"><div class="i-icon">🛣️</div><div class="i-val">300,000<span class="unit"> km</span></div><div class="i-label">Total EV Kilometres Driven</div><div class="i-trend">↑ 3 corridors proven across borders</div><div class="i-bar"><div class="i-fill" data-w="22"></div></div></div>
+        <div class="i-card"><div class="i-icon">💚</div><div class="i-val">142<span class="unit"> tCO₂</span></div><div class="i-label">Carbon Emissions Offset</div><div class="i-trend">↑ Equivalent to 61 cars off road / yr</div><div class="i-bar"><div class="i-fill" data-w="14"></div></div></div>
+        <div class="i-card"><div class="i-icon">⚡</div><div class="i-val">1.24<span class="unit"> GWh</span></div><div class="i-label">Clean Energy Dispensed</div><div class="i-trend">↑ 100% hydro + solar sourced</div><div class="i-bar"><div class="i-fill" data-w="18"></div></div></div>
+        <div class="i-card"><div class="i-icon">💰</div><div class="i-val">80<span class="unit">%</span></div><div class="i-label">Fuel Savings vs Diesel</div><div class="i-trend">↑ Fleet operators cash-flow positive Day 1</div><div class="i-bar"><div class="i-fill" data-w="80"></div></div></div>
+        <div class="i-card"><div class="i-icon">🤝</div><div class="i-val">150<span class="unit">+</span></div><div class="i-label">Commercial Customers</div><div class="i-trend">↑ US Embassy, NGOs, logistics, fleets</div><div class="i-bar"><div class="i-fill" data-w="45"></div></div></div>
+      </div>
+    </div>
+
+    <!-- HUBS DASHBOARD -->
+    <div class="sh">
+      <div class="sub">Hub Operations</div>
+      <div class="title">Hub <span class="accent">Performance</span></div>
+      <div class="desc">Per-city dashboard for all active Kabisa Hubs — 4S facilities operating across the network.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px;margin-bottom:56px" class="hub-dash-grid">
+
+      <!-- Kigali Hub -->
+      <div class="hub-dash-card">
+        <div class="hub-flag">🇷🇼</div>
+        <div class="hub-city">Kigali</div>
+        <div class="hub-country">Rwanda · Core Market</div>
+        <div class="hub-status op"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span> Operational</div>
+        <div class="hub-metric-grid">
+          <div class="hm-block"><div class="hm-val">300+</div><div class="hm-key">EVs Sold</div></div>
+          <div class="hm-block"><div class="hm-val">1,900+</div><div class="hm-key">Cars Served on Network</div></div>
+          <div class="hm-block green"><div class="hm-val">2,400+</div><div class="hm-key">Monthly Sessions</div></div>
+          <div class="hm-block blue"><div class="hm-val">60</div><div class="hm-key">Charging Points (35 AC + 25 DC)</div></div>
+          <div class="hm-block" style="grid-column:span 2"><div class="hm-val" style="font-size:16px">249 <span style="font-size:13px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;font-weight:400">/ yr</span></div><div class="hm-key">EV Maintenance Tickets</div></div>
+        </div>
+      </div>
+
+      <!-- Nairobi Hub -->
+      <div class="hub-dash-card">
+        <div class="hub-flag">🇰🇪</div>
+        <div class="hub-city">Nairobi</div>
+        <div class="hub-country">Kenya · Launched 2025</div>
+        <div class="hub-status sc"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span> Scaling</div>
+        <div class="hub-metric-grid">
+          <div class="hm-block"><div class="hm-val">—</div><div class="hm-key">EVs Sold</div></div>
+          <div class="hm-block"><div class="hm-val">140+</div><div class="hm-key">Cars Served on Network</div></div>
+          <div class="hm-block green"><div class="hm-val">380+</div><div class="hm-key">Monthly Sessions</div></div>
+          <div class="hm-block blue"><div class="hm-val">2</div><div class="hm-key">Charging Points (DC)</div></div>
+          <div class="hm-block" style="grid-column:span 2"><div class="hm-val" style="font-size:16px">—</div><div class="hm-key">Maintenance Tickets (tracking in progress)</div></div>
+        </div>
+      </div>
+
+      <!-- Dar es Salaam -->
+      <div class="hub-dash-card" style="opacity:.6">
+        <div class="hub-flag">🇹🇿</div>
+        <div class="hub-city">Dar es Salaam</div>
+        <div class="hub-country">Tanzania · Corridor Node</div>
+        <div class="hub-status sc"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span> Charging Active</div>
+        <div class="hub-metric-grid">
+          <div class="hm-block"><div class="hm-val">—</div><div class="hm-key">EVs Sold</div></div>
+          <div class="hm-block"><div class="hm-val">~20</div><div class="hm-key">Cars Served</div></div>
+          <div class="hm-block green"><div class="hm-val">5×40kW</div><div class="hm-key">Chargers Active</div></div>
+          <div class="hm-block blue"><div class="hm-val">5</div><div class="hm-key">Charging Points</div></div>
+          <div class="hm-block" style="grid-column:span 2"><div class="hm-val" style="font-size:16px">~$2K</div><div class="hm-key">Monthly Revenue</div></div>
+        </div>
+      </div>
+
+      <!-- Addis Ababa -->
+      <div class="hub-dash-card" style="opacity:.6">
+        <div class="hub-flag">🇪🇹</div>
+        <div class="hub-city">Addis Ababa</div>
+        <div class="hub-country">Ethiopia · Station Installed</div>
+        <div class="hub-status sc"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span> Station Active</div>
+        <div class="hub-metric-grid">
+          <div class="hm-block" style="grid-column:span 2"><div class="hm-val" style="color:var(--green)">120kW ✓</div><div class="hm-key">Charger Capacity Installed</div></div>
+          <div class="hm-block"><div class="hm-val">—</div><div class="hm-key">Monthly Sessions</div></div>
+          <div class="hm-block"><div class="hm-val">1</div><div class="hm-key">Charging Points</div></div>
+        </div>
+      </div>
+
+      <!-- Kampala -->
+      <div class="hub-dash-card" style="opacity:.45">
+        <div class="hub-flag">🇺🇬</div>
+        <div class="hub-city">Kampala</div>
+        <div class="hub-country">Uganda · Planned 2026</div>
+        <div class="hub-status pl"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span> Planning Phase</div>
+        <div class="hub-metric-grid">
+          <div class="hm-block" style="grid-column:span 2"><div class="hm-val" style="font-size:15px;color:rgba(255,255,255,.4)">Under Development</div><div class="hm-key">Dashboard metrics available post-launch</div></div>
+        </div>
+      </div>
+
+      <!-- Goma -->
+      <div class="hub-dash-card" style="opacity:.35">
+        <div class="hub-flag">🇨🇩</div>
+        <div class="hub-city">Goma</div>
+        <div class="hub-country">DRC · Corridor Extension</div>
+        <div class="hub-status pl"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span> Scoping</div>
+        <div class="hub-metric-grid">
+          <div class="hm-block" style="grid-column:span 2"><div class="hm-val" style="font-size:15px;color:rgba(255,255,255,.3)">~120km from Kigali</div><div class="hm-key">Route from existing Rwanda Hub</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CORRIDOR IMPLEMENTATION STATUS on dashboard -->
+    <div class="sh">
+      <div class="sub">Corridor Build Progress</div>
+      <div class="title">Corridor <span class="accent">Implementation Status</span></div>
+      <div class="desc">Station-by-station build progress across all three corridors. <span style="color:rgba(255,255,255,.55)">Updated monthly · Last update: <strong style="color:rgba(255,255,255,.7)">March 2026</strong></span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px">
+      <!-- Northern Corridor mini-status -->
+      <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);padding:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:18px">Northern Corridor</div>
+          <span class="badge tested">Testing Phase</span>
+        </div>
+        <div style="display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap">
+          <div style="border-left:3px solid var(--solar);padding-left:10px"><div style="font-family:'Fjalla One',sans-serif;font-size:20px;color:var(--solar)">3/14</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em">Stations Active</div></div>
+          <div style="border-left:3px solid var(--solar);padding-left:10px"><div style="font-family:'Fjalla One',sans-serif;font-size:20px;color:var(--solar)">1</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em">Trip Completed</div></div>
+        </div>
+        <div style="margin-bottom:6px;display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.4)"><span>Overall Build Progress</span><span>21%</span></div>
+        <div class="progress-bar-wrap" style="width:100%"><div class="progress-bar-fill" style="width:21%"></div></div>
+        <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,.35)">Kigali (240kW), Mombasa &amp; Nairobi partner stations active · Remaining under dev · DRC extension underway</div>
+        <button onclick="showTab('corridors')" style="margin-top:14px;background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.55);padding:6px 14px;cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;transition:all .2s" onmouseover="this.style.borderColor='var(--solar)';this.style.color='var(--solar)'" onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.55)'">View Full Corridor →</button>
+      </div>
+      <!-- Central Corridor mini-status -->
+      <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);padding:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:18px">Central Corridor</div>
+          <span class="badge active">Active</span>
+        </div>
+        <div style="display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap">
+          <div style="border-left:3px solid var(--voltage-3);padding-left:10px"><div style="font-family:'Fjalla One',sans-serif;font-size:20px;color:var(--voltage-3)">4/13</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em">Stations Active</div></div>
+          <div style="border-left:3px solid var(--voltage-3);padding-left:10px"><div style="font-family:'Fjalla One',sans-serif;font-size:20px;color:var(--voltage-3)">12</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em">Trips Completed</div></div>
+        </div>
+        <div style="margin-bottom:6px;display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.4)"><span>Overall Build Progress</span><span>31%</span></div>
+        <div class="progress-bar-wrap" style="width:100%"><div class="progress-bar-fill" style="width:31%"></div></div>
+        <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,.35)">Dar, Dodoma, Singida, Kahama active · Chalinze, Gairo, Manyoni, Igunga, Nzega, Ushirombo, Nyakanazi under dev</div>
+        <button onclick="showTab('corridors')" style="margin-top:14px;background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.55);padding:6px 14px;cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;transition:all .2s" onmouseover="this.style.borderColor='var(--solar)';this.style.color='var(--solar)'" onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.55)'">View Full Corridor →</button>
+      </div>
+      <!-- Addis-Nairobi -->
+      <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);padding:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:18px">Addis–Nairobi</div>
+          <span class="badge tested">Testing Phase</span>
+        </div>
+        <div style="display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap">
+          <div style="border-left:3px solid var(--solar-3);padding-left:10px"><div style="font-family:'Fjalla One',sans-serif;font-size:20px;color:var(--solar-3)">1/9</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em">Stations Active</div></div>
+          <div style="border-left:3px solid var(--solar-3);padding-left:10px"><div style="font-family:'Fjalla One',sans-serif;font-size:20px;color:var(--solar-3)">1</div><div style="font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.07em">Trip Completed</div></div>
+        </div>
+        <div style="margin-bottom:6px;display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.4)"><span>Overall Build Progress</span><span>11%</span></div>
+        <div class="progress-bar-wrap" style="width:100%"><div class="progress-bar-fill" style="width:11%"></div></div>
+        <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,.35)">Addis Ababa (120kW) active · Adama, Hawassa, Yabelo, Moyale, Marsabit, Isiolo, Nanyuki planned</div>
+        <button onclick="showTab('corridors')" style="margin-top:14px;background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.55);padding:6px 14px;cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;transition:all .2s" onmouseover="this.style.borderColor='var(--solar)';this.style.color='var(--solar)'" onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.55)'">View Full Corridor →</button>
+      </div>
+    </div>
+  </div>
+</div><!-- end dashboard -->
+
+
+<!-- ════════════════ CORRIDORS ════════════════ -->
+<div id="corridors" class="section">
+  <div style="padding:56px 60px" class="section-pad">
+    <div class="sh">
+      <div class="sub">Corridor Implementation Status</div>
+      <div class="title">The <span class="accent">Corridors</span></div>
+      <div class="desc">Three corridors tested across East Africa — all anchored in Kigali. Station-by-station implementation status below. <span style="color:rgba(255,255,255,.45)">Updated monthly · Last updated: <strong style="color:rgba(255,255,255,.65)">March 2026</strong></span></div>
+    </div>
+
+    <!-- Northern Corridor -->
+    <div class="corridor-card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:20px">
+        <div>
+          <div class="corr-name">Northern Corridor</div>
+          <p style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.65;max-width:560px;margin-top:5px">Mombasa → Kigali. The most traded corridor in sub-Saharan Africa — 1,850 km via the Kenya highlands and Uganda. 3 stations active (Mombasa &amp; Nairobi partner stations + Kigali Hub). <strong style="color:rgba(255,255,255,.8)">1 test trip completed.</strong> DRC extension underway from Kigali.</p>
+        </div>
+        <span class="badge tested" style="flex-shrink:0">Testing Phase</span>
+      </div>
+      <div class="corr-stats">
+        <div class="cs"><div class="n">1,850<span style="font-size:12px;color:rgba(255,212,0,.45)">km</span></div><div class="l">Total Length</div></div>
+        <div class="cs"><div class="n">14</div><div class="l">Total Stations</div></div>
+        <div class="cs"><div class="n">3</div><div class="l">Currently Active</div></div>
+        <div class="cs"><div class="n">1</div><div class="l">Trip Completed</div></div>
+        <div class="cs"><div class="n">6</div><div class="l">Countries</div></div>
+      </div>
+      <div class="route-row">
+        <span class="r-dot"></span><span>Mombasa</span><div class="r-line"></div><span>Voi</span><div class="r-line"></div><span>Kibwezi</span><div class="r-line"></div><span>Sultan Hamud</span><div class="r-line"></div><span style="color:var(--voltage-3)">Nairobi</span><div class="r-line"></div><span>Nakuru</span><div class="r-line"></div><span>Eldoret</span><div class="r-line"></div><span>Kisumu</span><div class="r-line"></div><span>Busia</span><div class="r-line"></div><span>Jinja</span><div class="r-line"></div><span>Kampala</span><div class="r-line"></div><span>Masaka</span><div class="r-line"></div><span>Mbarara</span><div class="r-line"></div><span style="color:var(--solar)">Kigali</span><div class="r-line" style="background:repeating-linear-gradient(to right,rgba(241,161,32,.5) 0 4px,transparent 4px 8px)"></div><span style="color:rgba(241,161,32,.7)">→ DRC</span>
+      </div>
+      <table class="impl-table" style="margin-top:20px">
+        <thead><tr><th>Station</th><th>Country</th><th>Status</th><th>Capacity</th><th>Progress</th></tr></thead>
+        <tbody>
+          <tr><td><div class="station-name" style="color:var(--solar)">Mombasa</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">Partner station</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--solar);font-size:12px;font-weight:700">Partner</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
+          <tr><td><div class="station-name">Voi</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:10%"></div></div></td></tr>
+          <tr><td><div class="station-name">Kibwezi</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:10%"></div></div></td></tr>
+          <tr><td><div class="station-name">Sultan Hamud</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
+          <tr><td><div class="station-name" style="color:var(--solar)">NBO Truck Park</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">Nairobi · Partner station</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--solar);font-size:12px;font-weight:700">Partner</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
+          <tr><td><div class="station-name">Nakuru</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
+          <tr><td><div class="station-name">Eldoret</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
+          <tr><td><div class="station-name">Kisumu</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
+          <tr><td><div class="station-name">Busia</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya/Uganda</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
+          <tr><td><div class="station-name">Jinja</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Uganda</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
+          <tr><td><div class="station-name" style="color:var(--solar)">Kampala</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">Uganda · Partner station</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Uganda</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--solar);font-size:12px;font-weight:700">Partner</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
+          <tr><td><div class="station-name">Masaka</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Uganda</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
+          <tr><td><div class="station-name">Mbarara</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Uganda</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
+          <tr><td><div class="station-name" style="color:var(--solar)">Kigali — SP Kanombe</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">Hub · East Africa's first 240kW fast charger</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Rwanda</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--solar);font-size:12px;font-weight:700">240kW</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Central Corridor -->
+    <div class="corridor-card" style="border-color:rgba(69,97,222,.18)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:20px">
+        <div>
+          <div class="corr-name" style="color:var(--voltage-3)">Central Corridor</div>
+          <p style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.65;max-width:560px;margin-top:5px">Dar es Salaam → Kigali. <strong style="color:rgba(255,255,255,.8)">12 full EV truck trips completed.</strong> 40kW stations active at Dar, Dodoma, Singida and Kahama; remaining stations under development or lease secured.</p>
+        </div>
+        <span class="badge active" style="flex-shrink:0;border-color:var(--voltage-3)">Active</span>
+      </div>
+      <div class="corr-stats">
+        <div class="cs" style="border-color:var(--voltage-3)"><div class="n" style="color:var(--voltage-3)">1,400<span style="font-size:12px;color:rgba(69,97,222,.45)">km</span></div><div class="l">Total Length</div></div>
+        <div class="cs" style="border-color:var(--voltage-3)"><div class="n" style="color:var(--voltage-3)">13</div><div class="l">Total Stations</div></div>
+        <div class="cs" style="border-color:var(--voltage-3)"><div class="n" style="color:var(--voltage-3)">4</div><div class="l">Currently Active</div></div>
+        <div class="cs" style="border-color:var(--voltage-3)"><div class="n" style="color:var(--voltage-3)">12</div><div class="l">Trips Completed</div></div>
+        <div class="cs" style="border-color:var(--voltage-3)"><div class="n" style="color:var(--voltage-3)">40kW</div><div class="l">Active Chargers</div></div>
+      </div>
+      <div class="route-row">
+        <span class="r-dot" style="border-color:var(--voltage-3)"></span><span>Dar es Salaam</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Visiga</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Chalinze</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Gairo</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Dodoma</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Manyoni</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Singida</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Igunga</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Nzega</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Kahama</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Ushirombo</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Nyakanazi</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Rusumo</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span style="color:var(--solar)">Kigali</span>
+      </div>
+      <table class="impl-table" style="margin-top:20px">
+        <thead><tr><th>Station</th><th>Country</th><th>Status</th><th>Capacity</th><th>Progress</th></tr></thead>
+        <tbody>
+          <tr><td><div class="station-name" style="color:var(--voltage-3)">Dar es Salaam</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">Four Points by Sheraton</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--voltage-3);font-size:12px;font-weight:700">40kW</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
+          <tr><td><div class="station-name">Visiga</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania</td><td><span class="badge dev">Lease Secured</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">0kW</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40%"></div></div></td></tr>
+          <tr><td><div class="station-name">Chalinze</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:20%"></div></div></td></tr>
+          <tr><td><div class="station-name">Gairo</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:15%"></div></div></td></tr>
+          <tr><td><div class="station-name" style="color:var(--voltage-3)">Dodoma</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--voltage-3);font-size:12px;font-weight:700">40kW</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
+          <tr><td><div class="station-name">Manyoni</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:15%"></div></div></td></tr>
+          <tr><td><div class="station-name" style="color:var(--voltage-3)">Singida</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--voltage-3);font-size:12px;font-weight:700">40kW</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
+          <tr><td><div class="station-name">Igunga</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:10%"></div></div></td></tr>
+          <tr><td><div class="station-name">Nzega</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:10%"></div></div></td></tr>
+          <tr><td><div class="station-name" style="color:var(--voltage-3)">Kahama</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--voltage-3);font-size:12px;font-weight:700">40kW</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
+          <tr><td><div class="station-name">Ushirombo</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:10%"></div></div></td></tr>
+          <tr><td><div class="station-name">Nyakanazi</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
+          <tr><td><div class="station-name">Rusumo</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">Lease Secured · TZ border</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania/Rwanda</td><td><span class="badge dev">Lease Secured</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">0kW</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:35%"></div></div></td></tr>
+          <tr><td><div class="station-name" style="color:var(--solar)">Kigali — SP Kanombe</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">East Africa's first 240kW fast charger</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Rwanda</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--solar);font-size:12px;font-weight:700">240kW</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Addis–Nairobi -->
+    <div class="corridor-card" style="border-color:rgba(241,161,32,.18)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:20px">
+        <div>
+          <div class="corr-name" style="color:var(--solar-3)">Addis–Nairobi Corridor</div>
+          <p style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.65;max-width:560px;margin-top:5px">Ethiopia → Kenya. 1,300 km proven route via the Moyale border crossing. Addis Ababa station active. Full build-out planned for 2026.</p>
+        </div>
+        <span class="badge tested" style="flex-shrink:0">Tested</span>
+      </div>
+      <div class="corr-stats">
+        <div class="cs" style="border-color:var(--solar-3)"><div class="n" style="color:var(--solar-3)">1,300<span style="font-size:12px;color:rgba(241,161,32,.45)">km</span></div><div class="l">Route Length</div></div>
+        <div class="cs" style="border-color:var(--solar-3)"><div class="n" style="color:var(--solar-3)">9</div><div class="l">Total Stations</div></div>
+        <div class="cs" style="border-color:var(--solar-3)"><div class="n" style="color:var(--solar-3)">1</div><div class="l">Currently Active</div></div>
+        <div class="cs" style="border-color:var(--solar-3)"><div class="n" style="color:var(--solar-3)">2026</div><div class="l">Build-out Target</div></div>
+        <div class="cs" style="border-color:var(--solar-3)"><div class="n" style="color:var(--solar-3)">ET + KE</div><div class="l">Countries</div></div>
+      </div>
+      <div class="route-row">
+        <span class="r-dot" style="border-color:var(--solar-3)"></span><span>Addis Ababa</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--solar-3) 0 4px,transparent 4px 8px)"></div><span>Adama</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--solar-3) 0 4px,transparent 4px 8px)"></div><span>Hawassa</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--solar-3) 0 4px,transparent 4px 8px)"></div><span>Yabelo</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--solar-3) 0 4px,transparent 4px 8px)"></div><span>Moyale</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--solar-3) 0 4px,transparent 4px 8px)"></div><span>Marsabit</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--solar-3) 0 4px,transparent 4px 8px)"></div><span>Isiolo</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--solar-3) 0 4px,transparent 4px 8px)"></div><span>Nanyuki</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--solar-3) 0 4px,transparent 4px 8px)"></div><span style="color:var(--voltage-3)">Nairobi</span>
+      </div>
+      <table class="impl-table" style="margin-top:20px">
+        <thead><tr><th>Station</th><th>Country</th><th>Status</th><th>Capacity</th><th>Progress</th></tr></thead>
+        <tbody>
+          <tr><td><div class="station-name" style="color:var(--solar-3)">Addis Ababa</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">Route origin</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Ethiopia</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--solar-3);font-size:12px;font-weight:700">120kW</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
+          <tr><td><div class="station-name">Adama</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Ethiopia</td><td><span class="badge planned">Planned</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
+          <tr><td><div class="station-name">Hawassa</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Ethiopia</td><td><span class="badge planned">Planned</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
+          <tr><td><div class="station-name">Yabelo</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Ethiopia</td><td><span class="badge planned">Planned</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
+          <tr><td><div class="station-name">Moyale</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">ET/KE border</td><td><span class="badge planned">Planned</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
+          <tr><td><div class="station-name">Marsabit</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge planned">Planned</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
+          <tr><td><div class="station-name">Isiolo</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge planned">Planned</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
+          <tr><td><div class="station-name">Nanyuki</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge planned">Planned</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
+          <tr><td><div class="station-name">NBO Truck Park</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge planned">Planned</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div><!-- end corridors -->
+
+
+<!-- ════════════════ ARCHITECTURE ════════════════ -->
+<div id="architecture" class="section">
+  <div style="padding:56px 60px" class="section-pad">
+
+    <!-- TOP: Understanding the Two Investment Vehicles -->
+    <div style="margin-bottom:64px;padding:44px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07)">
+      <div style="margin-bottom:36px">
+        <div class="sh" style="margin-bottom:0">
+          <div class="sub">Investment Framework</div>
+          <div class="title">Understanding the <span class="accent">Two Investment Vehicles</span></div>
+          <div class="desc">Kabisa offers two distinct paths to invest. The table below compares them side by side to help you choose the right vehicle for your portfolio strategy.</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:28px" id="compare-grid">
+        <!-- TopCo -->
+        <div style="background:rgba(255,212,0,.05);border:1px solid rgba(255,212,0,.2);padding:34px">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:22px;margin-bottom:6px;color:var(--solar)">TopCo Co-Investment</div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.32);margin-bottom:22px">Equity · SAFE · Broad Platform</div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;gap:14px"><div style="width:3px;background:var(--solar);flex-shrink:0;margin-top:4px"></div><div><div style="font-size:11px;font-weight:700;margin-bottom:2px;color:rgba(255,255,255,.75)">What you own</div><div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.6">Equity in Kabisa TopCo — the ultimate parent of all Hubs and Corridors entities across every market.</div></div></div>
+            <div style="display:flex;gap:14px"><div style="width:3px;background:var(--solar);flex-shrink:0;margin-top:4px"></div><div><div style="font-size:11px;font-weight:700;margin-bottom:2px;color:rgba(255,255,255,.75)">Instrument</div><div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.6">SAFE note — converts at 20% discount to next priced round (Series A). No maturity, no interest.</div></div></div>
+            <div style="display:flex;gap:14px"><div style="width:3px;background:var(--solar);flex-shrink:0;margin-top:4px"></div><div><div style="font-size:11px;font-weight:700;margin-bottom:2px;color:rgba(255,255,255,.75)">Returns profile</div><div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.6">Platform equity upside on full exit or IPO. Higher risk, higher potential return. No fixed coupon.</div></div></div>
+            <div style="display:flex;gap:14px"><div style="width:3px;background:var(--solar);flex-shrink:0;margin-top:4px"></div><div><div style="font-size:11px;font-weight:700;margin-bottom:2px;color:rgba(255,255,255,.75)">Best suited for</div><div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.6">VC funds, angel investors, and growth equity investors comfortable with early-stage equity risk.</div></div></div>
+            <div style="display:flex;gap:14px"><div style="width:3px;background:var(--solar);flex-shrink:0;margin-top:4px"></div><div><div style="font-size:11px;font-weight:700;margin-bottom:2px;color:rgba(255,255,255,.75)">Minimum</div><div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.6">$250,000 per investor</div></div></div>
+          </div>
+          <button class="btn-primary" style="margin-top:20px;clip-path:none;font-size:11px;padding:9px 16px" onclick="showTab('dataroom')">View SAFE Documents in Data Room →</button>
+        </div>
+        <!-- SPV -->
+        <div style="background:rgba(14,21,154,.1);border:1px solid rgba(69,97,222,.28);padding:34px">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:22px;margin-bottom:6px;color:var(--voltage-3)">Corridors &amp; SPV Investment</div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.32);margin-bottom:22px">Debt or Equity · Asset-Backed · Country SPVs</div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;gap:14px"><div style="width:3px;background:var(--voltage-3);flex-shrink:0;margin-top:4px"></div><div><div style="font-size:11px;font-weight:700;margin-bottom:2px;color:rgba(255,255,255,.75)">What you own</div><div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.6">Debt or equity stake in a country SPV (Rwanda, Kenya, Tanzania, Uganda) — each held under Kabisa Corridors Ltd.</div></div></div>
+            <div style="display:flex;gap:14px"><div style="width:3px;background:var(--voltage-3);flex-shrink:0;margin-top:4px"></div><div><div style="font-size:11px;font-weight:700;margin-bottom:2px;color:rgba(255,255,255,.75)">Instrument</div><div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.6">Senior secured debt (fixed coupon, asset-backed) or SPV equity. Debt is senior to equity in repayment.</div></div></div>
+            <div style="display:flex;gap:14px"><div style="width:3px;background:var(--voltage-3);flex-shrink:0;margin-top:4px"></div><div><div style="font-size:11px;font-weight:700;margin-bottom:2px;color:rgba(255,255,255,.75)">Returns profile</div><div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.6">Debt investors receive a fixed coupon backed by infrastructure assets. Equity investors share in country-level upside.</div></div></div>
+            <div style="display:flex;gap:14px"><div style="width:3px;background:var(--voltage-3);flex-shrink:0;margin-top:4px"></div><div><div style="font-size:11px;font-weight:700;margin-bottom:2px;color:rgba(255,255,255,.75)">Best suited for</div><div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.6">Infrastructure funds, DFIs, family offices, and impact investors seeking asset-backed exposure.</div></div></div>
+            <div style="display:flex;gap:14px"><div style="width:3px;background:var(--voltage-3);flex-shrink:0;margin-top:4px"></div><div><div style="font-size:11px;font-weight:700;margin-bottom:2px;color:rgba(255,255,255,.75)">Minimum</div><div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.6">$50,000 debt / $25,000 equity</div></div></div>
+          </div>
+          <button class="btn-primary" style="margin-top:20px;clip-path:none;background:var(--voltage-2);color:#fff;font-size:11px;padding:9px 16px" onclick="showTab('dataroom')">View SPV Term Sheets in Data Room →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CORPORATE STRUCTURE DIAGRAM -->
+    <div class="sh">
+      <div class="sub">Corporate Structure</div>
+      <div class="title">Investment <span class="accent">Architecture</span></div>
+      <div class="desc">Two parallel Mauritius holding companies — <strong style="color:var(--solar)">Kabisa Corridors Ltd</strong> for infrastructure SPVs, and <strong style="color:var(--voltage-3)">Kabisa Hubs Ltd</strong> for city OpCos. Investors participate proportionally through either vehicle.</div>
+    </div>
+
+    <div class="arch-layout">
+      <div class="tree-col">
+        <div style="width:100%;max-width:560px">
+          <div class="e-box topco">
+            <div class="e-name">Kabisa TopCo</div>
+            <div class="e-detail">Ultimate Parent · SAFE Round Open</div>
+            <div class="e-raised"><span>SAFE Target</span><strong>$6M</strong></div>
+            <div style="margin:4px 0 1px;display:flex;justify-content:space-between;font-size:9px;color:rgba(0,0,0,.4)"><span>$1.2M committed</span><span>20% of $6M</span></div>
+            <div class="e-bar"><div class="e-fill" data-w="20"></div></div>
+            <div style="font-size:9px;color:rgba(0,0,0,.45);margin-top:3px">Seed SAFE · 20% discount to next priced round · Min. $250K</div>
+          </div>
+        </div>
+        <div class="conn-v"></div>
+        <div style="display:flex;gap:3px;width:100%;max-width:560px">
+          <!-- Corridors Ltd -->
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center">
+            <div class="e-box mauritius" style="width:100%">
+              <div class="e-name" style="font-size:14px">Kabisa Corridors Ltd</div>
+              <div class="e-detail">Mauritius · Corridor HoldCo</div>
+              <div style="margin-top:6px;display:inline-block;font-size:9px;background:rgba(255,212,0,.1);border:1px solid rgba(255,212,0,.22);color:var(--solar);padding:2px 7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase">Holding Company</div>
+              <div style="margin-top:10px;font-size:10px;color:rgba(255,255,255,.38);line-height:1.5">Parent holding company for all country-level corridor SPVs across East Africa.</div>
+            </div>
+            <div class="conn-v"></div>
+            <div style="font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:rgba(255,212,0,.45);margin-bottom:10px;font-weight:700">Country SPVs</div>
+            <div style="display:flex;flex-direction:column;gap:7px;width:100%">
+              <!-- Rwanda -->
+              <div class="spv-card" style="min-width:unset;max-width:unset">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="display:flex;align-items:center;gap:7px"><span class="spv-flag">🇷🇼</span><span class="spv-country" style="font-size:14px">Rwanda SPV</span></div><span style="font-size:9px;background:rgba(0,200,122,.1);color:var(--green);padding:2px 6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Raising $2M</span></div>
+                <div class="spv-metrics" style="margin-bottom:10px"><div class="spv-m"><span class="lbl">Stations</span><span class="val" style="color:var(--solar)">5</span></div><div class="spv-m"><span class="lbl">Rev / mo</span><span class="val" style="color:var(--green)">$51K</span></div></div>
+                <div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px"><span>Debt ($1M target)</span><span style="color:var(--green);font-weight:700">100% committed ✓</span></div><div class="prog-track"><div class="prog-fill" data-w="100" style="background:var(--voltage-3)"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px"><span>Equity ($1M target)</span><span style="color:var(--solar);font-weight:700">$200K committed</span></div><div class="prog-track"><div class="prog-fill" data-w="20"></div></div></div>
+              </div>
+              <!-- Kenya -->
+              <div class="spv-card" style="min-width:unset;max-width:unset">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="display:flex;align-items:center;gap:7px"><span class="spv-flag">🇰🇪</span><span class="spv-country" style="font-size:14px">Kenya SPV</span></div><span style="font-size:9px;background:rgba(69,97,222,.1);color:var(--voltage-3);padding:2px 6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Raising $2M</span></div>
+                <div class="spv-metrics" style="margin-bottom:10px"><div class="spv-m"><span class="lbl">Active Points</span><span class="val" style="color:var(--solar)">2 DC</span></div><div class="spv-m"><span class="lbl">EVs Served</span><span class="val">140+</span></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px"><span>Equity (indicative)</span><span style="color:rgba(255,255,255,.3);font-weight:700">In Structuring</span></div><div class="prog-track"><div class="prog-fill" data-w="10"></div></div></div>
+              </div>
+              <!-- Tanzania -->
+              <div class="spv-card" style="min-width:unset;max-width:unset">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="display:flex;align-items:center;gap:7px"><span class="spv-flag">🇹🇿</span><span class="spv-country" style="font-size:14px">Tanzania SPV</span></div><span style="font-size:9px;background:rgba(255,212,0,.08);color:var(--solar);padding:2px 6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Raising $2.5M</span></div>
+                <div class="spv-metrics" style="margin-bottom:10px"><div class="spv-m"><span class="lbl">Stations</span><span class="val" style="color:var(--solar)">7</span></div><div class="spv-m"><span class="lbl">Rev / mo</span><span class="val">~$2K</span></div></div>
+                <div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px"><span>Debt ($2.5M target)</span><span style="color:var(--voltage-3);font-weight:700">$1M committed</span></div><div class="prog-track"><div class="prog-fill" data-w="40" style="background:var(--voltage-3)"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px"><span>Equity</span><span style="color:rgba(255,255,255,.3);font-weight:700">Open</span></div><div class="prog-track"><div class="prog-fill" data-w="1"></div></div></div>
+              </div>
+              <!-- Uganda -->
+              <div class="spv-card" style="min-width:unset;max-width:unset">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="display:flex;align-items:center;gap:7px"><span class="spv-flag">🇺🇬</span><span class="spv-country" style="font-size:14px">Uganda SPV</span></div><span style="font-size:9px;background:rgba(255,212,0,.08);color:rgba(255,212,0,.6);padding:2px 6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Raising $2M</span></div>
+                <div class="spv-metrics" style="margin-bottom:10px"><div class="spv-m"><span class="lbl">Stations Planned</span><span class="val" style="color:rgba(255,255,255,.45)">4</span></div><div class="spv-m"><span class="lbl">Rev / mo</span><span class="val" style="color:rgba(255,255,255,.4)">—</span></div></div>
+                <div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px"><span>Debt</span><span style="color:var(--voltage-3);font-weight:700">$500K committed</span></div><div class="prog-track"><div class="prog-fill" data-w="25" style="background:var(--voltage-3)"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px"><span>Equity</span><span style="color:rgba(255,255,255,.3);font-weight:700">Open</span></div><div class="prog-track"><div class="prog-fill" data-w="0"></div></div></div>
+              </div>
+              <div style="background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.18);padding:8px 14px;font-size:11px;margin-top:4px"><span style="color:rgba(255,255,255,.45)">All country SPV investors participate directly in their chosen SPV</span></div>
+            </div>
+          </div>
+
+          <!-- Hubs Ltd -->
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center">
+            <div class="e-box mauritius-hubs" style="width:100%">
+              <div class="e-name" style="font-size:14px">Kabisa Hubs Ltd</div>
+              <div class="e-detail">Mauritius · Hubs HoldCo</div>
+              <div style="margin-top:6px;display:inline-block;font-size:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.4);padding:2px 7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase">Not Raising for HoldCo</div>
+            </div>
+            <div class="conn-v blue"></div>
+            <div style="font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:rgba(69,97,222,.65);margin-bottom:10px;font-weight:700">City Entities</div>
+            <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+              <div class="e-box opco" style="width:100%;margin:0"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">🇷🇼</span><div><div class="e-name" style="font-size:13px">Kabisa Rwanda</div><div class="e-detail">Core Market · Operational</div></div></div><div style="margin-top:8px;display:flex;gap:16px"><div style="font-size:10px;color:rgba(255,255,255,.4)">Cars Served<strong style="color:var(--solar);display:block;font-size:13px">1,900+</strong></div><div style="font-size:10px;color:rgba(255,255,255,.4)">Rev/mo<strong style="color:var(--green);display:block;font-size:13px">$51K</strong></div></div></div>
+              <div class="e-box opco" style="width:100%;margin:0"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">🇰🇪</span><div><div class="e-name" style="font-size:13px">Kabisa Kenya</div><div class="e-detail">Launched 2025 · Scaling</div></div></div><div style="margin-top:8px;display:flex;gap:16px"><div style="font-size:10px;color:rgba(255,255,255,.4)">Cars Served<strong style="color:var(--solar);display:block;font-size:13px">140+</strong></div></div></div>
+              <div class="e-box opco" style="width:100%;margin:0;opacity:.48"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">🇹🇿</span><div><div class="e-name" style="font-size:13px">Kabisa Tanzania</div><div class="e-detail">2026 · Planned</div></div></div></div>
+              <div class="e-box opco" style="width:100%;margin:0;opacity:.48"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">🇺🇬</span><div><div class="e-name" style="font-size:13px">Kabisa Uganda</div><div class="e-detail">2026 · Planned</div></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right explainer panel -->
+      <div>
+        <h3 style="font-family:'Fjalla One',sans-serif;font-size:22px;margin-bottom:14px">How the Structure Works</h3>
+        <p style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:20px">Kabisa TopCo sits above two parallel holding companies in Mauritius. Investors choose which vehicle to enter through.</p>
+        <div style="border:1px solid rgba(255,212,0,.22);background:rgba(255,212,0,.04);padding:18px 20px;margin-bottom:14px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:22px;height:22px;border-radius:50%;background:var(--solar);color:var(--black);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0">1</div><div style="font-family:'Fjalla One',sans-serif;font-size:16px">Invest in Kabisa TopCo — Seed SAFE</div></div>
+          <p style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.6">SAFE at 20% discount to Series A. Converts to equity in the full platform across all markets.</p>
+        </div>
+        <div style="border:1px solid rgba(69,97,222,.28);background:rgba(14,21,154,.1);padding:18px 20px;margin-bottom:20px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:22px;height:22px;border-radius:50%;background:var(--voltage-2);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0">2</div><div style="font-family:'Fjalla One',sans-serif;font-size:16px">Invest via Kabisa Corridors — Country SPV</div></div>
+          <p style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:12px">Invest directly into a specific country charging corridor via its SPV. Kabisa Corridors Ltd serves as the holding company above all country SPVs.</p>
+        </div>
+        <div style="padding:14px 16px;background:rgba(255,212,0,.05);border:1px solid rgba(255,212,0,.14)">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--solar);margin-bottom:7px">Access full terms + financial models</div>
+          <button class="btn-primary" style="clip-path:none;font-size:11px;padding:9px 18px" onclick="showTab('dataroom')">Open Data Room →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- end architecture -->
+
+
+<!-- ════════════════ FAQ ════════════════ -->
+<div id="faq" class="section">
+  <div style="padding:56px 60px" class="section-pad">
+    <div class="sh">
+      <div class="sub">Investor Questions</div>
+      <div class="title">Frequently <span class="accent">Asked Questions</span></div>
+      <div class="desc">Everything you need to know before investing. Can't find what you're looking for? Email <a href="mailto:invest@kabisa.africa" style="color:var(--solar)">invest@kabisa.africa</a></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:40px;margin-top:44px" id="faq-layout">
+      <div style="position:sticky;top:80px;align-self:start">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.3);margin-bottom:12px">Categories</div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div class="faq-cat" data-cat="overview" onclick="filterFAQ('overview')" style="padding:8px 12px;font-size:12px;font-weight:600;border-left:3px solid var(--solar);background:rgba(255,212,0,.06);color:var(--solar)">Overview &amp; Company</div>
+          <div class="faq-cat" data-cat="investment" onclick="filterFAQ('investment')" style="padding:8px 12px;font-size:12px;font-weight:600;border-left:3px solid transparent;color:rgba(255,255,255,.45)">Investment Structure</div>
+          <div class="faq-cat" data-cat="topco" onclick="filterFAQ('topco')" style="padding:8px 12px;font-size:12px;font-weight:600;border-left:3px solid transparent;color:rgba(255,255,255,.45)">TopCo / SAFE</div>
+          <div class="faq-cat" data-cat="spv" onclick="filterFAQ('spv')" style="padding:8px 12px;font-size:12px;font-weight:600;border-left:3px solid transparent;color:rgba(255,255,255,.45)">Corridors &amp; SPVs</div>
+          <div class="faq-cat" data-cat="returns" onclick="filterFAQ('returns')" style="padding:8px 12px;font-size:12px;font-weight:600;border-left:3px solid transparent;color:rgba(255,255,255,.45)">Returns &amp; Financials</div>
+          <div class="faq-cat" data-cat="operations" onclick="filterFAQ('operations')" style="padding:8px 12px;font-size:12px;font-weight:600;border-left:3px solid transparent;color:rgba(255,255,255,.45)">Operations</div>
+          <div class="faq-cat" data-cat="process" onclick="filterFAQ('process')" style="padding:8px 12px;font-size:12px;font-weight:600;border-left:3px solid transparent;color:rgba(255,255,255,.45)">How to Invest</div>
+        </div>
+      </div>
+
+      <div id="faq-items">
+        <div class="faq-group" data-cat="overview">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:18px;color:var(--solar);margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid rgba(255,212,0,.15)">Overview &amp; Company</div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What is Kabisa? <span class="faq-arr">+</span></div><div class="faq-a">Kabisa is East Africa's leading EV charging infrastructure company, building the backbone for zero-emission freight and mobility. We operate charging hubs and corridor stations across Rwanda, Kenya, Tanzania and Uganda, with expansion into Ethiopia and DRC underway.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What stage is Kabisa at? <span class="faq-arr">+</span></div><div class="faq-a">Kabisa is post-traction and pre-Series A. We have 5 operational stations in Rwanda, 1,900+ EVs on our network, 300+ EVs sold, and $51K/month in charging revenue as of December 2025. We've completed 12 full EV truck corridor trips across borders.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What problem does Kabisa solve? <span class="faq-arr">+</span></div><div class="faq-a">East Africa has rapidly growing EV adoption (led by Rwanda's government mandate) but zero cross-border charging infrastructure. Diesel trucks dominate freight. Kabisa replaces that with a network of fast-chargers along the continent's most important trade corridors.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Who are Kabisa's customers? <span class="faq-arr">+</span></div><div class="faq-a">150+ commercial customers including the US Embassy, international NGOs, logistics operators and corporate fleets. Revenue comes from charging sessions (pay-per-kWh), EV sales commissions, fleet service contracts, and B2B charging subscriptions.</div></div>
+        </div>
+        <div class="faq-group" data-cat="investment" style="display:none">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:18px;color:var(--solar);margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid rgba(255,212,0,.15)">Investment Structure</div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What are the two ways to invest? <span class="faq-arr">+</span></div><div class="faq-a"><strong style="color:var(--solar)">Path 1 — TopCo SAFE:</strong> Invest into Kabisa TopCo via a SAFE with 20% discount to Series A. Broad platform exposure across all Hubs and Corridors markets. Min. $250K.<br><br><strong style="color:var(--voltage-3)">Path 2 — Corridors SPV:</strong> Invest directly into a country SPV (Rwanda, Kenya, Tanzania, Uganda) held under Kabisa Corridors Ltd. Structured as senior secured debt or equity, with capital deployed into charging infrastructure.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Where is Kabisa incorporated? <span class="faq-arr">+</span></div><div class="faq-a">Kabisa has a two-tier Mauritius holding structure. TopCo sits above two parallel vehicles: Kabisa Corridors Ltd (corridor SPVs) and Kabisa Hubs Ltd (city OpCos). Standard African infrastructure investment structure.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Is there a minimum investment? <span class="faq-arr">+</span></div><div class="faq-a">TopCo SAFE minimum is $250,000. For SPVs: $50,000 for debt tranches, $25,000 for equity. Contact us to discuss your preferred structure.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Do I need to sign an NDA? <span class="faq-arr">+</span></div><div class="faq-a">As a credentialed investor with portal access you already have access to the Data Room. Full term sheets, financial models and legal documents are available in the Data Room tab. An NDA may be required before final term sheet execution.</div></div>
+        </div>
+        <div class="faq-group" data-cat="topco" style="display:none">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:18px;color:var(--solar);margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid rgba(255,212,0,.15)">TopCo / SAFE</div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">How does the SAFE work? <span class="faq-arr">+</span></div><div class="faq-a">A SAFE (Simple Agreement for Future Equity) converts to equity at a 20% discount to Kabisa's next priced round. No maturity date, no interest. Converts upon a priced equity round, liquidity event, or dissolution. Full terms in the Data Room.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What is the valuation cap? <span class="faq-arr">+</span></div><div class="faq-a">The full SAFE terms including valuation cap are in the Data Room. Open the Data Room tab to access the term sheet directly.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">How much has been committed? <span class="faq-arr">+</span></div><div class="faq-a">$1.2M committed against a $6M target as of March 2026. The round is open.</div></div>
+        </div>
+        <div class="faq-group" data-cat="spv" style="display:none">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:18px;color:var(--solar);margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid rgba(255,212,0,.15)">Corridors &amp; SPV Investment</div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What is an SPV investment? <span class="faq-arr">+</span></div><div class="faq-a">Each country (Rwanda, Kenya, Tanzania, Uganda) has a dedicated SPV holding charging infrastructure assets. Investors participate as debt holders (senior, secured) or equity holders within a given country SPV.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">How does capital flow into the SPV? <span class="faq-arr">+</span></div><div class="faq-a">Capital invested into a country SPV is deployed directly into physical charging infrastructure — station equipment, grid connections, land leases, and installation. Kabisa Corridors Ltd acts as the holding company above each country SPV. Full deployment details and use-of-proceeds breakdowns are in the Data Room.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Which country SPVs are raising? <span class="faq-arr">+</span></div><div class="faq-a"><strong style="color:var(--solar)">Rwanda SPV</strong> — $2M raise ($1M debt fully committed, $200K equity committed). Active revenue.<br><br><strong style="color:var(--voltage-3)">Tanzania SPV</strong> — $2.5M raise ($1M debt committed). 7 stations, scaling.<br><br><strong>Kenya SPV</strong> — $2M indicative. Term sheet in structuring.<br><br><strong>Uganda SPV</strong> — $2M early stage. $500K debt committed.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Is debt investment asset-backed? <span class="faq-arr">+</span></div><div class="faq-a">Yes. Debt investments are secured against physical charging infrastructure assets within each SPV. Full security terms, priority waterfall and collateral details are in the Data Room.</div></div>
+        </div>
+        <div class="faq-group" data-cat="returns" style="display:none">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:18px;color:var(--solar);margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid rgba(255,212,0,.15)">Returns &amp; Financials</div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What returns can I expect? <span class="faq-arr">+</span></div><div class="faq-a">Full financial projections are in the Data Room. Rwanda is the most mature market: $51K/month growing at 11.4× year-on-year. Multi-market profitability projected by 2027 as corridor stations build out. Debt instruments have negotiated fixed returns; equity is subject to business performance.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What is Kabisa's revenue model? <span class="faq-arr">+</span></div><div class="faq-a">Four streams: (1) Pay-per-kWh charging fees, (2) EV sales commissions through Hub partnerships, (3) Fleet service and maintenance contracts, (4) B2B charging subscriptions for corporate fleets.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Has Kabisa been audited? <span class="faq-arr">+</span></div><div class="faq-a">Audited accounts for Rwanda OpCo are in the Data Room. Tanzania and Uganda entities are being audited for FY2025. Management accounts are available for all entities.</div></div>
+        </div>
+        <div class="faq-group" data-cat="operations" style="display:none">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:18px;color:var(--solar);margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid rgba(255,212,0,.15)">Operations</div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">How many stations are operational? <span class="faq-arr">+</span></div><div class="faq-a">5 active stations in Rwanda (including East Africa's first 240kW fast charger), 2 active stations in Kenya (mobile battery), and 4 active stations in Tanzania (Dar, Dodoma, Singida, Kahama) and 1 in Ethiopia. 12+ stations under development or with lease agreements in place.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What corridors have been tested? <span class="faq-arr">+</span></div><div class="faq-a">(1) <strong>Dar–Kigali (Central)</strong> — 12 full EV truck trips, 1,400km. (2) <strong>Kigali–Mombasa (Northern)</strong> — 1,850km tested. (3) <strong>Addis–Nairobi</strong> — 1,300km tested. All corridors anchor in Kigali.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What EV brands does Kabisa support? <span class="faq-arr">+</span></div><div class="faq-a">Multi-standard stations supporting CCS2, CHAdeMO, and Type 2 connectors — covering BYD, JAC, King Long, and other major brands operating in East Africa.</div></div>
+        </div>
+        <div class="faq-group" data-cat="process" style="display:none">
+          <div style="font-family:'Fjalla One',sans-serif;font-size:18px;color:var(--solar);margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid rgba(255,212,0,.15)">How to Invest</div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What is the investment process? <span class="faq-arr">+</span></div><div class="faq-a">1. <strong>Review materials</strong> — term sheets, financial model, legal structure in Data Room.<br>2. <strong>Intro call</strong> — 30-min call with Kabisa's investment team.<br>3. <strong>Term sheet</strong> — agree terms for your chosen path.<br>4. <strong>Legal &amp; KYC</strong> — standard AML/KYC via Mauritius legal counsel.<br>5. <strong>Wire &amp; close</strong> — funds transfer and documentation.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">How long does the process take? <span class="faq-arr">+</span></div><div class="faq-a">From first review to wire, most investors close in 3–6 weeks.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Who do I contact to start? <span class="faq-arr">+</span></div><div class="faq-a">Email <strong>invest@kabisa.africa</strong> with "Investor Inquiry" in the subject. Our team responds within 24 hours. Or go directly to the Data Room tab to review all documents.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- end faq -->
+
+
+<!-- ════════════════ DATA ROOM ════════════════ -->
+<div id="dataroom" class="section">
+  <div style="padding:56px 60px" class="section-pad">
+    <div class="sh">
+      <div class="sub">Investor Documents</div>
+      <div class="title">Data <span class="accent">Room</span></div>
+      <div class="desc">All documents are available below. Click any document to download or view.</div>
+    </div>
+
+    <!-- FOLDER TABS -->
+    <div style="border-bottom:1px solid rgba(255,255,255,.08);display:flex;flex-wrap:wrap;margin-bottom:28px">
+      <div class="dr-tab active" data-folder="f01" onclick="switchDRFolder('f01')">01 · Company Overview</div>
+      <div class="dr-tab" data-folder="f02" onclick="switchDRFolder('f02')">02 · Investment Memos</div>
+      <div class="dr-tab" data-folder="f03" onclick="switchDRFolder('f03')">03 · Financials</div>
+      <div class="dr-tab" data-folder="f04" onclick="switchDRFolder('f04')">04 · Legal &amp; Term Sheets</div>
+      <div class="dr-tab" data-folder="f05" onclick="switchDRFolder('f05')">05 · Operations</div>
+      <div class="dr-tab" data-folder="f06" onclick="switchDRFolder('f06')">06 · ESG &amp; Impact</div>
+    </div>
+
+    <!-- 01 Company Overview -->
+    <div class="dr-folder active" id="f01">
+      <div class="dr-folder-header">
+        <div style="background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.2);color:var(--solar);padding:3px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Confidential</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.35)">For credentialed investors with portal access</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📊</div><div class="dr-doc-body"><div class="dr-doc-title">Investor Pitch Deck</div><div class="dr-doc-meta">PDF · 28 slides · Mar 2026</div><div class="dr-doc-desc">Full company overview, market thesis, traction, team, and ask. Best starting point for any investor.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📄</div><div class="dr-doc-body"><div class="dr-doc-title">Kabisa One-Pager</div><div class="dr-doc-meta">PDF · 2 pages · Feb 2026</div><div class="dr-doc-desc">Snapshot of the business: traction, structure, investment ask and contact.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🏗️</div><div class="dr-doc-body"><div class="dr-doc-title">Corporate Structure Diagram</div><div class="dr-doc-meta">PDF · 3 pages</div><div class="dr-doc-desc">Visual overview of TopCo, Corridors Ltd, Hubs Ltd and all country-level entities.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">👥</div><div class="dr-doc-body"><div class="dr-doc-title">Team &amp; Advisors</div><div class="dr-doc-meta">PDF · 4 pages</div><div class="dr-doc-desc">Full team bios, advisory board, and key operational partners across East Africa.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📰</div><div class="dr-doc-body"><div class="dr-doc-title">FY2025 Investor Update</div><div class="dr-doc-meta">PDF · 12 pages · Dec 2025</div><div class="dr-doc-desc">Full year performance report: revenue, network growth, corridor milestones, and 2026 priorities.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🗺️</div><div class="dr-doc-body"><div class="dr-doc-title">Network Map &amp; Station List</div><div class="dr-doc-meta">PDF · 5 pages</div><div class="dr-doc-desc">All active, development, and planned stations with coordinates, capacity, and status.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+      </div>
+    </div>
+
+    <!-- 02 Investment Memos -->
+    <div class="dr-folder" id="f02">
+      <div class="dr-folder-header">
+        <div style="background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.2);color:var(--solar);padding:3px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Confidential</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.35)">Investment memoranda for qualified investors with portal access</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📋</div><div class="dr-doc-body"><div class="dr-doc-title">TopCo SAFE — Investment Memo</div><div class="dr-doc-meta">PDF · 18 pages</div><div class="dr-doc-desc">Full IM for the TopCo SAFE round. Cap table, valuation, terms, and investor rights.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📋</div><div class="dr-doc-body"><div class="dr-doc-title">Corridors Ltd — SPV Memo</div><div class="dr-doc-meta">PDF · 22 pages</div><div class="dr-doc-desc">IM for Kabisa Corridors Ltd. HoldCo structure, SPV mechanics, returns waterfall.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🇷🇼</div><div class="dr-doc-body"><div class="dr-doc-title">Rwanda SPV — Investment Brief</div><div class="dr-doc-meta">PDF · 14 pages</div><div class="dr-doc-desc">Station-level revenue data, debt/equity split, security package. Debt fully committed.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🇰🇪</div><div class="dr-doc-body"><div class="dr-doc-title">Kenya SPV — Investment Brief</div><div class="dr-doc-meta">PDF · 10 pages</div><div class="dr-doc-desc">Nairobi Hub metrics, scaling plan, and SPV structure for Kenya market entry.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🇹🇿</div><div class="dr-doc-body"><div class="dr-doc-title">Tanzania SPV — Investment Brief</div><div class="dr-doc-meta">PDF · 12 pages</div><div class="dr-doc-desc">Central Corridor buildout, existing traction (12 trips), and 2026 station plan.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🇺🇬</div><div class="dr-doc-body"><div class="dr-doc-title">Uganda SPV — Investment Brief</div><div class="dr-doc-meta">PDF · 10 pages</div><div class="dr-doc-desc">Uganda market entry via Northern Corridor. Station plan and early commitments.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🗺️</div><div class="dr-doc-body"><div class="dr-doc-title">Kabisa 2026–2028 Strategy</div><div class="dr-doc-meta">PDF · 16 pages</div><div class="dr-doc-desc">Multi-year expansion roadmap, market prioritisation, and capital deployment plan.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+      </div>
+    </div>
+
+    <!-- 03 Financials -->
+    <div class="dr-folder" id="f03">
+      <div class="dr-folder-header">
+        <div style="background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.2);color:var(--solar);padding:3px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Confidential</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.35)">Financial models and audited accounts for qualified investors</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">💹</div><div class="dr-doc-body"><div class="dr-doc-title">3-Year Financial Model</div><div class="dr-doc-meta">Excel · Multi-tab · Q1 2026</div><div class="dr-doc-desc">Bottom-up model covering all markets, stations, revenue streams, EBITDA, and returns by vehicle.</div></div><div class="dr-doc-action">↓ XLSX</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📒</div><div class="dr-doc-body"><div class="dr-doc-title">Rwanda — Audited Accounts FY2024</div><div class="dr-doc-meta">PDF · Certified auditor</div><div class="dr-doc-desc">Audited P&amp;L, balance sheet, and cash flow for Rwanda OpCo FY2024.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📒</div><div class="dr-doc-body"><div class="dr-doc-title">Management Accounts — All Markets</div><div class="dr-doc-meta">PDF · Q4 2025 · Unaudited</div><div class="dr-doc-desc">Consolidated management accounts: Rwanda, Tanzania, Kenya. Monthly revenue, cost, margin detail.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📡</div><div class="dr-doc-body"><div class="dr-doc-title">Live KPI Dashboard Access</div><div class="dr-doc-meta">Web · Real-time</div><div class="dr-doc-desc">Station-by-station sessions, kWh, revenue and uptime. Updated daily from the network.</div></div><div class="dr-doc-action">→ Open</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📈</div><div class="dr-doc-body"><div class="dr-doc-title">Revenue Waterfall &amp; Cap Table</div><div class="dr-doc-meta">Excel · Confidential</div><div class="dr-doc-desc">Investor returns waterfall by vehicle, pre/post-round cap table, dilution analysis.</div></div><div class="dr-doc-action">↓ XLSX</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🏦</div><div class="dr-doc-body"><div class="dr-doc-title">Use of Proceeds — All Vehicles</div><div class="dr-doc-meta">PDF · 4 pages</div><div class="dr-doc-desc">Breakdown of how capital raised under each vehicle will be deployed: CapEx, working capital, fees.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+      </div>
+    </div>
+
+    <!-- 04 Legal -->
+    <div class="dr-folder" id="f04">
+      <div class="dr-folder-header">
+        <div style="background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.2);color:var(--solar);padding:3px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Confidential</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.35)">Legal documentation and term sheets</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📝</div><div class="dr-doc-body"><div class="dr-doc-title">TopCo SAFE Agreement — Draft</div><div class="dr-doc-meta">PDF · Mauritius law</div><div class="dr-doc-desc">Draft SAFE note. Conversion mechanics, 20% discount, investor rights, and valuation cap.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📝</div><div class="dr-doc-body"><div class="dr-doc-title">Corridors SPV — Term Sheet</div><div class="dr-doc-meta">PDF · Draft · Confidential</div><div class="dr-doc-desc">Indicative term sheet for investment into Kabisa Corridors Ltd or country SPVs. Debt and equity variants.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🤝</div><div class="dr-doc-body"><div class="dr-doc-title">Shareholders Agreement — Framework</div><div class="dr-doc-meta">PDF · Draft</div><div class="dr-doc-desc">SHA framework: governance, information rights, tag/drag, exit provisions for SPV investors.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🏛️</div><div class="dr-doc-body"><div class="dr-doc-title">Mauritius Entity Certificates</div><div class="dr-doc-meta">PDF · Official documents</div><div class="dr-doc-desc">Certificate of incorporation, registered office, and GBL licence for TopCo and Corridors Ltd.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📜</div><div class="dr-doc-body"><div class="dr-doc-title">Rwanda OpCo Legal Pack</div><div class="dr-doc-meta">PDF · RDB certified</div><div class="dr-doc-desc">RDB incorporation, operating licences, and lease agreements for active stations.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🔐</div><div class="dr-doc-body"><div class="dr-doc-title">Security Package — Debt Instruments</div><div class="dr-doc-meta">PDF · Confidential</div><div class="dr-doc-desc">Security and collateral details for all debt instruments. Priority waterfall and enforcement rights.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+      </div>
+    </div>
+
+    <!-- 05 Operations -->
+    <div class="dr-folder" id="f05">
+      <div class="dr-folder-header">
+        <div style="background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.2);color:var(--solar);padding:3px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Confidential</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.35)">Operational data and site documentation</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">⚡</div><div class="dr-doc-body"><div class="dr-doc-title">Station Performance Data</div><div class="dr-doc-meta">Excel · All active stations · Dec 2025</div><div class="dr-doc-desc">Per-station: sessions, kWh dispensed, uptime, revenue, and monthly trends.</div></div><div class="dr-doc-action">↓ XLSX</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🚛</div><div class="dr-doc-body"><div class="dr-doc-title">Corridor Trip Logs</div><div class="dr-doc-meta">PDF · 12 verified trips</div><div class="dr-doc-desc">Documentation of 12 full EV truck trips on the Dar–Kigali Central Corridor including load and energy data.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🤝</div><div class="dr-doc-body"><div class="dr-doc-title">Customer &amp; Partner Agreements</div><div class="dr-doc-meta">PDF · Redacted</div><div class="dr-doc-desc">Redacted fleet operator agreements, OEM partnerships, and government MoUs.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🛠️</div><div class="dr-doc-body"><div class="dr-doc-title">Technical Specs — Charging Equipment</div><div class="dr-doc-meta">PDF · Per station type</div><div class="dr-doc-desc">Specs for 240kW, 120kW, and 40kW stations. OEM details, warranty, and service agreements.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📍</div><div class="dr-doc-body"><div class="dr-doc-title">Site Lease &amp; Land Agreements</div><div class="dr-doc-meta">PDF · All secured sites</div><div class="dr-doc-desc">Lease documentation for all stations with secured or active land rights.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📦</div><div class="dr-doc-body"><div class="dr-doc-title">CapEx &amp; Build Schedule</div><div class="dr-doc-meta">Excel · 2026 deployment plan</div><div class="dr-doc-desc">CapEx per station, procurement timeline, and 2026 build-out schedule across all corridors.</div></div><div class="dr-doc-action">↓ XLSX</div></a>
+      </div>
+    </div>
+
+    <!-- 06 ESG -->
+    <div class="dr-folder" id="f06">
+      <div class="dr-folder-header">
+        <div style="background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.2);color:var(--solar);padding:3px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Confidential</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.35)">ESG and impact documentation for credentialed investors</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🌱</div><div class="dr-doc-body"><div class="dr-doc-title">Carbon Offset Methodology</div><div class="dr-doc-meta">PDF · 8 pages</div><div class="dr-doc-desc">Carbon accounting for diesel displacement. 142 tCO₂ offset to date. Path to credit issuance.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">💚</div><div class="dr-doc-body"><div class="dr-doc-title">SDG Alignment Report</div><div class="dr-doc-meta">PDF · 10 pages · 2025</div><div class="dr-doc-desc">Impact mapped to UN SDGs: 7 (Clean Energy), 9 (Infrastructure), 13 (Climate Action).</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">⚡</div><div class="dr-doc-body"><div class="dr-doc-title">Energy Source Certification</div><div class="dr-doc-meta">PDF · Per country</div><div class="dr-doc-desc">Certification of 100% hydro and solar sourced electricity across all active Kabisa stations.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🌍</div><div class="dr-doc-body"><div class="dr-doc-title">DFI &amp; Development Finance Primer</div><div class="dr-doc-meta">PDF · 6 pages</div><div class="dr-doc-desc">Overview of active development finance conversations and Kabisa's eligibility for DFI debt instruments.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">👷</div><div class="dr-doc-body"><div class="dr-doc-title">Social Impact Data</div><div class="dr-doc-meta">PDF · 2025 annual</div><div class="dr-doc-desc">Jobs created, local supplier spend, female employment %, and community engagement across all markets.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+      </div>
+    </div>
+
+    <!-- Contact strip -->
+    <div style="margin-top:48px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px">
+      <div><div style="font-family:'Fjalla One',sans-serif;font-size:18px;margin-bottom:4px">Questions about these documents?</div><div style="font-size:13px;color:rgba(255,255,255,.42)">Our investment team responds within 24 hours.</div></div>
+      <a href="mailto:invest@kabisa.africa" style="display:inline-flex;align-items:center;gap:7px;padding:11px 22px;background:var(--solar);color:var(--black);text-decoration:none;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;transition:all .2s" onmouseover="this.style.background='var(--solar-2)'" onmouseout="this.style.background='var(--solar)'">✉ invest@kabisa.africa</a>
+    </div>
+
+  </div>
+</div><!-- end dataroom -->
+
+
+<footer style="border-top:1px solid rgba(255,255,255,.06);padding:28px 60px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+  <div>
+    <svg viewBox="0 0 2012 513" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;opacity:0.55">
+      <path d="M1421.22 434.169H1374.37L1404.79 381.505L1326.86 459.405H1373.71L1343.32 512.069L1421.22 434.169Z" fill="white"/>
+      <path d="M1348.83 406.104C1348.83 396.484 1341.03 388.676 1331.41 388.676C1321.79 388.676 1313.98 396.484 1313.98 406.104C1313.98 415.725 1321.79 423.533 1331.41 423.533C1341.03 423.533 1348.83 415.725 1348.83 406.104Z" fill="white"/>
+      <path d="M1416.68 470.021C1407.06 470.021 1399.25 477.829 1399.25 487.45C1399.25 497.071 1407.06 504.879 1416.68 504.879C1426.3 504.879 1434.11 497.071 1434.11 487.45C1434.11 477.829 1426.3 470.021 1416.68 470.021Z" fill="white"/>
+      <path d="M1281.29 394.591C1274.42 389.99 1266.23 387.7 1256.69 387.7C1247.15 387.7 1238.95 389.99 1232.03 394.591C1225.16 399.153 1219.88 405.805 1216.18 414.569C1212.51 423.334 1210.66 433.91 1210.66 446.339C1210.62 458.808 1212.43 469.464 1216.12 478.328C1219.82 487.192 1225.12 493.964 1231.97 498.645C1238.87 503.325 1247.11 505.676 1256.67 505.716C1266.23 505.716 1274.46 503.385 1281.33 498.704C1288.2 494.024 1293.46 487.251 1297.13 478.388C1300.83 469.524 1302.68 458.848 1302.68 446.339C1302.72 433.91 1300.89 423.334 1297.17 414.629C1293.46 405.865 1288.16 399.193 1281.25 394.591H1281.29ZM1272.35 475.898C1268.44 482.471 1263.25 485.738 1256.71 485.738C1252.37 485.738 1248.59 484.284 1245.36 481.395C1242.13 478.467 1239.62 474.085 1237.85 468.269C1236.1 462.413 1235.24 455.103 1235.24 446.339C1235.28 433.392 1237.25 423.672 1241.14 417.179C1245.04 410.685 1250.22 407.439 1256.71 407.439C1261.05 407.439 1264.82 408.893 1268.01 411.781C1271.23 414.669 1273.72 418.991 1275.46 424.748C1277.23 430.504 1278.12 437.695 1278.12 446.339C1278.16 459.465 1276.23 469.325 1272.33 475.878L1272.35 475.898Z" fill="white"/>
+      <path d="M1035.6 407.12V428.472L1061.69 412.119H1062.37V503.206H1086.45V389.253H1063.8L1035.6 407.12Z" fill="white"/>
+      <path d="M1178.11 394.591C1171.24 389.99 1163.06 387.7 1153.52 387.7C1143.97 387.7 1135.77 389.99 1128.86 394.591C1121.99 399.153 1116.71 405.805 1113 414.569C1109.34 423.334 1107.48 433.91 1107.48 446.339C1107.44 458.808 1109.26 469.464 1112.94 478.328C1116.65 487.192 1121.95 493.964 1128.8 498.645C1135.69 503.325 1143.94 505.676 1153.5 505.716C1163.06 505.716 1171.28 503.385 1178.15 498.704C1185.03 494.024 1190.28 487.251 1193.95 478.388C1197.65 469.524 1199.51 458.848 1199.51 446.339C1199.55 433.91 1197.71 423.334 1193.99 414.629C1190.28 405.865 1184.97 399.193 1178.07 394.591H1178.11ZM1169.15 475.898C1165.25 482.471 1160.05 485.738 1153.52 485.738C1149.17 485.738 1145.39 484.284 1142.16 481.395C1138.94 478.467 1136.43 474.085 1134.65 468.269C1132.9 462.413 1132.04 455.103 1132.04 446.339C1132.08 433.392 1134.06 423.672 1137.94 417.179C1141.84 410.685 1147.02 407.439 1153.52 407.439C1157.86 407.439 1161.62 408.893 1164.81 411.781C1168.04 414.669 1170.53 418.991 1172.26 424.748C1174.03 430.504 1174.93 437.695 1174.93 446.339C1174.97 459.465 1173.04 469.325 1169.13 475.878L1169.15 475.898Z" fill="white"/>
+      <path d="M1580.13 389.253H1556.42V503.206H1580.13V389.253Z" fill="white"/>
+      <path d="M1871.25 416.521C1866.47 416.521 1862.25 417.896 1858.56 420.644C1854.9 423.353 1852.27 427.357 1850.72 432.655H1849.82V417.736H1826.83V503.206H1850.54V454.844C1850.54 451.358 1851.31 448.271 1852.87 445.602C1854.46 442.933 1856.61 440.862 1859.32 439.368C1862.07 437.854 1865.18 437.077 1868.66 437.077C1870.3 437.077 1872.09 437.197 1874.06 437.475C1876.03 437.734 1877.57 438.033 1878.68 438.372V417.338C1877.65 417.079 1876.43 416.88 1875.06 416.721C1873.68 416.561 1872.41 416.501 1871.21 416.501L1871.25 416.521Z" fill="white"/>
+      <path d="M1909.95 417.736H1886.25V503.206H1909.95V417.736Z" fill="white"/>
+      <path d="M1898.16 382.74C1894.64 382.74 1891.61 383.935 1889.1 386.306C1886.61 388.636 1885.37 391.445 1885.37 394.711C1885.37 397.978 1886.61 400.846 1889.1 403.216C1891.63 405.547 1894.64 406.722 1898.16 406.722C1901.69 406.722 1904.69 405.547 1907.18 403.216C1909.71 400.846 1910.97 397.998 1910.97 394.711C1910.97 391.425 1909.71 388.656 1907.18 386.306C1904.69 383.935 1901.69 382.74 1898.16 382.74Z" fill="white"/>
+      <path d="M1975.82 479.622C1974.41 481.734 1972.62 483.347 1970.42 484.462C1968.27 485.578 1965.84 486.135 1963.13 486.135C1959.47 486.135 1956.26 485.14 1953.51 483.128C1950.77 481.116 1948.63 478.208 1947.12 474.384C1945.63 470.559 1944.89 465.918 1944.89 460.481C1944.89 455.043 1945.65 450.522 1947.18 446.737C1948.69 442.953 1950.81 440.084 1953.51 438.112C1956.26 436.101 1959.47 435.105 1963.13 435.105C1967.48 435.105 1970.98 436.419 1973.65 439.049C1976.36 441.638 1978.03 445.084 1978.65 449.346H2001.02C2000.68 442.753 1998.89 436.997 1995.62 432.097C1992.36 427.197 1987.93 423.393 1982.32 420.684C1976.72 417.975 1970.19 416.621 1962.74 416.621C1954.09 416.621 1946.64 418.493 1940.37 422.238C1934.09 425.942 1929.25 431.121 1925.85 437.754C1922.48 444.347 1920.79 452.035 1920.79 460.799C1920.79 469.563 1922.46 477.093 1925.79 483.725C1929.15 490.358 1933.99 495.557 1940.25 499.301C1946.56 503.006 1954.09 504.859 1962.84 504.859C1970.44 504.859 1977.02 503.464 1982.6 500.676C1988.15 497.887 1992.51 494.043 1995.66 489.103C1998.85 484.124 2000.64 478.387 2001 471.854H1978.63C1978.19 474.862 1977.24 477.431 1975.8 479.582L1975.82 479.622Z" fill="white"/>
+      <path d="M1489.74 456.139H1538.48V436.28H1489.74V409.111H1542.42V389.253H1465.64V503.206H1542.64V483.347H1489.74V456.139Z" fill="white"/>
+      <path d="M1660.97 427.416C1657.33 423.811 1653.07 421.122 1648.17 419.349C1643.31 417.537 1638.07 416.621 1632.41 416.621C1624.03 416.621 1616.72 418.473 1610.48 422.178C1604.29 425.883 1599.49 431.061 1596.06 437.694C1592.65 444.327 1590.94 452.055 1590.94 460.839C1590.94 469.623 1592.65 477.67 1596.06 484.263C1599.47 490.836 1604.33 495.915 1610.64 499.501C1616.98 503.066 1624.54 504.839 1633.35 504.839C1640.4 504.839 1646.61 503.763 1651.99 501.612C1657.41 499.421 1661.83 496.373 1665.24 492.489C1668.68 488.566 1670.97 483.964 1672.09 478.686L1650.16 477.232C1649.34 479.383 1648.17 481.196 1646.59 482.69C1645.04 484.183 1643.17 485.279 1640.98 486.036C1638.79 486.773 1636.38 487.151 1633.75 487.151C1629.78 487.151 1626.36 486.315 1623.45 484.642C1620.56 482.968 1618.31 480.598 1616.72 477.511C1615.16 474.424 1614.39 470.778 1614.39 466.556V466.496H1672.59V459.983C1672.59 452.713 1671.57 446.379 1669.52 440.961C1667.49 435.503 1664.62 430.982 1660.95 427.376L1660.97 427.416ZM1614.45 451.856C1614.58 448.789 1615.34 445.98 1616.8 443.451C1618.35 440.662 1620.5 438.451 1623.25 436.838C1626.04 435.165 1629.22 434.328 1632.81 434.328C1636.4 434.328 1639.28 435.085 1641.87 436.619C1644.5 438.112 1646.57 440.164 1648.05 442.793C1649.54 445.422 1650.28 448.45 1650.28 451.856H1614.45Z" fill="white"/>
+      <path d="M1811.38 485.02C1810.26 485.2 1809.15 485.299 1808.03 485.299C1806.44 485.299 1805.02 485.06 1803.81 484.582C1802.61 484.104 1801.7 483.267 1801.02 482.072C1800.36 480.857 1800.02 479.144 1800.02 476.953V435.563H1816.1V417.756H1800.02V397.26H1776.32V417.736H1764.63V435.543H1776.32V480.061C1776.28 485.658 1777.46 490.299 1779.83 493.964C1782.2 497.629 1785.52 500.337 1789.79 502.09C1794.09 503.843 1799.09 504.6 1804.8 504.381C1807.87 504.261 1810.5 503.963 1812.65 503.425C1814.8 502.947 1816.48 502.509 1817.65 502.15L1813.93 484.502C1813.33 484.622 1812.47 484.781 1811.36 485L1811.38 485.02Z" fill="white"/>
+      <path d="M1712.64 438.112C1715.39 436.101 1718.6 435.105 1722.26 435.105C1726.6 435.105 1730.11 436.419 1732.78 439.049C1735.49 441.638 1737.16 445.084 1737.78 449.346H1760.15C1759.81 442.753 1758.02 436.997 1754.75 432.097C1751.48 427.197 1747.06 423.393 1741.44 420.684C1735.85 417.975 1729.31 416.621 1721.86 416.621C1713.22 416.621 1705.77 418.493 1699.5 422.238C1693.22 425.942 1688.38 431.121 1684.98 437.754C1681.59 444.347 1679.92 452.035 1679.92 460.799C1679.92 469.563 1681.59 477.093 1684.92 483.725C1688.28 490.358 1693.12 495.557 1699.38 499.301C1705.69 503.006 1713.22 504.859 1721.96 504.859C1729.57 504.859 1736.15 503.464 1741.72 500.676C1747.28 497.887 1751.64 494.043 1754.79 489.103C1757.98 484.124 1759.77 478.387 1760.13 471.854H1737.76C1737.32 474.862 1736.36 477.431 1734.91 479.582C1733.5 481.694 1731.7 483.307 1729.51 484.422C1727.36 485.538 1724.93 486.096 1722.22 486.096C1718.56 486.096 1715.33 485.1 1712.6 483.088C1709.85 481.076 1707.72 478.168 1706.21 474.344C1704.73 470.52 1703.98 465.879 1703.98 460.441C1703.98 455.003 1704.73 450.482 1706.27 446.697C1707.78 442.913 1709.89 440.045 1712.62 438.073L1712.64 438.112Z" fill="white"/>
+      <path d="M1920.2 59.8394H1957.26V68.7794H1944.16V102.859H1933.28V68.7794H1920.2V59.8394ZM2008.48 59.8394H1998.96L1988.32 88.2594L1977.6 59.8394H1964.74V102.859H1975.56V78.5594L1985.26 102.859H1991.34L2000.98 78.6194V102.859H2011.86V59.8394H2008.46H2008.48Z" fill="white"/>
+      <path d="M998.42 325.76H924.78L844.38 186.5L763.98 325.76H690.34L844.38 58.9399L998.42 325.76Z" fill="white"/>
+      <path d="M1384.36 63.5801H1320.82V325.8H1384.36V63.5801Z" fill="white"/>
+      <path d="M1461.28 242.36H1522.4C1525.14 268.68 1541.3 279.64 1570.48 279.64C1590.4 279.64 1609.96 271.96 1609.96 252.22C1609.96 231.38 1590.04 226.98 1556.4 218.22C1513.82 207.64 1468.82 193.74 1468.82 138.9C1468.82 84.06 1511.4 58.48 1566.36 58.48C1621.32 58.48 1660.8 84.08 1663.2 138.9H1603.8C1601.4 118.78 1586.98 107.46 1564.32 107.46C1543.02 107.46 1528.94 117.32 1528.94 131.94C1528.94 150.2 1547.84 154.6 1584.58 163.38C1630.26 174.72 1671.48 189.7 1671.48 245.62C1671.48 301.54 1627.52 330.8 1570.86 330.8C1505.6 330.8 1462.68 300.1 1461.3 242.34H1461.28V242.36Z" fill="white"/>
+      <path d="M602.92 325.74H688.36L557.24 194.64L688.36 63.52H602.92L510.32 156.12V63.54H446.78V325.76H510.32V233.18L602.92 325.76V325.74Z" fill="white"/>
+      <path d="M1246.12 233.16C1243.1 212.8 1232.76 191.3 1216.26 181.02C1225.76 165.16 1230.12 143 1227.26 123.08C1224.86 106.18 1215.54 92.2601 1203.08 81.5601C1189.58 70.1801 1171 63.6001 1135.56 63.6001H1035.6V325.82H1152.72C1183.86 325.82 1198.9 320.58 1214.06 310.9C1237.44 295.4 1250.48 262.34 1246.12 233.18H1246.1L1246.12 233.16ZM1097.7 114.92H1142.54C1160.98 114.92 1172.7 124.46 1172.7 140.98C1172.7 157.5 1160.28 167.38 1142.18 167.38H1097.7V114.94V114.92ZM1097.7 211.38H1153.08C1172.26 211.38 1187.16 222 1187.16 242.92C1187.16 261.62 1174.38 273.72 1153.78 273.72H1097.7V211.38Z" fill="white"/>
+      <path d="M2000.72 325.76H1927.08L1846.68 186.5L1766.28 325.76H1692.64L1846.68 58.9399L2000.72 325.76Z" fill="white"/>
+      <path d="M86.42 63.54H0.97998L132.1 194.64L0.97998 325.76H86.42L217.54 194.64L86.42 63.54Z" fill="#FFD400"/>
+      <path d="M188.64 0.04L103.16 0L297.82 194.64L103.16 389.3H188.58L383.26 194.64L188.64 0.04Z" fill="#FFD400"/>
+    </svg>
+  </div>
+  <div style="font-size:11px;color:rgba(255,255,255,.18);text-align:right">
+    Illustrative data for investor preview purposes.<br>© 2025 Kabisa. All rights reserved. · invest@kabisa.africa
+  </div>
+</footer>
+
+
+<script>
+var mapInitialized = false;
+
+// ── TAB NAVIGATION ──
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  ['portal','dashboard','corridors','architecture','faq','dataroom'].forEach(function(t){
+    var el = document.getElementById('nav-' + t);
+    if (el) el.classList.remove('active');
+  });
+  var sec = document.getElementById(id);
+  if (sec) sec.classList.add('active');
+  var navEl = document.getElementById('nav-' + id);
+  if (navEl) navEl.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  if (id === 'dashboard' || id === 'architecture') {
+    initBars();
+  }
+}
+
+// ── SPV PANELS ──
+function showSPV(country) {
+  document.querySelectorAll('.spv-detail').forEach(function(d){ d.style.display='none'; });
+  document.getElementById('spv-panel').style.display = 'block';
+  document.getElementById('spv-' + country).style.display = 'block';
+  document.getElementById('spv-panel').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function closeSPV() {
+  document.getElementById('spv-panel').style.display = 'none';
+  document.querySelectorAll('.spv-detail').forEach(function(d){ d.style.display='none'; });
+}
+
+// ── ANIMATE PROGRESS BARS ──
+function initBars() {
+  setTimeout(function(){
+    document.querySelectorAll('[data-w]').forEach(function(el){
+      el.style.width = el.getAttribute('data-w') + '%';
+    });
+  }, 300);
+}
+
+// ── FAQ ──
+function toggleFAQ(el) {
+  var answer = el.nextElementSibling;
+  var isOpen = el.classList.contains('open');
+  var group = el.closest('.faq-group');
+  group.querySelectorAll('.faq-q.open').forEach(function(q){
+    q.classList.remove('open');
+    q.nextElementSibling.style.display = 'none';
+  });
+  if (!isOpen) {
+    el.classList.add('open');
+    answer.style.display = 'block';
+  }
+}
+
+function filterFAQ(cat) {
+  document.querySelectorAll('.faq-cat').forEach(function(c){
+    if (c.dataset.cat === cat) {
+      c.style.cssText = 'padding:8px 12px;font-size:12px;font-weight:600;border-left:3px solid var(--solar);background:rgba(255,212,0,.06);color:var(--solar);cursor:pointer';
+    } else {
+      c.style.cssText = 'padding:8px 12px;font-size:12px;font-weight:600;border-left:3px solid transparent;color:rgba(255,255,255,.45);cursor:pointer';
+    }
+  });
+  document.querySelectorAll('.faq-group').forEach(function(g){
+    g.style.display = g.dataset.cat === cat ? 'block' : 'none';
+  });
+}
+
+// ── DATA ROOM FOLDER TABS ──
+function switchDRFolder(folderId) {
+  document.querySelectorAll('.dr-tab').forEach(function(t){
+    if (t.dataset.folder === folderId) {
+      t.classList.add('active');
+    } else {
+      t.classList.remove('active');
+    }
+  });
+  document.querySelectorAll('.dr-folder').forEach(function(f){
+    if (f.id === folderId) {
+      f.classList.add('active');
+    } else {
+      f.classList.remove('active');
+    }
+  });
+}
+
+// ── AUTH GATE ──
+async function checkPortalAccess() {
+  if (!window.Clerk) { window.location.href = '/#sign-in'; return; }
+  await window.Clerk.load();
+  if (!window.Clerk.user) { window.location.href = '/#sign-in'; return; }
+  const role = window.Clerk.user.publicMetadata?.role;
+  if (role !== 'investor' && role !== 'admin') {
+    window.location.href = '/#investor-status';
+    return;
+  }
+  document.body.style.visibility = 'visible';
+}
+
+async function portalSignOut() {
+  if (window.Clerk) { await window.Clerk.signOut(); }
+  window.location.href = '/#home';
+}
+
+// ── INIT ──
+window.addEventListener('load', function(){
+  document.body.style.visibility = 'hidden';
+  checkPortalAccess().then(function() { initBars(); });
+});
+</script>
+</body>
+</html>
