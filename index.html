@@ -243,7 +243,7 @@ body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);
         <a href="mailto:hello@kabisa.africa" onclick="closeAbout()" style="display:block;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);cursor:pointer" onmouseover="this.style.color='#FFD400'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Contact</a>
       </div>
     </li>
-    <li><a onclick="showPage('investors-gate')" id="nav-investors" class="nav-cta">Investor Access</a></li>
+    <li><a onclick="handleInvestorNav()" id="nav-investors" class="nav-cta">Investor Access</a></li>
   </ul>
   <button class="nav-mobile-btn" onclick="toggleMobileMenu()" aria-label="Menu">
     <span id="mb1"></span><span id="mb2"></span><span id="mb3"></span>
@@ -263,7 +263,7 @@ body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);
   <a onclick="showPage('careers');closeMobileMenu()">Careers</a>
   <a onclick="showPage('news');closeMobileMenu()">News</a>
   <a href="mailto:hello@kabisa.africa" onclick="closeMobileMenu()">Contact</a>
-  <a onclick="showPage('investors-gate');closeMobileMenu()" style="color:#FFD400;font-weight:700;margin-top:8px">Investor Access</a>
+  <a onclick="handleInvestorNav();closeMobileMenu()" id="mobile-nav-investors" style="color:#FFD400;font-weight:700;margin-top:8px">Investor Access</a>
 </div>
 
 <!-- HOME -->
@@ -949,28 +949,6 @@ body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);
   </div>
 </div>
 
-<!-- Sign Up Page -->
-<div class="page" id="page-sign-up">
-  <div class="investors-gate">
-    <div class="gate-card">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;margin-bottom:24px;letter-spacing:2px">CREATE YOUR ACCOUNT</div>
-      <div id="clerk-sign-up"></div>
-      <p style="text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4)">Already have an account? <a href="#sign-in" style="color:var(--solar);text-decoration:none">Sign in</a></p>
-    </div>
-  </div>
-</div>
-
-<!-- Sign In Page -->
-<div class="page" id="page-sign-in">
-  <div class="investors-gate">
-    <div class="gate-card">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;margin-bottom:24px;letter-spacing:2px">INVESTOR SIGN IN</div>
-      <div id="clerk-sign-in"></div>
-      <p style="text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4)">Need an account? <a href="#sign-up" style="color:var(--solar);text-decoration:none">Sign up</a></p>
-    </div>
-  </div>
-</div>
-
 <!-- Investor Status Page -->
 <div class="page" id="page-investor-status">
   <div class="investors-gate">
@@ -1111,6 +1089,38 @@ async function loadInvestorStatus() {
   }
 }
 
+// Dynamic nav based on auth state
+function handleInvestorNav() {
+  if (window.Clerk && window.Clerk.user) {
+    var role = window.Clerk.user.publicMetadata && window.Clerk.user.publicMetadata.role;
+    if (role === 'investor' || role === 'admin') {
+      window.location.href = 'investor-portal.html';
+    } else {
+      showPage('investor-status');
+    }
+  } else {
+    showPage('investors-gate');
+  }
+}
+
+function updateNavForAuth() {
+  var navBtn = document.getElementById('nav-investors');
+  var mobileBtn = document.getElementById('mobile-nav-investors');
+  if (window.Clerk && window.Clerk.user) {
+    var role = window.Clerk.user.publicMetadata && window.Clerk.user.publicMetadata.role;
+    if (role === 'investor' || role === 'admin') {
+      if (navBtn) { navBtn.textContent = 'Investor Portal'; }
+      if (mobileBtn) { mobileBtn.textContent = 'Investor Portal'; }
+    } else {
+      if (navBtn) { navBtn.textContent = 'My Application'; }
+      if (mobileBtn) { mobileBtn.textContent = 'My Application'; }
+    }
+  } else {
+    if (navBtn) { navBtn.textContent = 'Investor Access'; }
+    if (mobileBtn) { mobileBtn.textContent = 'Investor Access'; }
+  }
+}
+
 // Initialize Clerk
 window.addEventListener('load', async () => {
   routeFromHash();
@@ -1118,6 +1128,7 @@ window.addEventListener('load', async () => {
 
   if (window.Clerk) {
     await window.Clerk.load();
+    updateNavForAuth();
 
     var h = window.location.hash;
 

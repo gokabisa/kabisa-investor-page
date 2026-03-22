@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/investor-portal.html", "destination": "/investore-portal.html" },
+    { "source": "/investor-portal.html", "destination": "/investor-portal.html" },
     { "source": "/admin.html", "destination": "/admin.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
