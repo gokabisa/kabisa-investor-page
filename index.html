@@ -842,10 +842,9 @@ body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);
       <div class="gate-title">INVESTOR ACCESS</div>
       <p class="gate-sub">Access to Kabisa's investor portal requires verification. Complete the steps below to receive approval and access our full data room.</p>
       <div class="gate-steps">
-        <div class="gate-step"><div class="step-num">1</div><div class="step-text"><strong>Create Account</strong><span>Submit your details for Kabisa team review</span></div></div>
-        <div class="gate-step"><div class="step-num">2</div><div class="step-text"><strong>Team Approval</strong><span>We verify your identity and investment profile (1–2 business days)</span></div></div>
-        <div class="gate-step"><div class="step-num">3</div><div class="step-text"><strong>NDA via DocuSign</strong><span>You receive and sign an NDA digitally through DocuSign</span></div></div>
-        <div class="gate-step" style="border-bottom:none;padding-bottom:0"><div class="step-num">4</div><div class="step-text"><strong>Full Portal Access</strong><span>Access financials, term sheets, KPI dashboard and data room</span></div></div>
+        <div class="gate-step"><div class="step-num">1</div><div class="step-text"><strong>Create Account</strong><span>Submit your details — 24/7 review</span></div></div>
+        <div class="gate-step"><div class="step-num">2</div><div class="step-text"><strong>NDA via DocuSign</strong><span>You receive and sign an NDA digitally through DocuSign</span></div></div>
+        <div class="gate-step" style="border-bottom:none;padding-bottom:0"><div class="step-num">3</div><div class="step-text"><strong>Full Portal Access</strong><span>Access financials, term sheets, KPI dashboard and data room</span></div></div>
       </div>
       <div class="gate-form" id="gate-form">
         <div class="form-row">
@@ -929,7 +928,7 @@ async function submitInvestorRequest(){
         <p style="font-size:14px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.6;max-width:360px;margin:0 auto 32px">Thank you, <strong>${first}</strong>. We'll review your request within 1-2 business days.</p>
         <div style="background:var(--gray2);padding:20px;margin-bottom:24px;text-align:left">
           <div style="font-size:11px;color:rgba(255,255,255,0.4);font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">What happens next</div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:2">1. Create your account below<br>2. Kabisa IR reviews your profile<br>3. NDA sent for e-signature<br>4. Portal access granted</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:2">1. Create your account below<br>2. NDA sent for e-signature<br>3. Portal access granted</div>
         </div>
         <a href="#sign-up" style="display:inline-block;background:var(--solar);color:#000;padding:14px 32px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;text-decoration:none">CREATE ACCOUNT</a>
         <p style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:16px">Enquiries: <a href="mailto:investors@kabisa.africa" style="color:var(--solar);text-decoration:none">investors@kabisa.africa</a></p>
@@ -967,7 +966,7 @@ async function loadInvestorStatus() {
         '<p style="color:rgba(255,255,255,0.55);font-size:14px;line-height:1.6;max-width:360px;margin:0 auto 24px">Your account is set up. Our investor relations team is reviewing your application.</p>' +
         '<div style="background:rgba(255,255,255,0.04);padding:20px;text-align:left;max-width:360px;margin:0 auto">' +
         '<div style="font-size:11px;color:rgba(255,255,255,0.35);font-family:Barlow Condensed,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">What happens next</div>' +
-        '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:2">1. IR team reviews your profile (1-2 days)<br>2. NDA sent for e-signature<br>3. Portal access granted</div>' +
+        '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:2">1. 24/7 review of your profile<br>2. NDA sent for e-signature<br>3. Portal access granted</div>' +
         '</div>' +
         '<p style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:16px">Questions? <a href="mailto:investors@kabisa.africa" style="color:var(--solar);text-decoration:none">investors@kabisa.africa</a></p>' +
         '</div>';
@@ -1008,7 +1007,9 @@ async function loadInvestorStatus() {
 function handleInvestorNav() {
   if (window.Clerk && window.Clerk.user) {
     var role = window.Clerk.user.publicMetadata && window.Clerk.user.publicMetadata.role;
-    if (role === 'investor' || role === 'admin') {
+    if (role === 'admin') {
+      window.location.href = 'admin.html';
+    } else if (role === 'investor') {
       window.location.href = 'investor-portal.html';
     } else {
       showPage('investor-status');
@@ -1023,7 +1024,10 @@ function updateNavForAuth() {
   var mobileBtn = document.getElementById('mobile-nav-investors');
   if (window.Clerk && window.Clerk.user) {
     var role = window.Clerk.user.publicMetadata && window.Clerk.user.publicMetadata.role;
-    if (role === 'investor' || role === 'admin') {
+    if (role === 'admin') {
+      if (navBtn) { navBtn.textContent = 'Admin Panel'; }
+      if (mobileBtn) { mobileBtn.textContent = 'Admin Panel'; }
+    } else if (role === 'investor') {
       if (navBtn) { navBtn.textContent = 'Investor Portal'; }
       if (mobileBtn) { mobileBtn.textContent = 'Investor Portal'; }
     } else {
@@ -1047,8 +1051,13 @@ window.addEventListener('load', async () => {
 
     var h = window.location.hash;
 
-    // If already signed in, skip auth pages and go to status
+    // If already signed in, route based on role
     if (window.Clerk.user) {
+      var signInRole = window.Clerk.user.publicMetadata && window.Clerk.user.publicMetadata.role;
+      if (signInRole === 'admin' && (h === '#sign-up' || h === '#sign-in' || h === '#investor-status')) {
+        window.location.href = 'admin.html';
+        return;
+      }
       if (h === '#sign-up' || h === '#sign-in') {
         window.location.hash = 'investor-status';
         return;
@@ -1068,6 +1077,8 @@ window.addEventListener('hashchange', async () => {
   if (window.Clerk) {
     var h = window.location.hash;
     if (window.Clerk.user) {
+      var hashRole = window.Clerk.user.publicMetadata && window.Clerk.user.publicMetadata.role;
+      if (hashRole === 'admin' && (h === '#sign-up' || h === '#sign-in' || h === '#investor-status')) { window.location.href = 'admin.html'; return; }
       if (h === '#sign-up' || h === '#sign-in') { window.location.hash = 'investor-status'; return; }
       if (h === '#investor-status') { loadInvestorStatus(); }
     } else {
@@ -1081,7 +1092,7 @@ window.addEventListener('hashchange', async () => {
 <script>
 var AC = {"Northern": [[-4.05, 39.67], [-3.4, 38.55], [-2.52, 37.82], [-1.29, 36.82], [-0.28, 36.07], [0.52, 35.27], [0.45, 34.18], [0.31, 32.58], [-1.95, 30.06], [-3.38, 29.36]], "Northern-DRC": [[-1.95, 30.06], [-1.68, 29.22]], "Northern-SS": [[0.31, 32.58], [1.82, 32.25], [3.34, 31.92], [4.85, 31.59]], "Central": [[-6.79, 39.2], [-6.82, 37.68], [-6.5, 36.71], [-6.17, 35.74], [-5.11, 35.25], [-4.05, 34.76], [-3.28, 34.1], [-2.51, 33.43], [-2.51, 32.9], [-2.05, 31.5], [-1.95, 30.06], [-3.38, 29.36]], "Addis-NBO": [[9.02, 38.75], [7.57, 38.61], [6.12, 38.47], [4.62, 38.48], [3.11, 38.49], [1.28, 37.9], [-0.01, 37.36], [-1.29, 36.82]]};
 var PC = {"Abidjan-Lagos": [[5.36, -4.0], [5.42, -2.73], [5.49, -1.47], [5.55, -0.2], [6.14, 1.22], [6.37, 2.42], [6.37, 4.1], [6.36, 5.78]], "Nacala": [[-14.83, 40.52], [-14.47, 38.97], [-14.34, 37.68], [-14.22, 36.38], [-14.09, 35.09], [-13.96, 33.79], [-14.99, 32.66], [-13.55, 32.59], [-13.0, 31.0], [-13.81, 30.09], [-14.61, 29.19], [-15.42, 28.28]], "Maputo-WB": [[-25.97, 32.57], [-26.05, 31.06], [-26.12, 29.55], [-26.2, 28.04], [-25.43, 26.98], [-24.65, 25.91], [-24.3, 24.44], [-23.95, 22.97], [-23.61, 21.5], [-23.26, 20.02], [-22.91, 18.55], [-22.56, 17.08], [-22.76, 15.8], [-22.96, 14.51]], "Douala-Kampala": [[4.06, 9.7], [3.87, 11.52], [4.17, 12.93], [4.47, 14.34], [4.77, 15.74], [5.07, 17.15], [5.37, 18.56], [4.56, 19.67], [3.75, 20.77], [2.95, 21.88], [2.14, 22.98], [1.33, 24.09], [0.52, 25.19], [0.48, 26.67], [0.44, 28.15], [0.39, 29.62], [0.35, 31.1]], "Lobito": [[-11.2, 17.87], [-11.27, 19.24], [-11.34, 20.61], [-11.41, 21.98], [-11.47, 23.36], [-11.54, 24.73], [-11.61, 26.1], [-11.68, 27.47], [-11.86, 29.08], [-12.97, 28.64], [-14.2, 28.46], [-15.42, 28.28]], "North-South": [[-29.86, 31.02], [-28.64, 30.03], [-27.42, 29.03], [-26.2, 28.04], [-24.69, 28.18], [-23.18, 28.31], [-21.67, 28.45], [-20.16, 28.58], [-19.0, 29.82], [-17.83, 31.05], [-17.03, 30.13], [-16.22, 29.2], [-15.42, 28.28], [-14.17, 28.01], [-12.93, 27.74], [-11.68, 27.47]]};
-var AS = [[-1.95, 30.06, "Kigali Hub", "Northern", 240], [-1.95, 30.13, "SP Kanombe", "Kigali", 240], [-1.48, 29.63, "SP Musanze", "Kigali", 60], [-1.94, 30.09, "IZI Nyarutarama", "Kigali", 240], [-1.29, 36.82, "Nairobi Hub", "Northern", 240], [-4.05, 39.67, "Mombasa Port", "Northern", 240], [-6.79, 39.2, "Dar es Salaam", "Central", 240], [9.02, 38.75, "Addis Ababa", "Addis-NBO", 240]];
+var AS = [[-1.95, 30.06, "Kigali Hub", "Northern", 240], [-1.95, 30.13, "SP Kanombe", "Kigali", 240], [-1.48, 29.63, "SP Musanze", "Kigali", 60], [-1.94, 30.09, "IZI Nyarutarama", "Kigali", 120], [-1.29, 36.82, "Nairobi Hub", "Northern", 240], [-4.05, 39.67, "Mombasa Port", "Northern", 240], [-6.79, 39.2, "Dar es Salaam", "Central", 240], [9.02, 38.75, "Addis Ababa", "Addis-NBO", 240]];
 var PS = [[-3.4, 38.55, "Northern"], [-2.52, 37.82, "Northern"], [-0.28, 36.07, "Northern"], [0.52, 35.27, "Northern"], [0.45, 34.18, "Northern"], [0.31, 32.58, "Northern"], [-0.44, 31.74, "Northern"], [-1.2, 30.9, "Northern"], [-3.38, 29.36, "Northern"], [-1.68, 29.22, "Northern-DRC"], [1.82, 32.25, "Northern-SS"], [3.34, 31.92, "Northern-SS"], [4.85, 31.59, "Northern-SS"], [-6.82, 37.68, "Central"], [-6.5, 36.71, "Central"], [-6.17, 35.74, "Central"], [-5.11, 35.25, "Central"], [-4.05, 34.76, "Central"], [-3.28, 34.1, "Central"], [-2.51, 33.43, "Central"], [-2.51, 32.9, "Central"], [-2.05, 31.5, "Central"], [7.57, 38.61, "Addis-NBO"], [6.12, 38.47, "Addis-NBO"], [4.62, 38.48, "Addis-NBO"], [3.11, 38.49, "Addis-NBO"], [1.28, 37.9, "Addis-NBO"], [-0.01, 37.36, "Addis-NBO"], [5.36, -4.0, "Abidjan-Lagos"], [5.42, -2.73, "Abidjan-Lagos"], [5.49, -1.47, "Abidjan-Lagos"], [5.55, -0.2, "Abidjan-Lagos"], [6.14, 1.22, "Abidjan-Lagos"], [6.37, 2.42, "Abidjan-Lagos"], [6.37, 4.1, "Abidjan-Lagos"], [6.36, 5.78, "Abidjan-Lagos"], [-14.83, 40.52, "Nacala"], [-14.47, 38.97, "Nacala"], [-14.34, 37.68, "Nacala"], [-14.22, 36.38, "Nacala"], [-14.09, 35.09, "Nacala"], [-13.96, 33.79, "Nacala"], [-14.99, 32.66, "Nacala"], [-13.55, 32.59, "Nacala"], [-13.0, 31.0, "Nacala"], [-13.81, 30.09, "Nacala"], [-14.61, 29.19, "Nacala"], [-15.42, 28.28, "Nacala"], [-25.97, 32.57, "Maputo-WB"], [-26.05, 31.06, "Maputo-WB"], [-26.12, 29.55, "Maputo-WB"], [-26.2, 28.04, "Maputo-WB"], [-25.43, 26.98, "Maputo-WB"], [-24.65, 25.91, "Maputo-WB"], [-24.3, 24.44, "Maputo-WB"], [-23.95, 22.97, "Maputo-WB"], [-23.61, 21.5, "Maputo-WB"], [-23.26, 20.02, "Maputo-WB"], [-22.91, 18.55, "Maputo-WB"], [-22.56, 17.08, "Maputo-WB"], [-22.76, 15.8, "Maputo-WB"], [-22.96, 14.51, "Maputo-WB"], [4.06, 9.7, "Douala-Kampala"], [3.87, 11.52, "Douala-Kampala"], [4.17, 12.93, "Douala-Kampala"], [4.47, 14.34, "Douala-Kampala"], [4.77, 15.74, "Douala-Kampala"], [5.07, 17.15, "Douala-Kampala"], [5.37, 18.56, "Douala-Kampala"], [4.56, 19.67, "Douala-Kampala"], [3.75, 20.77, "Douala-Kampala"], [2.95, 21.88, "Douala-Kampala"], [2.14, 22.98, "Douala-Kampala"], [1.33, 24.09, "Douala-Kampala"], [0.52, 25.19, "Douala-Kampala"], [0.48, 26.67, "Douala-Kampala"], [0.44, 28.15, "Douala-Kampala"], [0.39, 29.62, "Douala-Kampala"], [0.35, 31.1, "Douala-Kampala"], [-11.2, 17.87, "Lobito"], [-11.27, 19.24, "Lobito"], [-11.34, 20.61, "Lobito"], [-11.41, 21.98, "Lobito"], [-11.47, 23.36, "Lobito"], [-11.54, 24.73, "Lobito"], [-11.61, 26.1, "Lobito"], [-11.68, 27.47, "Lobito"], [-11.86, 29.08, "Lobito"], [-12.97, 28.64, "Lobito"], [-14.2, 28.46, "Lobito"], [-29.86, 31.02, "North-South"], [-28.64, 30.03, "North-South"], [-27.42, 29.03, "North-South"], [-24.69, 28.18, "North-South"], [-23.18, 28.31, "North-South"], [-21.67, 28.45, "North-South"], [-20.16, 28.58, "North-South"], [-19.0, 29.82, "North-South"], [-17.83, 31.05, "North-South"], [-17.03, 30.13, "North-South"], [-16.22, 29.2, "North-South"], [-14.17, 28.01, "North-South"], [-12.93, 27.74, "North-South"]];
 var _mapsBuilt = {};
 
@@ -1166,16 +1177,35 @@ window.addEventListener('load', function() {
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;background:#2A2A2A" class="reveal">
       <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
-          <img src="https://ui-avatars.com/api/?name=Nick+Hu&background=111111&color=FFD400&bold=true&size=400&format=png" alt="Nick Hu" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
+          <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/26a285cd-4120-499a-4337-ca9dde753100/public" alt="Nick Hu" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
-            <div style="width:100px;height:100px;border-radius:50%;border:2px solid #FFD400;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:32px;color:#FFD400;letter-spacing:2px;background:rgba(0,0,0,0.6)">NH</div>
-          </div>
         </div>
         <div style="padding:20px 20px 24px">
           <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;margin-bottom:3px;letter-spacing:1px">Nick Hu</div>
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Co-Founder</div>
           <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Building Africa's EV charging backbone from the ground up.</p>
+        </div>
+      </div>
+      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+        <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
+          <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/5754b170-156b-48c6-db43-857b21c43900/public" alt="Lukas Lukochek" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
+        </div>
+        <div style="padding:20px 20px 24px">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;margin-bottom:3px;letter-spacing:1px">Lukas Lukochek</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Co-Founder</div>
+          <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Co-founding Kabisa and driving the vision for Africa's EV future.</p>
+        </div>
+      </div>
+      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+        <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
+          <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/c1e059f9-c005-43fe-7bfc-e4ed612d6400/public" alt="Pophia Muhoza" style="width:90%;height:90%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
+        </div>
+        <div style="padding:20px 20px 24px">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;margin-bottom:3px;letter-spacing:1px">Pophia Muhoza</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Rwanda Managing Director</div>
+          <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Leading Kabisa's operations and strategic growth in Rwanda.</p>
         </div>
       </div>
       <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
@@ -1194,11 +1224,8 @@ window.addEventListener('load', function() {
       </div>
       <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
-          <img src="https://ui-avatars.com/api/?name=John+Msingo&background=111111&color=FFD400&bold=true&size=400&format=png" alt="John Msingo" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
+          <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/a09d0d87-da50-4972-a270-11382d1f0400/public" alt="John Msingo" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
-            <div style="width:100px;height:100px;border-radius:50%;border:2px solid #FFD400;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:32px;color:#FFD400;letter-spacing:2px;background:rgba(0,0,0,0.6)">JM</div>
-          </div>
         </div>
         <div style="padding:20px 20px 24px">
           <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;margin-bottom:3px;letter-spacing:1px">John Msingo</div>
@@ -1208,11 +1235,8 @@ window.addEventListener('load', function() {
       </div>
       <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
-          <img src="https://ui-avatars.com/api/?name=Iliiza+Karangwa&background=111111&color=FFD400&bold=true&size=400&format=png" alt="Iliiza Karangwa" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
+          <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/c6486c92-3e8f-42db-13ea-b109231c7200/public" alt="Iliiza Karangwa" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
-            <div style="width:100px;height:100px;border-radius:50%;border:2px solid #FFD400;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:32px;color:#FFD400;letter-spacing:2px;background:rgba(0,0,0,0.6)">IK</div>
-          </div>
         </div>
         <div style="padding:20px 20px 24px">
           <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;margin-bottom:3px;letter-spacing:1px">Iliiza Karangwa</div>
@@ -1236,16 +1260,24 @@ window.addEventListener('load', function() {
       </div>
       <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
-          <img src="https://ui-avatars.com/api/?name=Ira+Rutazinda&background=111111&color=FFD400&bold=true&size=400&format=png" alt="Ira Rutazinda" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
+          <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/af63aa69-ad2d-451a-83b3-ae6e64ac1300/public" alt="Ira Rutazinda" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
-            <div style="width:100px;height:100px;border-radius:50%;border:2px solid #FFD400;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:32px;color:#FFD400;letter-spacing:2px;background:rgba(0,0,0,0.6)">IR</div>
-          </div>
         </div>
         <div style="padding:20px 20px 24px">
           <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;margin-bottom:3px;letter-spacing:1px">Ira Rutazinda</div>
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Rwanda Systems</div>
           <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Building and maintaining Kabisa's technology infrastructure.</p>
+        </div>
+      </div>
+      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+        <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
+          <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/bf075e8a-b8a2-498f-6394-d206c43dcf00/public" alt="Happy Ineza" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
+        </div>
+        <div style="padding:20px 20px 24px">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;margin-bottom:3px;letter-spacing:1px">Happy Ineza</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Rwanda Charging Lead</div>
+          <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Leading Kabisa's charging infrastructure deployment across Rwanda.</p>
         </div>
       </div>
       <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
@@ -1264,11 +1296,8 @@ window.addEventListener('load', function() {
       </div>
       <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
-          <img src="https://ui-avatars.com/api/?name=Rodrigue+Mucyo&background=111111&color=FFD400&bold=true&size=400&format=png" alt="Rodrigue Mucyo" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
+          <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/850433c3-33d6-4668-3f2a-6c6d634b9c00/public" alt="Rodrigue Mucyo" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
-            <div style="width:100px;height:100px;border-radius:50%;border:2px solid #FFD400;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:32px;color:#FFD400;letter-spacing:2px;background:rgba(0,0,0,0.6)">RM</div>
-          </div>
         </div>
         <div style="padding:20px 20px 24px">
           <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;margin-bottom:3px;letter-spacing:1px">Rodrigue Mucyo</div>

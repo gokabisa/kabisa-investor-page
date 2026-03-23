@@ -45,6 +45,9 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);m
 .btn-approve:hover{background:var(--green);color:#000}
 .btn-reject{border-color:var(--red);color:var(--red);margin-left:6px}
 .btn-reject:hover{background:var(--red);color:#fff}
+.btn-admin{border-color:#9b59b6;color:#9b59b6;margin-left:6px}
+.btn-admin:hover{background:#9b59b6;color:#fff}
+.badge-admin{background:rgba(155,89,182,.2);color:#9b59b6}
 
 .empty-state{text-align:center;padding:60px;color:rgba(255,255,255,.3);font-size:14px}
 </style>
@@ -101,6 +104,7 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);m
           <th>Email</th>
           <th>Organisation</th>
           <th>Status</th>
+          <th>Role</th>
           <th>NDA</th>
           <th>Submitted</th>
           <th>Actions</th>
@@ -203,11 +207,19 @@ function renderTable(requests) {
       actions = '<button class="action-btn btn-approve" onclick="approveRequest(\'' + r.id + '\')">Approve</button>' +
                 '<button class="action-btn btn-reject" onclick="rejectRequest(\'' + r.id + '\')">Reject</button>';
     }
+    const isAdmin = r.clerkRole === 'admin';
+    if (!isAdmin && r.status !== 'PENDING' && r.status !== 'REJECTED') {
+      actions += '<button class="action-btn btn-admin" onclick="makeAdmin(\'' + r.id + '\', \'' + r.email + '\')">Make Admin</button>';
+    }
+    const roleBadge = isAdmin
+      ? '<span class="badge badge-admin">ADMIN</span>'
+      : '<span class="badge badge-pending">' + (r.clerkRole || 'USER') + '</span>';
     return '<tr>' +
       '<td><strong>' + r.firstName + '</strong></td>' +
       '<td>' + r.email + '</td>' +
       '<td>' + r.organisation + '</td>' +
       '<td><span class="badge ' + badgeClass(r.status) + '">' + r.status.replace(/_/g, ' ') + '</span></td>' +
+      '<td>' + roleBadge + '</td>' +
       '<td><span class="badge ' + badgeClass('badge-' + r.ndaStatus) + '">' + (r.ndaStatus || 'NONE').replace(/_/g, ' ') + '</span></td>' +
       '<td>' + formatDate(r.createdAt) + '</td>' +
       '<td>' + actions + '</td>' +
@@ -256,6 +268,16 @@ async function rejectRequest(id) {
   });
   if (res.ok) { await loadRequests(); }
   else { const d = await res.json(); alert(d.error || 'Failed to reject'); }
+}
+
+async function makeAdmin(id, email) {
+  if (!confirm('Promote ' + email + ' to admin? They will no longer need an NDA and will have full admin access.')) return;
+  const res = await fetch(API_BASE + '/admin/requests/' + id + '/make-admin', {
+    method: 'PATCH',
+    headers: { 'Authorization': 'Bearer ' + clerkToken }
+  });
+  if (res.ok) { await loadRequests(); }
+  else { const d = await res.json(); alert(d.error || 'Failed to promote user'); }
 }
 
 // --- NDA Settings ---
