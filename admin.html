@@ -71,6 +71,11 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);m
 
 <div class="admin-body">
   <div id="admin-loading" class="admin-loading">Verifying access...</div>
+  <div id="admin-sign-in" style="display:none;max-width:480px;margin:60px auto;text-align:center">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:8px;letter-spacing:2px">ADMIN SIGN IN</div>
+    <p style="color:rgba(255,255,255,.45);font-size:13px;margin-bottom:24px">Sign in with your admin credentials to continue.</p>
+    <div id="clerk-admin-sign-in"></div>
+  </div>
   <div id="admin-denied" style="display:none;text-align:center;padding-top:60px">
     <div style="font-size:48px;margin-bottom:16px">&#128683;</div>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:12px;letter-spacing:2px">ACCESS DENIED</div>
@@ -126,8 +131,16 @@ async function checkAdminAccess() {
   await window.Clerk.load();
 
   if (!window.Clerk.user) {
-    // Not signed in — redirect to Clerk's hosted sign-in, then back here
-    window.Clerk.redirectToSignIn({ afterSignInUrl: window.location.href });
+    // Not signed in — show embedded sign-in
+    document.getElementById('admin-loading').style.display = 'none';
+    document.getElementById('admin-sign-in').style.display = 'block';
+    window.Clerk.mountSignIn(document.getElementById('clerk-admin-sign-in'), {
+      afterSignInUrl: window.location.href,
+      appearance: {
+        variables: { colorPrimary:'#FFD400', colorBackground:'#111', colorText:'rgba(255,255,255,0.85)', colorTextSecondary:'rgba(255,255,255,0.5)', colorInputBackground:'rgba(255,255,255,0.06)', colorInputText:'#fff', borderRadius:'0px', fontFamily:"'Barlow Condensed',sans-serif" },
+        elements: { card:{background:'transparent',boxShadow:'none',border:'none'}, headerTitle:{display:'none'}, headerSubtitle:{display:'none'}, formButtonPrimary:{background:'#FFD400',color:'#000',fontFamily:"'Bebas Neue',sans-serif",fontSize:'16px',letterSpacing:'2px',borderRadius:'0'}, footerAction:{display:'none'}, socialButtonsBlockButton:{border:'1px solid rgba(255,255,255,0.1)',background:'rgba(255,255,255,0.04)'}, dividerLine:{background:'rgba(255,255,255,0.1)'}, dividerText:{color:'rgba(255,255,255,0.3)'} }
+      }
+    });
     return false;
   }
 

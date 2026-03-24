@@ -284,7 +284,7 @@ body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);
   <div class="stats-strip">
     <div class="stat"><div class="num">2,000+</div><div class="lbl">EVs on Network</div></div>
     <div class="divider"></div>
-    <div class="stat"><div class="num">40,000+</div><div class="lbl">Charging Sessions</div></div>
+    <div class="stat"><div class="num">20,000+</div><div class="lbl">Charging Sessions</div></div>
     <div class="divider"></div>
     <div class="stat"><div class="num">3,000+</div><div class="lbl">KM Connected Road</div></div>
     <div class="divider"></div>
@@ -843,19 +843,36 @@ body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);
         <div class="gate-step"><div class="step-num">2</div><div class="step-text"><strong>NDA via DocuSign</strong><span>You receive and sign an NDA digitally through DocuSign</span></div></div>
         <div class="gate-step" style="border-bottom:none;padding-bottom:0"><div class="step-num">3</div><div class="step-text"><strong>Full Portal Access</strong><span>Access financials, term sheets, KPI dashboard and data room</span></div></div>
       </div>
-      <div class="gate-form" id="gate-form">
-        <div class="form-row">
-          <div class="form-group"><label>First Name</label><input type="text" placeholder="First name" id="f-first"></div>
-          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Last name" id="f-last"></div>
-        </div>
-        <div class="form-group"><label>Email Address</label><input type="email" placeholder="your@institution.com" id="f-email"></div>
+      <!-- Step 1: Investor details -->
+      <div class="gate-form" id="gate-step-1">
         <div class="form-group"><label>Organisation</label><input type="text" placeholder="Fund / firm name" id="f-org"></div>
         <div class="form-group"><label>Investor Type</label><select id="f-type"><option value="">Select type…</option><option>Family Office</option><option>Development Finance Institution</option><option>Sovereign Wealth Fund</option><option>Angel / HNW Individual</option><option>Corporate Strategic</option><option>Other</option></select></div>
         <div class="form-group"><label>Typical Ticket Size</label><select id="f-ticket"><option value="">Select range…</option><option>Under $250K</option><option>$250K – $1M</option><option>$1M – $5M</option><option>$5M – $25M</option><option>$25M+</option></select></div>
-        <button class="btn-primary" onclick="submitInvestorRequest()">Request Access →</button>
+        <button class="btn-primary" onclick="showGateStep2()">Continue</button>
         <p class="form-note">Your information is shared only with Kabisa's investor relations team.</p>
         <p style="text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4)">Already have an account? <a href="#sign-in" style="color:var(--solar);text-decoration:none;cursor:pointer">Sign in</a></p>
       </div>
+      <!-- Step 2: Clerk sign-up (revealed after step 1) -->
+      <div id="gate-step-2" style="display:none">
+        <div style="text-align:center;margin-bottom:20px">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:6px">CREATE YOUR ACCOUNT</div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.45)">Set up your login with name, email and password.</p>
+        </div>
+        <div id="clerk-gate-sign-up"></div>
+        <p style="text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4)">Already have an account? <a href="#sign-in" style="color:var(--solar);text-decoration:none;cursor:pointer">Sign in</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sign In Page (embedded Clerk) -->
+<div class="page" id="page-sign-in">
+  <div class="investors-gate">
+    <div class="gate-card" style="max-width:480px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;margin-bottom:8px;letter-spacing:2px">SIGN IN</div>
+      <p style="text-align:center;font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:24px">Access your investor application or portal.</p>
+      <div id="clerk-sign-in"></div>
+      <p style="text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4)">Don't have an account? <a href="#investors-gate" style="color:var(--solar);text-decoration:none;cursor:pointer">Request access</a></p>
     </div>
   </div>
 </div>
@@ -883,7 +900,7 @@ function showPage(id) {
   const t = document.getElementById('page-' + id);
   if (t) { t.classList.add('active'); window.scrollTo(0,0); window.location.hash = id;
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    const m={'home':'nav-home','hubs-home':'nav-hubs','hubs-kigali':'nav-hubs','hubs-nairobi':'nav-hubs','corridors':'nav-corridors','investors-gate':'nav-investors','impact':'nav-impact','team':'nav-team','news':'nav-news','technology':'nav-tech','vehicles':'nav-vehicles','careers':'nav-about','team':'nav-about','news':'nav-about'};
+    const m={'home':'nav-home','hubs-home':'nav-hubs','hubs-kigali':'nav-hubs','hubs-nairobi':'nav-hubs','corridors':'nav-corridors','investors-gate':'nav-investors','sign-up':'nav-investors','sign-in':'nav-investors','investor-status':'nav-investors','impact':'nav-impact','team':'nav-team','news':'nav-news','technology':'nav-tech','vehicles':'nav-vehicles','careers':'nav-about'};
     if(m[id]){const el=document.getElementById(m[id]);if(el)el.classList.add('active');}
     setTimeout(initReveal,100);
   }
@@ -894,45 +911,62 @@ function initReveal(){
   document.querySelectorAll('.page.active .reveal').forEach(el=>obs.observe(el));
 }
 
-async function submitInvestorRequest(){
-  const first=document.getElementById('f-first').value.trim();
-  const email=document.getElementById('f-email').value.trim();
-  const org=document.getElementById('f-org').value.trim();
-  if(!first||!email||!org){alert('Please complete all required fields.');return;}
+// Store investor details from step 1
+var _gateData = {};
+
+async function showGateStep2() {
+  var org = document.getElementById('f-org').value.trim();
+  var investorType = document.getElementById('f-type').value;
+  var ticketSize = document.getElementById('f-ticket').value;
+  if (!org) { alert('Please enter your organisation.'); return; }
+  if (!investorType) { alert('Please select an investor type.'); return; }
+  if (!ticketSize) { alert('Please select a ticket size.'); return; }
+
+  _gateData = { organisation: org, investorType: investorType, ticketSize: ticketSize };
+
+  document.getElementById('gate-step-1').style.display = 'none';
+  document.getElementById('gate-step-2').style.display = 'block';
+
+  // Mount Clerk sign-up in the gate card
+  if (window.Clerk) {
+    if (!window.Clerk.loaded) await window.Clerk.load();
+    var el = document.getElementById('clerk-gate-sign-up');
+    window.Clerk.mountSignUp(el, {
+      appearance: clerkAppearance,
+      afterSignUpUrl: window.location.origin + '/#investor-status'
+    });
+  }
+}
+
+async function submitInvestorRequest() {
+  // Called after Clerk sign-up completes — user is now signed in
+  if (!window.Clerk || !window.Clerk.user) return;
+
+  var user = window.Clerk.user;
+  var firstName = user.firstName || '';
+  var email = (user.primaryEmailAddress && user.primaryEmailAddress.emailAddress) || '';
+
+  if (!firstName || !email) return;
 
   try {
-    const res = await fetch(API_BASE + '/investor-requests', {
+    var token = await window.Clerk.session.getToken();
+    var res = await fetch(API_BASE + '/investor-requests', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ firstName: first, email: email, organisation: org })
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({
+        firstName: firstName,
+        email: email,
+        organisation: _gateData.organisation || '',
+        investorType: _gateData.investorType || '',
+        ticketSize: _gateData.ticketSize || ''
+      })
     });
-    const data = await res.json();
 
-    if (!res.ok) {
-      if (res.status === 409) {
-        // Already submitted — redirect to sign-up
-        window.location.hash = 'sign-up';
-        return;
-      }
-      alert(data.error || 'Something went wrong. Please try again.');
-      return;
+    if (!res.ok && res.status !== 409) {
+      console.error('Investor request submit failed:', res.status);
     }
-
-    document.getElementById('gate-form-card').innerHTML=`
-      <div style="text-align:center;padding:60px 40px">
-        <div style="font-size:48px;margin-bottom:24px">&#9993;&#65039;</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;margin-bottom:12px">REQUEST RECEIVED</div>
-        <p style="font-size:14px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.6;max-width:360px;margin:0 auto 32px">Thank you, <strong>${first}</strong>. We'll review your request within 1-2 business days.</p>
-        <div style="background:var(--gray2);padding:20px;margin-bottom:24px;text-align:left">
-          <div style="font-size:11px;color:rgba(255,255,255,0.4);font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">What happens next</div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:2">1. Create your account below<br>2. NDA sent for e-signature<br>3. Portal access granted</div>
-        </div>
-        <a href="#sign-up" style="display:inline-block;background:var(--solar);color:#000;padding:14px 32px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;text-decoration:none">CREATE ACCOUNT</a>
-        <p style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:16px">Enquiries: <a href="mailto:investors@kabisa.africa" style="color:var(--solar);text-decoration:none">investors@kabisa.africa</a></p>
-      </div>`;
   } catch(err) {
     console.error('Submit error:', err);
-    alert('Network error. Please check your connection and try again.');
   }
 }
 
@@ -1037,6 +1071,51 @@ function updateNavForAuth() {
   }
 }
 
+// Clerk embedded component appearance
+var clerkAppearance = {
+  variables: {
+    colorPrimary: '#FFD400',
+    colorBackground: '#111',
+    colorText: 'rgba(255,255,255,0.85)',
+    colorTextSecondary: 'rgba(255,255,255,0.5)',
+    colorInputBackground: 'rgba(255,255,255,0.06)',
+    colorInputText: '#fff',
+    borderRadius: '0px',
+    fontFamily: "'Barlow Condensed', sans-serif"
+  },
+  elements: {
+    card: { background: 'transparent', boxShadow: 'none', border: 'none' },
+    headerTitle: { display: 'none' },
+    headerSubtitle: { display: 'none' },
+    formButtonPrimary: { background: '#FFD400', color: '#000', fontFamily: "'Bebas Neue', sans-serif", fontSize: '16px', letterSpacing: '2px', borderRadius: '0' },
+    formButtonPrimary__hover: { background: '#ffe04a' },
+    footerAction: { display: 'none' },
+    socialButtonsBlockButton: { border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.04)' },
+    dividerLine: { background: 'rgba(255,255,255,0.1)' },
+    dividerText: { color: 'rgba(255,255,255,0.3)' }
+  }
+};
+
+function mountClerkSignIn() {
+  var el = document.getElementById('clerk-sign-in');
+  if (el && window.Clerk) {
+    window.Clerk.unmountSignIn(el);
+    window.Clerk.mountSignIn(el, {
+      afterSignInUrl: window.location.origin + '/#investor-status',
+      appearance: clerkAppearance
+    });
+  }
+}
+
+function unmountClerkComponents() {
+  var gateSignUpEl = document.getElementById('clerk-gate-sign-up');
+  var signInEl = document.getElementById('clerk-sign-in');
+  if (window.Clerk) {
+    if (gateSignUpEl) window.Clerk.unmountSignUp(gateSignUpEl);
+    if (signInEl) window.Clerk.unmountSignIn(signInEl);
+  }
+}
+
 // Initialize Clerk
 window.addEventListener('load', async () => {
   routeFromHash();
@@ -1045,6 +1124,14 @@ window.addEventListener('load', async () => {
   if (window.Clerk) {
     await window.Clerk.load();
     updateNavForAuth();
+
+    // When user signs up via embedded form, submit investor request with stored gate data
+    window.Clerk.addListener(function(event) {
+      if (event.user && _gateData.organisation) {
+        submitInvestorRequest();
+        _gateData = {};
+      }
+    });
 
     var h = window.location.hash;
 
@@ -1063,13 +1150,14 @@ window.addEventListener('load', async () => {
         loadInvestorStatus();
       }
     } else {
-      // Not signed in — redirect to Clerk hosted pages
-      if (h === '#sign-up') { window.Clerk.redirectToSignUp({ afterSignUpUrl: window.location.origin + '/#investor-status' }); return; }
-      if (h === '#sign-in') { window.Clerk.redirectToSignIn({ afterSignInUrl: window.location.origin + '/#investor-status' }); return; }
+      // Not signed in — handle auth pages
+      if (h === '#sign-up') { showPage('investors-gate'); return; }
+      if (h === '#sign-in') { showPage('sign-in'); mountClerkSignIn(); return; }
     }
   }
 });
 window.addEventListener('hashchange', async () => {
+  unmountClerkComponents();
   routeFromHash();
   if (window.Clerk) {
     var h = window.location.hash;
@@ -1079,8 +1167,8 @@ window.addEventListener('hashchange', async () => {
       if (h === '#sign-up' || h === '#sign-in') { window.location.hash = 'investor-status'; return; }
       if (h === '#investor-status') { loadInvestorStatus(); }
     } else {
-      if (h === '#sign-up') { window.Clerk.redirectToSignUp({ afterSignUpUrl: window.location.origin + '/#investor-status' }); return; }
-      if (h === '#sign-in') { window.Clerk.redirectToSignIn({ afterSignInUrl: window.location.origin + '/#investor-status' }); return; }
+      if (h === '#sign-up') { showPage('investors-gate'); return; }
+      if (h === '#sign-in') { showPage('sign-in'); mountClerkSignIn(); return; }
     }
   }
 });
