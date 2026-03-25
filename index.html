@@ -1203,10 +1203,12 @@ window.addEventListener('load', async () => {
   }
 });
 window.addEventListener('hashchange', async () => {
+  var h = window.location.hash;
+  // Don't interfere with Clerk internal navigation (e.g. #/factor-one, #/factor-two)
+  if (h.indexOf('#/') === 0) return;
   unmountClerkComponents();
   routeFromHash();
   if (window.Clerk) {
-    var h = window.location.hash;
     if (window.Clerk.user) {
       var hashRole = window.Clerk.user.publicMetadata && window.Clerk.user.publicMetadata.role;
       if (hashRole === 'admin' && (h === '#sign-up' || h === '#sign-in' || h === '#investor-status')) { window.location.href = 'admin.html'; return; }
