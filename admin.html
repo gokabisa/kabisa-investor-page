@@ -50,6 +50,7 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);m
 .badge-admin{background:rgba(155,89,182,.2);color:#9b59b6}
 
 .empty-state{text-align:center;padding:60px;color:rgba(255,255,255,.3);font-size:14px}
+div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important}
 </style>
 <script
   async
@@ -137,8 +138,8 @@ async function checkAdminAccess() {
     window.Clerk.mountSignIn(document.getElementById('clerk-admin-sign-in'), {
       afterSignInUrl: window.location.href,
       appearance: {
-        variables: { colorPrimary:'#FFD400', colorBackground:'#111', colorText:'rgba(255,255,255,0.85)', colorTextSecondary:'rgba(255,255,255,0.5)', colorInputBackground:'rgba(255,255,255,0.06)', colorInputText:'#fff', borderRadius:'0px', fontFamily:"'Barlow Condensed',sans-serif" },
-        elements: { card:{background:'transparent',boxShadow:'none',border:'none'}, headerTitle:{display:'none'}, headerSubtitle:{display:'none'}, formButtonPrimary:{background:'#FFD400',color:'#000',fontFamily:"'Bebas Neue',sans-serif",fontSize:'16px',letterSpacing:'2px',borderRadius:'0'}, footerAction:{display:'none'}, socialButtonsBlockButton:{border:'1px solid rgba(255,255,255,0.1)',background:'rgba(255,255,255,0.04)'}, dividerLine:{background:'rgba(255,255,255,0.1)'}, dividerText:{color:'rgba(255,255,255,0.3)'} }
+        variables: { colorPrimary:'#FFD400', colorBackground:'#111', colorText:'rgba(255,255,255,0.85)', colorTextSecondary:'rgba(255,255,255,0.5)', colorInputBackground:'rgba(255,255,255,0.06)', colorInputText:'#fff', borderRadius:'0px', fontFamily:"'Barlow Condensed',sans-serif", spacingUnit:'0.8rem' },
+        elements: { card:{background:'transparent',boxShadow:'none',border:'none',padding:'0',gap:'0'}, headerTitle:{display:'none'}, headerSubtitle:{display:'none'}, rootBox:{width:'100%'}, cardBox:{boxShadow:'none'}, formFieldRow:{marginBottom:'4px'}, formFieldLabel:{fontSize:'11px',marginBottom:'2px',color:'rgba(255,255,255,0.5)'}, formFieldInput:{padding:'10px 12px',fontSize:'14px'}, formButtonPrimary:{background:'#FFD400',color:'#000',fontFamily:"'Bebas Neue',sans-serif",fontSize:'16px',letterSpacing:'2px',borderRadius:'0',marginTop:'8px'}, formButtonPrimary__hover:{background:'#ffe04a'}, footerAction:{display:'none'}, footer:{display:'none'}, badge:{display:'none'}, logoBox:{display:'none'}, socialButtonsBlockButton:{border:'1px solid rgba(255,255,255,0.1)',background:'rgba(255,255,255,0.04)',padding:'10px',marginBottom:'0'}, socialButtonsProviderIcon:{width:'18px',height:'18px'}, dividerRow:{margin:'12px 0'}, dividerLine:{background:'rgba(255,255,255,0.1)'}, dividerText:{color:'rgba(255,255,255,0.3)',fontSize:'11px'}, identityPreview:{gap:'4px'}, form:{gap:'8px'} }
       }
     });
     return false;
