@@ -862,18 +862,50 @@ body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);
   </div>
 </div>
 
+<!-- Investor Status Page -->
+<div class="page" id="page-investor-status">
+  <div class="investors-gate">
+    <div class="gate-card" style="max-width:500px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;margin-bottom:24px;letter-spacing:2px">APPLICATION STATUS</div>
+      <div id="investor-status-content">
+        <p style="text-align:center;color:rgba(255,255,255,0.5)">Loading your status...</p>
+      </div>
+      <div style="text-align:center;margin-top:24px">
+        <button class="btn-primary" id="btn-sign-out" style="display:none" onclick="handleSignOut()">Sign Out</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sign In Page (embedded Clerk) -->
+<div class="page" id="page-sign-in">
+  <div class="investors-gate">
+    <div class="gate-card">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;margin-bottom:8px;letter-spacing:2px">SIGN IN</div>
+      <p style="text-align:center;font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:24px">Access your investor application or portal.</p>
+      <div id="clerk-sign-in" style="display:flex;justify-content:center"></div>
+      <p style="text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4)">Don't have an account? <a href="#investors-gate" style="color:var(--solar);text-decoration:none;cursor:pointer">Request access</a></p>
+    </div>
+  </div>
+</div>
+
 <script>
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const t = document.getElementById('page-' + id);
   if (t) { t.classList.add('active'); window.scrollTo(0,0); window.location.hash = id;
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    const m={'home':'nav-home','hubs-home':'nav-hubs','hubs-kigali':'nav-hubs','hubs-nairobi':'nav-hubs','corridors':'nav-corridors','investors-gate':'nav-investors','impact':'nav-impact','team':'nav-team','news':'nav-news','technology':'nav-tech','vehicles':'nav-vehicles','careers':'nav-about','team':'nav-about','news':'nav-about'};
+    const m={'home':'nav-home','hubs-home':'nav-hubs','hubs-kigali':'nav-hubs','hubs-nairobi':'nav-hubs','corridors':'nav-corridors','investors-gate':'nav-investors','sign-in':'nav-investors','investor-status':'nav-investors','impact':'nav-impact','team':'nav-team','news':'nav-news','technology':'nav-tech','vehicles':'nav-vehicles','careers':'nav-about','team':'nav-about','news':'nav-about'};
     if(m[id]){const el=document.getElementById(m[id]);if(el)el.classList.add('active');}
     setTimeout(initReveal,100);
   }
 }
-function routeFromHash(){showPage(window.location.hash.replace('#','')||'home');}
+function routeFromHash(){
+  var h = window.location.hash.replace('#','') || 'home';
+  // Keep sign-in page visible during Clerk internal navigation (e.g. /factor-one, /factor-two)
+  if (h.startsWith('/')) return;
+  showPage(h);
+}
 function initReveal(){
   const obs=new IntersectionObserver((entries)=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);obs.unobserve(e.target);}});},{threshold:0.08});
   document.querySelectorAll('.page.active .reveal').forEach(el=>obs.observe(el));
@@ -912,6 +944,17 @@ var clerkAppearance = {
   }
 };
 
+function mountClerkSignIn() {
+  var el = document.getElementById('clerk-sign-in');
+  if (el && window.Clerk) {
+    window.Clerk.unmountSignIn(el);
+    window.Clerk.mountSignIn(el, {
+      afterSignInUrl: window.location.href.split('#')[0] + '#investor-status',
+      appearance: clerkAppearance
+    });
+  }
+}
+
 async function showGateStep2() {
   var org = document.getElementById('f-org').value.trim();
   var investorType = document.getElementById('f-type').value;
@@ -928,7 +971,7 @@ async function showGateStep2() {
     await window.Clerk.load();
     window.Clerk.mountSignUp(document.getElementById('clerk-gate-sign-up'), {
       appearance: clerkAppearance,
-      afterSignUpUrl: window.location.origin + '/#investor-status'
+      afterSignUpUrl: window.location.href.split('#')[0] + '#investor-status'
     });
   }
 }
@@ -954,6 +997,71 @@ async function submitInvestorRequest() {
     });
   } catch(err) { console.error('Submit error:', err); }
 }
+
+async function handleSignOut() {
+  if (window.Clerk) {
+    await window.Clerk.signOut();
+    window.location.hash = 'home';
+  }
+}
+
+async function loadInvestorStatus() {
+  const el = document.getElementById('investor-status-content');
+  const btnSignOut = document.getElementById('btn-sign-out');
+  if (!window.Clerk || !window.Clerk.user) {
+    el.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.5)">Please <a href="#sign-in" style="color:var(--solar)">sign in</a> to view your status.</p>';
+    return;
+  }
+  btnSignOut.style.display = 'inline-block';
+  try {
+    const token = await window.Clerk.session.getToken();
+    const res = await fetch(API_BASE + '/investor/status', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (!res.ok) {
+      el.innerHTML = '<div style="text-align:center;padding:20px">' +
+        '<div style="font-size:48px;margin-bottom:16px">&#9989;</div>' +
+        '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;margin-bottom:12px;letter-spacing:2px">ACCOUNT CREATED</div>' +
+        '<p style="color:rgba(255,255,255,0.55);font-size:14px;line-height:1.6;max-width:360px;margin:0 auto 24px">Your account is set up. Our investor relations team is reviewing your application.</p>' +
+        '<div style="background:rgba(255,255,255,0.04);padding:20px;text-align:left;max-width:360px;margin:0 auto">' +
+        '<div style="font-size:11px;color:rgba(255,255,255,0.35);font-family:Barlow Condensed,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">What happens next</div>' +
+        '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:2">1. 24/7 review of your profile<br>2. NDA sent for e-signature<br>3. Portal access granted</div>' +
+        '</div>' +
+        '<p style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:16px">Questions? <a href="mailto:investors@kabisa.africa" style="color:var(--solar);text-decoration:none">investors@kabisa.africa</a></p>' +
+        '</div>';
+      return;
+    }
+    const s = await res.json();
+    const steps = [
+      { label: 'Request Submitted', done: true },
+      { label: 'Account Created', done: ['CLERK_SIGNED_UP','APPROVED','NDA_SENT','NDA_SIGNED','ACCESS_GRANTED'].includes(s.status) },
+      { label: 'Approved by IR', done: ['APPROVED','NDA_SENT','NDA_SIGNED','ACCESS_GRANTED'].includes(s.status) },
+      { label: 'NDA Signed', done: ['NDA_SIGNED','ACCESS_GRANTED'].includes(s.status) },
+      { label: 'Portal Access', done: s.status === 'ACCESS_GRANTED' }
+    ];
+    let html = '<div style="max-width:320px;margin:0 auto">';
+    steps.forEach((step, i) => {
+      const color = step.done ? 'var(--solar)' : 'rgba(255,255,255,0.2)';
+      const icon = step.done ? '&#10003;' : (i + 1);
+      html += '<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06)">';
+      html += '<div style="width:32px;height:32px;border-radius:50%;background:' + color + ';display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:' + (step.done ? '#000' : 'rgba(255,255,255,0.4)') + '">' + icon + '</div>';
+      html += '<span style="font-size:14px;color:' + (step.done ? '#fff' : 'rgba(255,255,255,0.4)') + '">' + step.label + '</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+    if (s.status === 'ACCESS_GRANTED') {
+      html += '<div style="text-align:center;margin-top:24px"><a href="investor-portal.html" style="display:inline-block;background:var(--solar);color:#000;padding:14px 32px;font-family:\'Bebas Neue\',sans-serif;font-size:16px;letter-spacing:2px;text-decoration:none">ENTER PORTAL</a></div>';
+    }
+    if (s.status === 'REJECTED') {
+      html = '<div style="text-align:center;padding:20px"><p style="color:rgba(255,255,255,0.5)">Your application was not approved at this time.</p><p style="font-size:13px;color:rgba(255,255,255,0.3);margin-top:8px">Contact <a href="mailto:investors@kabisa.africa" style="color:var(--solar)">investors@kabisa.africa</a> for details.</p></div>';
+    }
+    el.innerHTML = html;
+  } catch(err) {
+    console.error('Status error:', err);
+    el.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.5)">Unable to load status. Please try again later.</p>';
+  }
+}
+
 window.addEventListener('load', async ()=>{
   routeFromHash(); initReveal();
   if (window.Clerk) {
@@ -964,9 +1072,33 @@ window.addEventListener('load', async ()=>{
         _gateData = {};
       }
     });
+    var h = window.location.hash;
+    if (window.Clerk.user) {
+      var role = window.Clerk.user.publicMetadata && window.Clerk.user.publicMetadata.role;
+      if (role === 'admin' && (h === '#sign-in' || h === '#investor-status')) {
+        window.location.href = 'admin.html'; return;
+      }
+      if (h === '#sign-in') { window.location.hash = 'investor-status'; return; }
+      if (h === '#investor-status') { showPage('investor-status'); loadInvestorStatus(); return; }
+    } else {
+      if (h === '#sign-in') { showPage('sign-in'); mountClerkSignIn(); return; }
+    }
   }
 });
-window.addEventListener('hashchange',routeFromHash);
+window.addEventListener('hashchange', async ()=>{
+  routeFromHash();
+  if (window.Clerk) {
+    var h = window.location.hash;
+    if (window.Clerk.user) {
+      var role = window.Clerk.user.publicMetadata && window.Clerk.user.publicMetadata.role;
+      if (role === 'admin' && (h === '#sign-in' || h === '#investor-status')) { window.location.href = 'admin.html'; return; }
+      if (h === '#sign-in') { window.location.hash = 'investor-status'; return; }
+      if (h === '#investor-status') { showPage('investor-status'); loadInvestorStatus(); return; }
+    } else {
+      if (h === '#sign-in') { showPage('sign-in'); mountClerkSignIn(); return; }
+    }
+  }
+});
 </script>
 
 <script>
