@@ -244,11 +244,11 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
         <a href="mailto:hello@kabisa.africa" onclick="closeAbout()" style="display:block;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);cursor:pointer" onmouseover="this.style.color='#FFD400'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Contact</a>
       </div>
     </li>
-    <li class="nav-investor-wrap" style="position:relative" onmouseenter="showInvestorDropdown()" onmouseleave="hideInvestorDropdown()">
+    <li id="nav-investor-wrap" style="position:relative" onmouseenter="showInvestorDropdown()" onmouseleave="hideInvestorDropdown()">
       <a onclick="handleInvestorNav()" id="nav-investors" class="nav-cta">Investor Access</a>
       <div id="investor-dropdown" style="display:none;position:absolute;top:100%;left:0;background:#111;border:1px solid #2A2A2A;min-width:180px;z-index:200;margin-top:4px">
-        <a onclick="showPage('investors-gate');hideInvestorDropdown()" style="display:block;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);cursor:pointer;border-bottom:1px solid #2A2A2A" onmouseover="this.style.color='#FFD400'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Investor Portal</a>
-        <a id="nav-admin-link" onclick="window.location.href='admin.html'" style="display:none;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);cursor:pointer" onmouseover="this.style.color='#FFD400'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Admin Panel</a>
+        <a onclick="handleInvestorNav();hideInvestorDropdown()" style="display:block;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);cursor:pointer;border-bottom:1px solid #2A2A2A" onmouseover="this.style.color='#FFD400'" onmouseout="this.style.color='rgba(255,255,255,0.7)'" id="nav-portal-link">Investor Portal</a>
+        <a onclick="window.location.href='admin.html';hideInvestorDropdown()" style="display:block;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);cursor:pointer" onmouseover="this.style.color='#FFD400'" onmouseout="this.style.color='rgba(255,255,255,0.7)'" id="nav-admin-link">Admin Panel</a>
       </div>
     </li>
     <li id="nav-profile-wrap" style="display:none">
@@ -1067,7 +1067,9 @@ function handleInvestorNav() {
   }
 }
 
+var _isAdmin = false;
 function showInvestorDropdown() {
+  if (!_isAdmin) return;
   var d = document.getElementById('investor-dropdown');
   if (d) d.style.display = 'block';
 }
@@ -1079,15 +1081,15 @@ function hideInvestorDropdown() {
 function updateNavForAuth() {
   var navBtn = document.getElementById('nav-investors');
   var mobileBtn = document.getElementById('mobile-nav-investors');
-  var adminLink = document.getElementById('nav-admin-link');
   var profileWrap = document.getElementById('nav-profile-wrap');
+  _isAdmin = false;
   if (window.Clerk && window.Clerk.user) {
     var role = window.Clerk.user.publicMetadata && window.Clerk.user.publicMetadata.role;
     if (profileWrap) profileWrap.style.display = 'list-item';
     if (role === 'admin') {
-      if (navBtn) { navBtn.textContent = 'Admin Panel'; }
-      if (mobileBtn) { mobileBtn.textContent = 'Admin Panel'; }
-      if (adminLink) { adminLink.style.display = 'block'; }
+      _isAdmin = true;
+      if (navBtn) { navBtn.textContent = 'Investor Portal'; }
+      if (mobileBtn) { mobileBtn.textContent = 'Investor Portal'; }
     } else if (role === 'investor') {
       if (navBtn) { navBtn.textContent = 'Investor Portal'; }
       if (mobileBtn) { mobileBtn.textContent = 'Investor Portal'; }
@@ -1099,7 +1101,6 @@ function updateNavForAuth() {
     if (navBtn) { navBtn.textContent = 'Investor Access'; }
     if (mobileBtn) { mobileBtn.textContent = 'Investor Access'; }
     if (profileWrap) profileWrap.style.display = 'none';
-    if (adminLink) { adminLink.style.display = 'none'; }
   }
 }
 
