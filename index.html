@@ -220,7 +220,7 @@ body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);
   async
   crossorigin="anonymous"
   data-clerk-publishable-key="pk_test_c3VidGxlLWNvbmRvci01OS5jbGVyay5hY2NvdW50cy5kZXYk"
-  src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+  src="https://subtle-condor-59.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
   type="text/javascript"
 ></script>
 </head>
@@ -929,7 +929,7 @@ async function showGateStep2() {
 
   // Mount Clerk sign-up in the gate card
   if (window.Clerk) {
-    if (!window.Clerk.loaded) await window.Clerk.load();
+    await window.Clerk.load();
     var el = document.getElementById('clerk-gate-sign-up');
     window.Clerk.mountSignUp(el, {
       appearance: clerkAppearance,

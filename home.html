@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_c3VidGxlLWNvbmRvci01OS5jbGVyay5hY2NvdW50cy5kZXYk" src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" type="text/javascript"></script>
+<script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_c3VidGxlLWNvbmRvci01OS5jbGVyay5hY2NvdW50cy5kZXYk" src="https://subtle-condor-59.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" type="text/javascript"></script>
 <style>
 
 :root {
@@ -909,99 +909,7 @@ async function showGateStep2() {
   document.getElementById('gate-step-2').style.display = 'block';
 
   if (window.Clerk) {
-    if (!window.Clerk.loaded) await window.Clerk.load();
-    window.Clerk.mountSignUp(document.getElementById('clerk-gate-sign-up'), {
-      appearance: clerkAppearance,
-      afterSignUpUrl: window.location.origin + '/#investor-status'
-    });
-  }
-}
-
-async function submitInvestorRequest() {
-  if (!window.Clerk || !window.Clerk.user) return;
-  var user = window.Clerk.user;
-  var firstName = user.firstName || '';
-  var email = (user.primaryEmailAddress && user.primaryEmailAddress.emailAddress) || '';
-  if (!firstName || !email) return;
-
-  try {
-    var token = await window.Clerk.session.getToken();
-    await fetch(API_BASE + '/investor-requests', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({
-        firstName: firstName, email: email,
-        organisation: _gateData.organisation || '',
-        investorType: _gateData.investorType || '',
-        ticketSize: _gateData.ticketSize || ''
-      })
-    });
-  } catch(err) { console.error('Submit error:', err); }
-}
-window.addEventListener('load', async ()=>{
-  routeFromHash(); initReveal();
-  if (window.Clerk) {
     await window.Clerk.load();
-    window.Clerk.addListener(function(event) {
-      if (event.user && _gateData.organisation) {
-        submitInvestorRequest();
-        _gateData = {};
-      }
-    });
-  }
-});
-window.addEventListener('hashchange',routeFromHash);
-</script>
-
-<script>
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const t = document.getElementById('page-' + id);
-  if (t) { t.classList.add('active'); window.scrollTo(0,0); window.location.hash = id;
-    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    const m={'home':'nav-home','hubs-home':'nav-hubs','hubs-kigali':'nav-hubs','hubs-nairobi':'nav-hubs','corridors':'nav-corridors','investors-gate':'nav-investors','impact':'nav-impact','team':'nav-team','news':'nav-news','technology':'nav-tech','vehicles':'nav-vehicles','careers':'nav-about','team':'nav-about','news':'nav-about'};
-    if(m[id]){const el=document.getElementById(m[id]);if(el)el.classList.add('active');}
-    setTimeout(initReveal,100);
-  }
-}
-function routeFromHash(){showPage(window.location.hash.replace('#','')||'home');}
-function initReveal(){
-  const obs=new IntersectionObserver((entries)=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);obs.unobserve(e.target);}});},{threshold:0.08});
-  document.querySelectorAll('.page.active .reveal').forEach(el=>obs.observe(el));
-}
-var _gateData = {};
-var API_BASE = 'https://investors-api.gokabisa.com/api/v1';
-
-var clerkAppearance = {
-  variables: {
-    colorPrimary: '#FFD400', colorBackground: '#111', colorText: 'rgba(255,255,255,0.85)',
-    colorTextSecondary: 'rgba(255,255,255,0.5)', colorInputBackground: 'rgba(255,255,255,0.06)',
-    colorInputText: '#fff', borderRadius: '0px', fontFamily: "'Barlow Condensed', sans-serif"
-  },
-  elements: {
-    card: { background:'transparent', boxShadow:'none', border:'none' },
-    headerTitle: { display:'none' }, headerSubtitle: { display:'none' },
-    formButtonPrimary: { background:'#FFD400', color:'#000', fontFamily:"'Bebas Neue',sans-serif", fontSize:'16px', letterSpacing:'2px', borderRadius:'0' },
-    footerAction: { display:'none' },
-    socialButtonsBlockButton: { border:'1px solid rgba(255,255,255,0.1)', background:'rgba(255,255,255,0.04)' },
-    dividerLine: { background:'rgba(255,255,255,0.1)' }, dividerText: { color:'rgba(255,255,255,0.3)' }
-  }
-};
-
-async function showGateStep2() {
-  var org = document.getElementById('f-org').value.trim();
-  var investorType = document.getElementById('f-type').value;
-  var ticketSize = document.getElementById('f-ticket').value;
-  if (!org) { alert('Please enter your organisation.'); return; }
-  if (!investorType) { alert('Please select an investor type.'); return; }
-  if (!ticketSize) { alert('Please select a ticket size.'); return; }
-
-  _gateData = { organisation: org, investorType: investorType, ticketSize: ticketSize };
-  document.getElementById('gate-step-1').style.display = 'none';
-  document.getElementById('gate-step-2').style.display = 'block';
-
-  if (window.Clerk) {
-    if (!window.Clerk.loaded) await window.Clerk.load();
     window.Clerk.mountSignUp(document.getElementById('clerk-gate-sign-up'), {
       appearance: clerkAppearance,
       afterSignUpUrl: window.location.origin + '/#investor-status'
