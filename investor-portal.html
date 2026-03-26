@@ -214,6 +214,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 }
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-thumb{background:rgba(255,212,0,.22);border-radius:3px}
+div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important}
 </style>
 <script
   async
@@ -226,7 +227,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 <body>
 
 <nav>
-  <div class="nav-logo" onclick="showTab('portal')" style="gap:0;padding:4px 0">
+  <div class="nav-logo" onclick="window.location.href='index.html#home'" style="gap:0;padding:4px 0">
     <svg width="160" height="41" viewBox="0 0 2012 513" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
       <path d="M1421.22 434.169H1374.37L1404.79 381.505L1326.86 459.405H1373.71L1343.32 512.069L1421.22 434.169Z" fill="white"/>
       <path d="M1348.83 406.104C1348.83 396.484 1341.03 388.676 1331.41 388.676C1321.79 388.676 1313.98 396.484 1313.98 406.104C1313.98 415.725 1321.79 423.533 1331.41 423.533C1341.03 423.533 1348.83 415.725 1348.83 406.104Z" fill="white"/>
@@ -292,7 +293,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 <div id="portal" class="section active">
   <div class="hero">
     <div class="kicker">Investor Portal · Private &amp; Confidential</div>
-    <h1>Investing in East Africa's<br><span class="accent">Infrastructure of the Future</span></h1>
+    <h1><span class="accent">WHY NOW?</span></h1>
     <p class="hero-sub">Kabisa is building the EV charging backbone across East Africa's most critical trade corridors — powering zero-emission freight from Mombasa to Kigali, Dar es Salaam to Kampala, and Addis Ababa to Nairobi. We are revenue-generating, infrastructure-first, and open to qualified investors.</p>
   </div>
 
@@ -482,7 +483,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
         <div class="stat-delta">↑ 3× vs 2024</div>
       </div>
       <div class="stat-cell">
-        <div class="stat-number">1,900<span class="stat-unit">+</span></div>
+        <div class="stat-number">2,000<span class="stat-unit">+</span></div>
         <div class="stat-label">EVs on Network</div>
         <div class="stat-delta">↑ 10–15% month-on-month</div>
       </div>
@@ -491,27 +492,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
         <div class="stat-label">Charging Sessions YTD</div>
         <div class="stat-delta">↑ 15% MoM growth</div>
       </div>
-      <div class="stat-cell">
-        <div class="stat-number">$51<span class="stat-unit">K</span></div>
-        <div class="stat-label">Charging Rev / Month</div>
-        <div class="stat-delta">↑ 11.4× Jan–Dec 2025</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-number">3,000<span class="stat-unit">+</span></div>
-        <div class="stat-label">km Connected Road</div>
-        <div class="stat-delta">↑ 3 corridors tested</div>
-      </div>
     </div>
 
     <!-- IMPACT METRICS -->
     <div style="margin-top:3px;margin-bottom:56px">
       <div class="impact-grid">
-        <div class="i-card"><div class="i-icon">🚛</div><div class="i-val">15<span class="unit"> trucks</span></div><div class="i-label">Medium &amp; Heavy Duty Trucks Active</div><div class="i-trend">↑ Scaling to 100 by end-2026</div><div class="i-bar"><div class="i-fill" data-w="15"></div></div></div>
-        <div class="i-card"><div class="i-icon">🛣️</div><div class="i-val">300,000<span class="unit"> km</span></div><div class="i-label">Total EV Kilometres Driven</div><div class="i-trend">↑ 3 corridors proven across borders</div><div class="i-bar"><div class="i-fill" data-w="22"></div></div></div>
-        <div class="i-card"><div class="i-icon">💚</div><div class="i-val">142<span class="unit"> tCO₂</span></div><div class="i-label">Carbon Emissions Offset</div><div class="i-trend">↑ Equivalent to 61 cars off road / yr</div><div class="i-bar"><div class="i-fill" data-w="14"></div></div></div>
-        <div class="i-card"><div class="i-icon">⚡</div><div class="i-val">1.24<span class="unit"> GWh</span></div><div class="i-label">Clean Energy Dispensed</div><div class="i-trend">↑ 100% hydro + solar sourced</div><div class="i-bar"><div class="i-fill" data-w="18"></div></div></div>
-        <div class="i-card"><div class="i-icon">💰</div><div class="i-val">80<span class="unit">%</span></div><div class="i-label">Fuel Savings vs Diesel</div><div class="i-trend">↑ Fleet operators cash-flow positive Day 1</div><div class="i-bar"><div class="i-fill" data-w="80"></div></div></div>
-        <div class="i-card"><div class="i-icon">🤝</div><div class="i-val">150<span class="unit">+</span></div><div class="i-label">Commercial Customers</div><div class="i-trend">↑ US Embassy, NGOs, logistics, fleets</div><div class="i-bar"><div class="i-fill" data-w="45"></div></div></div>
+        <div class="i-card"><div class="i-icon"></div><div class="i-val">15<span class="unit"> trucks</span></div><div class="i-label">Medium &amp; Heavy Duty Trucks Active</div><div class="i-trend">↑ Scaling to 100 by end-2026</div><div class="i-bar"><div class="i-fill" data-w="15"></div></div></div>
+        <div class="i-card"><div class="i-icon"></div><div class="i-val">300,000<span class="unit"> km</span></div><div class="i-label">Total EV Kilometres Driven</div><div class="i-trend">↑ 3 corridors proven across borders</div><div class="i-bar"><div class="i-fill" data-w="22"></div></div></div>
+        <div class="i-card"><div class="i-icon"></div><div class="i-val">142<span class="unit"> tCO₂</span></div><div class="i-label">Carbon Emissions Offset</div><div class="i-trend">↑ Equivalent to 61 cars off road / yr</div><div class="i-bar"><div class="i-fill" data-w="14"></div></div></div>
+        <div class="i-card"><div class="i-icon"></div><div class="i-val">1.24<span class="unit"> GWh</span></div><div class="i-label">Clean Energy Dispensed</div><div class="i-trend">↑ 100% hydro + solar sourced</div><div class="i-bar"><div class="i-fill" data-w="18"></div></div></div>
+        <div class="i-card"><div class="i-icon"></div><div class="i-val">80<span class="unit">%</span></div><div class="i-label">Fuel Savings vs Diesel</div><div class="i-trend">↑ Fleet operators cash-flow positive Day 1</div><div class="i-bar"><div class="i-fill" data-w="80"></div></div></div>
+        <div class="i-card"><div class="i-icon"></div><div class="i-val">150<span class="unit">+</span></div><div class="i-label">Commercial Customers</div><div class="i-trend">↑ US Embassy, NGOs, logistics, fleets</div><div class="i-bar"><div class="i-fill" data-w="45"></div></div></div>
       </div>
     </div>
 
@@ -525,13 +516,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 
       <!-- Kigali Hub -->
       <div class="hub-dash-card">
-        <div class="hub-flag">🇷🇼</div>
+        <div class="hub-flag">RW</div>
         <div class="hub-city">Kigali</div>
         <div class="hub-country">Rwanda · Core Market</div>
         <div class="hub-status op"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span> Operational</div>
         <div class="hub-metric-grid">
           <div class="hm-block"><div class="hm-val">300+</div><div class="hm-key">EVs Sold</div></div>
-          <div class="hm-block"><div class="hm-val">1,900+</div><div class="hm-key">Cars Served on Network</div></div>
+          <div class="hm-block"><div class="hm-val">2,000+</div><div class="hm-key">Cars Served on Network</div></div>
           <div class="hm-block green"><div class="hm-val">2,400+</div><div class="hm-key">Monthly Sessions</div></div>
           <div class="hm-block blue"><div class="hm-val">60</div><div class="hm-key">Charging Points (35 AC + 25 DC)</div></div>
           <div class="hm-block" style="grid-column:span 2"><div class="hm-val" style="font-size:16px">249 <span style="font-size:13px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;font-weight:400">/ yr</span></div><div class="hm-key">EV Maintenance Tickets</div></div>
@@ -540,7 +531,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 
       <!-- Nairobi Hub -->
       <div class="hub-dash-card">
-        <div class="hub-flag">🇰🇪</div>
+        <div class="hub-flag">KE</div>
         <div class="hub-city">Nairobi</div>
         <div class="hub-country">Kenya · Launched 2025</div>
         <div class="hub-status sc"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span> Scaling</div>
@@ -555,7 +546,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 
       <!-- Dar es Salaam -->
       <div class="hub-dash-card" style="opacity:.6">
-        <div class="hub-flag">🇹🇿</div>
+        <div class="hub-flag">TZ</div>
         <div class="hub-city">Dar es Salaam</div>
         <div class="hub-country">Tanzania · Corridor Node</div>
         <div class="hub-status sc"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span> Charging Active</div>
@@ -570,7 +561,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 
       <!-- Addis Ababa -->
       <div class="hub-dash-card" style="opacity:.6">
-        <div class="hub-flag">🇪🇹</div>
+        <div class="hub-flag">ET</div>
         <div class="hub-city">Addis Ababa</div>
         <div class="hub-country">Ethiopia · Station Installed</div>
         <div class="hub-status sc"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span> Station Active</div>
@@ -583,7 +574,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 
       <!-- Kampala -->
       <div class="hub-dash-card" style="opacity:.45">
-        <div class="hub-flag">🇺🇬</div>
+        <div class="hub-flag">UG</div>
         <div class="hub-city">Kampala</div>
         <div class="hub-country">Uganda · Planned 2026</div>
         <div class="hub-status pl"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span> Planning Phase</div>
@@ -594,7 +585,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 
       <!-- Goma -->
       <div class="hub-dash-card" style="opacity:.35">
-        <div class="hub-flag">🇨🇩</div>
+        <div class="hub-flag">CD</div>
         <div class="hub-city">Goma</div>
         <div class="hub-country">DRC · Corridor Extension</div>
         <div class="hub-status pl"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span> Scoping</div>
@@ -867,7 +858,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
               <!-- Rwanda -->
               <div class="spv-card" style="min-width:unset;max-width:unset">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="display:flex;align-items:center;gap:7px"><span class="spv-flag">🇷🇼</span><span class="spv-country" style="font-size:14px">Rwanda SPV</span></div><span style="font-size:9px;background:rgba(0,200,122,.1);color:var(--green);padding:2px 6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Raising $2M</span></div>
-                <div class="spv-metrics" style="margin-bottom:10px"><div class="spv-m"><span class="lbl">Stations</span><span class="val" style="color:var(--solar)">5</span></div><div class="spv-m"><span class="lbl">Rev / mo</span><span class="val" style="color:var(--green)">$51K</span></div></div>
+                <div class="spv-metrics" style="margin-bottom:10px"><div class="spv-m"><span class="lbl">Stations</span><span class="val" style="color:var(--solar)">5</span></div></div>
                 <div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px"><span>Debt ($1M target)</span><span style="color:var(--green);font-weight:700">100% committed ✓</span></div><div class="prog-track"><div class="prog-fill" data-w="100" style="background:var(--voltage-3)"></div></div></div>
                 <div><div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px"><span>Equity ($1M target)</span><span style="color:var(--solar);font-weight:700">$200K committed</span></div><div class="prog-track"><div class="prog-fill" data-w="20"></div></div></div>
               </div>
@@ -880,14 +871,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
               <!-- Tanzania -->
               <div class="spv-card" style="min-width:unset;max-width:unset">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="display:flex;align-items:center;gap:7px"><span class="spv-flag">🇹🇿</span><span class="spv-country" style="font-size:14px">Tanzania SPV</span></div><span style="font-size:9px;background:rgba(255,212,0,.08);color:var(--solar);padding:2px 6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Raising $2.5M</span></div>
-                <div class="spv-metrics" style="margin-bottom:10px"><div class="spv-m"><span class="lbl">Stations</span><span class="val" style="color:var(--solar)">7</span></div><div class="spv-m"><span class="lbl">Rev / mo</span><span class="val">~$2K</span></div></div>
+                <div class="spv-metrics" style="margin-bottom:10px"><div class="spv-m"><span class="lbl">Stations</span><span class="val" style="color:var(--solar)">7</span></div></div>
                 <div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px"><span>Debt ($2.5M target)</span><span style="color:var(--voltage-3);font-weight:700">$1M committed</span></div><div class="prog-track"><div class="prog-fill" data-w="40" style="background:var(--voltage-3)"></div></div></div>
                 <div><div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px"><span>Equity</span><span style="color:rgba(255,255,255,.3);font-weight:700">Open</span></div><div class="prog-track"><div class="prog-fill" data-w="1"></div></div></div>
               </div>
               <!-- Uganda -->
               <div class="spv-card" style="min-width:unset;max-width:unset">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="display:flex;align-items:center;gap:7px"><span class="spv-flag">🇺🇬</span><span class="spv-country" style="font-size:14px">Uganda SPV</span></div><span style="font-size:9px;background:rgba(255,212,0,.08);color:rgba(255,212,0,.6);padding:2px 6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Raising $2M</span></div>
-                <div class="spv-metrics" style="margin-bottom:10px"><div class="spv-m"><span class="lbl">Stations Planned</span><span class="val" style="color:rgba(255,255,255,.45)">4</span></div><div class="spv-m"><span class="lbl">Rev / mo</span><span class="val" style="color:rgba(255,255,255,.4)">—</span></div></div>
+                <div class="spv-metrics" style="margin-bottom:10px"><div class="spv-m"><span class="lbl">Stations Planned</span><span class="val" style="color:rgba(255,255,255,.45)">4</span></div></div>
                 <div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px"><span>Debt</span><span style="color:var(--voltage-3);font-weight:700">$500K committed</span></div><div class="prog-track"><div class="prog-fill" data-w="25" style="background:var(--voltage-3)"></div></div></div>
                 <div><div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px"><span>Equity</span><span style="color:rgba(255,255,255,.3);font-weight:700">Open</span></div><div class="prog-track"><div class="prog-fill" data-w="0"></div></div></div>
               </div>
@@ -905,7 +896,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
             <div class="conn-v blue"></div>
             <div style="font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:rgba(69,97,222,.65);margin-bottom:10px;font-weight:700">City Entities</div>
             <div style="display:flex;flex-direction:column;gap:6px;width:100%">
-              <div class="e-box opco" style="width:100%;margin:0"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">🇷🇼</span><div><div class="e-name" style="font-size:13px">Kabisa Rwanda</div><div class="e-detail">Core Market · Operational</div></div></div><div style="margin-top:8px;display:flex;gap:16px"><div style="font-size:10px;color:rgba(255,255,255,.4)">Cars Served<strong style="color:var(--solar);display:block;font-size:13px">1,900+</strong></div><div style="font-size:10px;color:rgba(255,255,255,.4)">Rev/mo<strong style="color:var(--green);display:block;font-size:13px">$51K</strong></div></div></div>
+              <div class="e-box opco" style="width:100%;margin:0"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">🇷🇼</span><div><div class="e-name" style="font-size:13px">Kabisa Rwanda</div><div class="e-detail">Core Market · Operational</div></div></div><div style="margin-top:8px;display:flex;gap:16px"><div style="font-size:10px;color:rgba(255,255,255,.4)">Cars Served<strong style="color:var(--solar);display:block;font-size:13px">1,900+</strong></div></div></div>
               <div class="e-box opco" style="width:100%;margin:0"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">🇰🇪</span><div><div class="e-name" style="font-size:13px">Kabisa Kenya</div><div class="e-detail">Launched 2025 · Scaling</div></div></div><div style="margin-top:8px;display:flex;gap:16px"><div style="font-size:10px;color:rgba(255,255,255,.4)">Cars Served<strong style="color:var(--solar);display:block;font-size:13px">140+</strong></div></div></div>
               <div class="e-box opco" style="width:100%;margin:0;opacity:.48"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">🇹🇿</span><div><div class="e-name" style="font-size:13px">Kabisa Tanzania</div><div class="e-detail">2026 · Planned</div></div></div></div>
               <div class="e-box opco" style="width:100%;margin:0;opacity:.48"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">🇺🇬</span><div><div class="e-name" style="font-size:13px">Kabisa Uganda</div><div class="e-detail">2026 · Planned</div></div></div></div>
@@ -963,7 +954,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
         <div class="faq-group" data-cat="overview">
           <div style="font-family:'Fjalla One',sans-serif;font-size:18px;color:var(--solar);margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid rgba(255,212,0,.15)">Overview &amp; Company</div>
           <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What is Kabisa? <span class="faq-arr">+</span></div><div class="faq-a">Kabisa is East Africa's leading EV charging infrastructure company, building the backbone for zero-emission freight and mobility. We operate charging hubs and corridor stations across Rwanda, Kenya, Tanzania and Uganda, with expansion into Ethiopia and DRC underway.</div></div>
-          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What stage is Kabisa at? <span class="faq-arr">+</span></div><div class="faq-a">Kabisa is post-traction and pre-Series A. We have 5 operational stations in Rwanda, 1,900+ EVs on our network, 300+ EVs sold, and $51K/month in charging revenue as of December 2025. We've completed 12 full EV truck corridor trips across borders.</div></div>
+          <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What stage is Kabisa at? <span class="faq-arr">+</span></div><div class="faq-a">Kabisa is post-traction and pre-Series A. We have 5 operational stations in Rwanda, 2,000+ EVs on our network, 300+ EVs sold, and $51K/month in charging revenue as of December 2025. We've completed 12 full EV truck corridor trips across borders.</div></div>
           <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">What problem does Kabisa solve? <span class="faq-arr">+</span></div><div class="faq-a">East Africa has rapidly growing EV adoption (led by Rwanda's government mandate) but zero cross-border charging infrastructure. Diesel trucks dominate freight. Kabisa replaces that with a network of fast-chargers along the continent's most important trade corridors.</div></div>
           <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)">Who are Kabisa's customers? <span class="faq-arr">+</span></div><div class="faq-a">150+ commercial customers including the US Embassy, international NGOs, logistics operators and corporate fleets. Revenue comes from charging sessions (pay-per-kWh), EV sales commissions, fleet service contracts, and B2B charging subscriptions.</div></div>
         </div>
@@ -1027,7 +1018,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
       <div class="dr-tab" data-folder="f03" onclick="switchDRFolder('f03')">03 · Financials</div>
       <div class="dr-tab" data-folder="f04" onclick="switchDRFolder('f04')">04 · Legal &amp; Term Sheets</div>
       <div class="dr-tab" data-folder="f05" onclick="switchDRFolder('f05')">05 · Operations</div>
-      <div class="dr-tab" data-folder="f06" onclick="switchDRFolder('f06')">06 · ESG &amp; Impact</div>
     </div>
 
     <!-- 01 Company Overview -->
@@ -1039,9 +1029,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
         <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📊</div><div class="dr-doc-body"><div class="dr-doc-title">Investor Pitch Deck</div><div class="dr-doc-meta">PDF · 28 slides · Mar 2026</div><div class="dr-doc-desc">Full company overview, market thesis, traction, team, and ask. Best starting point for any investor.</div></div><div class="dr-doc-action">↓ PDF</div></a>
         <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📄</div><div class="dr-doc-body"><div class="dr-doc-title">Kabisa One-Pager</div><div class="dr-doc-meta">PDF · 2 pages · Feb 2026</div><div class="dr-doc-desc">Snapshot of the business: traction, structure, investment ask and contact.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🏗️</div><div class="dr-doc-body"><div class="dr-doc-title">Corporate Structure Diagram</div><div class="dr-doc-meta">PDF · 3 pages</div><div class="dr-doc-desc">Visual overview of TopCo, Corridors Ltd, Hubs Ltd and all country-level entities.</div></div><div class="dr-doc-action">↓ PDF</div></a>
         <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">👥</div><div class="dr-doc-body"><div class="dr-doc-title">Team &amp; Advisors</div><div class="dr-doc-meta">PDF · 4 pages</div><div class="dr-doc-desc">Full team bios, advisory board, and key operational partners across East Africa.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📰</div><div class="dr-doc-body"><div class="dr-doc-title">FY2025 Investor Update</div><div class="dr-doc-meta">PDF · 12 pages · Dec 2025</div><div class="dr-doc-desc">Full year performance report: revenue, network growth, corridor milestones, and 2026 priorities.</div></div><div class="dr-doc-action">↓ PDF</div></a>
+        <a class="dr-doc" href="https://docs.google.com/presentation/d/1RxxbpSxH0TCSpJQ2BKL_1hdv6_r_E0m8-WyOKnmJzbo/export?format=pptx"><div class="dr-doc-icon">📰</div><div class="dr-doc-body"><div class="dr-doc-title">FY2025 Investor Update</div><div class="dr-doc-meta">PPTX · Google Slides · Dec 2025</div><div class="dr-doc-desc">Full year performance report: revenue, network growth, corridor milestones, and 2026 priorities.</div></div><div class="dr-doc-action">↓ PPTX</div></a>
         <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🗺️</div><div class="dr-doc-body"><div class="dr-doc-title">Network Map &amp; Station List</div><div class="dr-doc-meta">PDF · 5 pages</div><div class="dr-doc-desc">All active, development, and planned stations with coordinates, capacity, and status.</div></div><div class="dr-doc-action">↓ PDF</div></a>
       </div>
     </div>
@@ -1059,7 +1048,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
         <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🇰🇪</div><div class="dr-doc-body"><div class="dr-doc-title">Kenya SPV — Investment Brief</div><div class="dr-doc-meta">PDF · 10 pages</div><div class="dr-doc-desc">Nairobi Hub metrics, scaling plan, and SPV structure for Kenya market entry.</div></div><div class="dr-doc-action">↓ PDF</div></a>
         <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🇹🇿</div><div class="dr-doc-body"><div class="dr-doc-title">Tanzania SPV — Investment Brief</div><div class="dr-doc-meta">PDF · 12 pages</div><div class="dr-doc-desc">Central Corridor buildout, existing traction (12 trips), and 2026 station plan.</div></div><div class="dr-doc-action">↓ PDF</div></a>
         <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🇺🇬</div><div class="dr-doc-body"><div class="dr-doc-title">Uganda SPV — Investment Brief</div><div class="dr-doc-meta">PDF · 10 pages</div><div class="dr-doc-desc">Uganda market entry via Northern Corridor. Station plan and early commitments.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🗺️</div><div class="dr-doc-body"><div class="dr-doc-title">Kabisa 2026–2028 Strategy</div><div class="dr-doc-meta">PDF · 16 pages</div><div class="dr-doc-desc">Multi-year expansion roadmap, market prioritisation, and capital deployment plan.</div></div><div class="dr-doc-action">↓ PDF</div></a>
       </div>
     </div>
 
@@ -1104,25 +1092,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
         <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">⚡</div><div class="dr-doc-body"><div class="dr-doc-title">Station Performance Data</div><div class="dr-doc-meta">Excel · All active stations · Dec 2025</div><div class="dr-doc-desc">Per-station: sessions, kWh dispensed, uptime, revenue, and monthly trends.</div></div><div class="dr-doc-action">↓ XLSX</div></a>
         <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🚛</div><div class="dr-doc-body"><div class="dr-doc-title">Corridor Trip Logs</div><div class="dr-doc-meta">PDF · 12 verified trips</div><div class="dr-doc-desc">Documentation of 12 full EV truck trips on the Dar–Kigali Central Corridor including load and energy data.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🤝</div><div class="dr-doc-body"><div class="dr-doc-title">Customer &amp; Partner Agreements</div><div class="dr-doc-meta">PDF · Redacted</div><div class="dr-doc-desc">Redacted fleet operator agreements, OEM partnerships, and government MoUs.</div></div><div class="dr-doc-action">↓ PDF</div></a>
         <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🛠️</div><div class="dr-doc-body"><div class="dr-doc-title">Technical Specs — Charging Equipment</div><div class="dr-doc-meta">PDF · Per station type</div><div class="dr-doc-desc">Specs for 240kW, 120kW, and 40kW stations. OEM details, warranty, and service agreements.</div></div><div class="dr-doc-action">↓ PDF</div></a>
         <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📍</div><div class="dr-doc-body"><div class="dr-doc-title">Site Lease &amp; Land Agreements</div><div class="dr-doc-meta">PDF · All secured sites</div><div class="dr-doc-desc">Lease documentation for all stations with secured or active land rights.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📦</div><div class="dr-doc-body"><div class="dr-doc-title">CapEx &amp; Build Schedule</div><div class="dr-doc-meta">Excel · 2026 deployment plan</div><div class="dr-doc-desc">CapEx per station, procurement timeline, and 2026 build-out schedule across all corridors.</div></div><div class="dr-doc-action">↓ XLSX</div></a>
-      </div>
-    </div>
-
-    <!-- 06 ESG -->
-    <div class="dr-folder" id="f06">
-      <div class="dr-folder-header">
-        <div style="background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.2);color:var(--solar);padding:3px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Confidential</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.35)">ESG and impact documentation for credentialed investors</div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🌱</div><div class="dr-doc-body"><div class="dr-doc-title">Carbon Offset Methodology</div><div class="dr-doc-meta">PDF · 8 pages</div><div class="dr-doc-desc">Carbon accounting for diesel displacement. 142 tCO₂ offset to date. Path to credit issuance.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">💚</div><div class="dr-doc-body"><div class="dr-doc-title">SDG Alignment Report</div><div class="dr-doc-meta">PDF · 10 pages · 2025</div><div class="dr-doc-desc">Impact mapped to UN SDGs: 7 (Clean Energy), 9 (Infrastructure), 13 (Climate Action).</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">⚡</div><div class="dr-doc-body"><div class="dr-doc-title">Energy Source Certification</div><div class="dr-doc-meta">PDF · Per country</div><div class="dr-doc-desc">Certification of 100% hydro and solar sourced electricity across all active Kabisa stations.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🌍</div><div class="dr-doc-body"><div class="dr-doc-title">DFI &amp; Development Finance Primer</div><div class="dr-doc-meta">PDF · 6 pages</div><div class="dr-doc-desc">Overview of active development finance conversations and Kabisa's eligibility for DFI debt instruments.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">👷</div><div class="dr-doc-body"><div class="dr-doc-title">Social Impact Data</div><div class="dr-doc-meta">PDF · 2025 annual</div><div class="dr-doc-desc">Jobs created, local supplier spend, female employment %, and community engagement across all markets.</div></div><div class="dr-doc-action">↓ PDF</div></a>
       </div>
     </div>
 
