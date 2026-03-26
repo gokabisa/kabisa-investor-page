@@ -103,8 +103,9 @@ body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);
 .hub-badge.soon{background:var(--gray2);color:var(--gray4)}
 .hub-4s{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--gray2)}
 .service-card{background:var(--black);padding:28px 24px}
-.service-icon{font-size:28px;margin-bottom:12px}
-.service-name{font-family:'Bebas Neue',sans-serif;font-size:20px;margin-bottom:8px}
+.service-icon{display:none}
+.service-name{font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:8px}
+.service-name .s-letter{font-size:36px;color:#FFD400}
 .service-desc{font-size:13px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.6}
 
 .hub-detail{padding:0 80px 80px}
@@ -221,7 +222,7 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
   async
   crossorigin="anonymous"
   data-clerk-publishable-key="pk_live_Y2xlcmsua2FiaXNhLmFmcmljYSQ"
-  src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+  src="https://clerk.kabisa.africa/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
   type="text/javascript"
 ></script>
 </head>
@@ -289,8 +290,8 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
       <p class="hero-sub">Kabisa builds the charging backbone for zero-emission freight and mobility across East Africa — through a network of Hubs and the Corridors that connect them.</p>
     </div>
     <div class="home-pillars">
-      <div class="pillar-card" onclick="showPage('hubs-home')"><div class="pillar-num">01</div><div class="pillar-label">Network</div><div class="pillar-title">HUBS</div><div class="pillar-desc">City-based EV retail, service and charging centres anchoring fleet adoption across East Africa.</div><div class="pillar-arrow">Explore Hubs →</div></div>
-      <div class="pillar-card" onclick="showPage('corridors')"><div class="pillar-num">02</div><div class="pillar-label">Infrastructure</div><div class="pillar-title">CORRIDORS</div><div class="pillar-desc">Long-haul charging networks connecting capitals and ports across 3,000+ km of active road.</div><div class="pillar-arrow">Explore Corridors →</div></div>
+      <div class="pillar-card" onclick="showPage('hubs-home')"><div class="pillar-label">Network</div><div class="pillar-title">HUBS</div><div class="pillar-desc">City-based EV retail, service and charging centres anchoring fleet adoption across East Africa.</div><div class="pillar-arrow">Explore Hubs →</div></div>
+      <div class="pillar-card" onclick="showPage('corridors')"><div class="pillar-label">Infrastructure</div><div class="pillar-title">CORRIDORS</div><div class="pillar-desc">Long-haul charging networks connecting capitals and ports across 3,000+ km of active road.</div><div class="pillar-arrow">Explore Corridors →</div></div>
     </div>
   </section>
 
@@ -378,10 +379,10 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
   <div style="padding:0 80px 80px">
     <div class="section-heading reveal">The 4S Hub Model</div>
     <div class="hub-4s reveal">
-      <div class="service-card"><div class="service-icon">🛒</div><div class="service-name">SALES</div><div class="service-desc">EV retail — 2W, 3W and light commercial to consumers and fleet operators.</div></div>
-      <div class="service-card"><div class="service-icon">🔧</div><div class="service-name">SERVICE</div><div class="service-desc">Authorised service and maintenance. Certified EV technicians on-site.</div></div>
-      <div class="service-card"><div class="service-icon">📦</div><div class="service-name">SPARES</div><div class="service-desc">Locally-stocked parts reducing downtime for commercial fleets.</div></div>
-      <div class="service-card"><div class="service-icon">📊</div><div class="service-name">SURVEYS</div><div class="service-desc">Fleet diagnostics, route surveys and EV feasibility for operators transitioning to electric.</div></div>
+      <div class="service-card"><div class="service-name"><span class="s-letter">S</span>ALES</div><div class="service-desc">EV retail — 2W, 3W and light commercial to consumers and fleet operators.</div></div>
+      <div class="service-card"><div class="service-name"><span class="s-letter">S</span>ERVICE</div><div class="service-desc">Authorised service and maintenance. Certified EV technicians on-site.</div></div>
+      <div class="service-card"><div class="service-name"><span class="s-letter">S</span>PARES</div><div class="service-desc">Locally-stocked parts reducing downtime for commercial fleets.</div></div>
+      <div class="service-card"><div class="service-name"><span class="s-letter">S</span>URVEYS</div><div class="service-desc">Fleet diagnostics, route surveys and EV feasibility for operators transitioning to electric.</div></div>
     </div>
   </div>
   <footer class="site-footer"><div class="footer-bottom"><p>© 2025 Kabisa Group · <a onclick="showPage('home')" style="color:inherit;cursor:pointer">kabisa.africa</a></p></div></footer>
@@ -420,10 +421,10 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
         </div>
         <div class="section-heading">Hub Services</div>
         <div class="hub-4s">
-          <div class="service-card"><div class="service-icon">🛒</div><div class="service-name">EV SALES</div><div class="service-desc">2W, 3W and light commercial EVs. Fleet pricing for 5+ vehicle operators.</div></div>
-          <div class="service-card"><div class="service-icon">🔧</div><div class="service-name">SERVICE CENTRE</div><div class="service-desc">Certified EV technicians on-site 6 days a week.</div></div>
-          <div class="service-card"><div class="service-icon">⚡</div><div class="service-name">CHARGING</div><div class="service-desc">AC and DC charging. Multiple corridor waypoints across Rwanda.</div></div>
-          <div class="service-card"><div class="service-icon">📊</div><div class="service-name">FLEET ADVISORY</div><div class="service-desc">Route analysis and TCO modelling for operators transitioning from diesel.</div></div>
+          <div class="service-card"><div class="service-name">EV <span class="s-letter">S</span>ALES</div><div class="service-desc">2W, 3W and light commercial EVs. Fleet pricing for 5+ vehicle operators.</div></div>
+          <div class="service-card"><div class="service-name"><span class="s-letter">S</span>ERVICE CENTRE</div><div class="service-desc">Certified EV technicians on-site 6 days a week.</div></div>
+          <div class="service-card"><div class="service-name">CHARGING</div><div class="service-desc">AC and DC charging. Multiple corridor waypoints across Rwanda.</div></div>
+          <div class="service-card"><div class="service-name">FLEET ADVISORY</div><div class="service-desc">Route analysis and TCO modelling for operators transitioning from diesel.</div></div>
         </div>
       </div>
       <div>
@@ -472,10 +473,10 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
         <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.65);line-height:1.8;margin-bottom:40px">Kenya's commercial fleet operators face dramatic fuel cost pressures. Kabisa Nairobi provides the sales, service and charging infrastructure to make the switch to electric commercially viable.</p>
         <div class="section-heading">Hub Services</div>
         <div class="hub-4s">
-          <div class="service-card"><div class="service-icon">🛒</div><div class="service-name">EV SALES</div><div class="service-desc">Commercial vehicles for last-mile delivery and boda boda operators.</div></div>
-          <div class="service-card"><div class="service-icon">🔧</div><div class="service-name">SERVICE</div><div class="service-desc">Full EV service centre. Mobile servicing for fleet customers.</div></div>
-          <div class="service-card"><div class="service-icon">⚡</div><div class="service-name">CHARGING</div><div class="service-desc">Fast DC charging for commercial freight on the Northern Corridor.</div></div>
-          <div class="service-card"><div class="service-icon">📊</div><div class="service-name">FLEET ADVISORY</div><div class="service-desc">Corridor route planning and driver training for Kenyan operators.</div></div>
+          <div class="service-card"><div class="service-name">EV <span class="s-letter">S</span>ALES</div><div class="service-desc">Commercial vehicles for last-mile delivery and boda boda operators.</div></div>
+          <div class="service-card"><div class="service-name"><span class="s-letter">S</span>ERVICE</div><div class="service-desc">Full EV service centre. Mobile servicing for fleet customers.</div></div>
+          <div class="service-card"><div class="service-name">CHARGING</div><div class="service-desc">Fast DC charging for commercial freight on the Northern Corridor.</div></div>
+          <div class="service-card"><div class="service-name">FLEET ADVISORY</div><div class="service-desc">Corridor route planning and driver training for Kenyan operators.</div></div>
         </div>
       </div>
       <div>
@@ -1655,7 +1656,6 @@ window.addEventListener('load', function() {
 
       <div style="background:#000;padding:36px 32px;position:relative;overflow:hidden">
         <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#FFD400"></div>
-        <div style="font-size:32px;margin-bottom:20px">⚡</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:12px;letter-spacing:1px">KABISA CHARGE SYSTEM</div>
         <p style="font-size:13px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:24px">The hardware and software stack managing every charging session — from the station to the grid connection to the billing layer.</p>
         <div style="display:flex;flex-direction:column;gap:8px">
@@ -1668,7 +1668,6 @@ window.addEventListener('load', function() {
 
       <div style="background:#000;padding:36px 32px;position:relative;overflow:hidden">
         <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#FFD400"></div>
-        <div style="font-size:32px;margin-bottom:20px">🚛</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:12px;letter-spacing:1px">FLEET INTELLIGENCE</div>
         <p style="font-size:13px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:24px">Real-time telemetry, route optimization and predictive analytics for commercial fleets operating on Kabisa-enabled corridors.</p>
         <div style="display:flex;flex-direction:column;gap:8px">
@@ -1682,7 +1681,6 @@ window.addEventListener('load', function() {
 
       <div style="background:#000;padding:36px 32px;position:relative;overflow:hidden">
         <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#FFD400"></div>
-        <div style="font-size:32px;margin-bottom:20px">🗺️</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:12px;letter-spacing:1px">CORRIDOR NETWORK</div>
         <p style="font-size:13px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:24px">The physical and digital layer connecting charging stations across 3,000+ km of active corridor — with real-time station availability and reservation.</p>
         <div style="display:flex;flex-direction:column;gap:8px">
