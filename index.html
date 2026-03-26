@@ -234,7 +234,6 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
     <li><a onclick="showPage('corridors')" id="nav-corridors">Corridors</a></li>
     <li><a onclick="showPage('vehicles')" id="nav-vehicles">Vehicles</a></li>
     <li><a onclick="showPage('technology')" id="nav-tech">Technology</a></li>
-    <li><a onclick="showPage('impact')" id="nav-impact">Impact</a></li>
     <li class="nav-about-wrap" style="position:relative">
       <a id="nav-about" onclick="toggleAbout(event)" style="cursor:pointer">About ▾</a>
       <div id="about-dropdown" style="display:none;position:absolute;top:100%;left:0;background:#111;border:1px solid #2A2A2A;min-width:160px;z-index:200;margin-top:4px">
@@ -272,7 +271,6 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
   <a onclick="showPage('corridors');closeMobileMenu()">Corridors</a>
   <a onclick="showPage('vehicles');closeMobileMenu()">Vehicles</a>
   <a onclick="showPage('technology');closeMobileMenu()">Technology</a>
-  <a onclick="showPage('impact');closeMobileMenu()">Impact</a>
   <div class="mobile-menu-section">About</div>
   <a onclick="showPage('team');closeMobileMenu()">Team</a>
   <a onclick="showPage('careers');closeMobileMenu()">Careers</a>
@@ -915,7 +913,7 @@ function showPage(id) {
   const t = document.getElementById('page-' + id);
   if (t) { t.classList.add('active'); window.scrollTo(0,0); window.location.hash = id;
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    const m={'home':'nav-home','hubs-home':'nav-hubs','hubs-kigali':'nav-hubs','hubs-nairobi':'nav-hubs','corridors':'nav-corridors','investors-gate':'nav-investors','sign-up':'nav-investors','sign-in':'nav-investors','investor-status':'nav-investors','impact':'nav-impact','team':'nav-team','news':'nav-news','technology':'nav-tech','vehicles':'nav-vehicles','careers':'nav-about'};
+    const m={'home':'nav-home','hubs-home':'nav-hubs','hubs-kigali':'nav-hubs','hubs-nairobi':'nav-hubs','corridors':'nav-corridors','investors-gate':'nav-investors','sign-up':'nav-investors','sign-in':'nav-investors','investor-status':'nav-investors','team':'nav-team','news':'nav-news','technology':'nav-tech','vehicles':'nav-vehicles','careers':'nav-about'};
     if(m[id]){const el=document.getElementById(m[id]);if(el)el.classList.add('active');}
     setTimeout(initReveal,100);
   }
@@ -1705,445 +1703,135 @@ window.addEventListener('load', function() {
       <div style="background:#000;padding:24px 20px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:8px">Hardware</div><div style="font-family:'Bebas Neue',sans-serif;font-size:18px;margin-bottom:6px">DC Charger Units</div><p style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">60–240 kW stations deployed at corridor waypoints and urban hubs</p></div>
       <div style="background:#000;padding:24px 20px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:8px">Data</div><div style="font-family:'Bebas Neue',sans-serif;font-size:18px;margin-bottom:6px">Telematics Layer</div><p style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">CAN bus integration, OBD-II, custom firmware for African road conditions</p></div>
       <div style="background:#000;padding:24px 20px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:8px">Grid</div><div style="font-family:'Bebas Neue',sans-serif;font-size:18px;margin-bottom:6px">Energy Management</div><p style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">Peak shaving, solar integration, backup battery for unreliable grid conditions</p></div>
-      <div style="background:#000;padding:24px 20px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:8px">Payments</div><div style="font-family:'Bebas Neue',sans-serif;font-size:18px;margin-bottom:6px">Payment Rail</div><p style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">Mobile money, card, fleet accounts, and subscription billing across all markets</p></div>
-      <div style="background:#000;padding:24px 20px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:8px">Diagnostics</div><div style="font-family:'Bebas Neue',sans-serif;font-size:18px;margin-bottom:6px">Service Platform</div><p style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">Predictive fault detection, remote diagnostics, certified technician dispatch</p></div>
+      <div style="background:#000;padding:24px 20px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:8px">Telematics</div><div style="font-family:'Bebas Neue',sans-serif;font-size:18px;margin-bottom:6px">Telematics Service Platform</div><p style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">Predictive fault detection, remote diagnostics, certified technician dispatch</p></div>
       <div style="background:#000;padding:24px 20px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:8px">Analytics</div><div style="font-family:'Bebas Neue',sans-serif;font-size:18px;margin-bottom:6px">Fleet Dashboard</div><p style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">Per-vehicle TCO, fuel equivalent savings, CO₂ reduction reporting for fleets</p></div>
       <div style="background:#000;padding:24px 20px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:8px">API</div><div style="font-family:'Bebas Neue',sans-serif;font-size:18px;margin-bottom:6px">Integration Layer</div><p style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">Open APIs for logistics operators, OEMs, and government reporting systems</p></div>
       <div style="background:#000;padding:24px 20px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:8px">Intelligence</div><div style="font-family:'Bebas Neue',sans-serif;font-size:18px;margin-bottom:6px">Route Optimization</div><p style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">AI-powered charging stop recommendations based on load, range, and station availability</p></div>
     </div>
+
+
   </div>
   <footer class="site-footer"><div class="footer-bottom"><p>© 2025 Kabisa Group · <a onclick="showPage('home')" style="color:inherit;cursor:pointer">kabisa.africa</a></p></div></footer>
 </div>
 
-<div class="page" id="page-impact">
 <style>
-.imp-toggle{display:flex;gap:2px;background:#2A2A2A;padding:2px}
-.imp-btn{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:10px 20px;cursor:pointer;color:rgba(255,255,255,0.5);background:#000;border:none;transition:all 0.2s}
-.imp-btn.active{background:#FFD400;color:#000;font-weight:700}
-.imp-btn:hover:not(.active){color:#FFD400}
-.imp-kpi{background:#000;padding:24px;border-top:2px solid #FFD400}
-.imp-kpi-num{font-family:'Bebas Neue',sans-serif;font-size:44px;color:#FFD400;line-height:1}
-.imp-kpi-lbl{font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
-.imp-kpi-sub{font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px}
-.before-after{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#2A2A2A}
-.ba-card{padding:32px}
-.ba-card.before{background:#0d0d0d}
-.ba-card.after{background:#0a1a0a}
-.ba-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid #2A2A2A}
-.ba-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px}
-.ba-row-lbl{color:rgba(255,255,255,0.45)}
-.ba-row-val{font-family:'Bebas Neue',sans-serif;font-size:18px}
-.country-card{background:#000;padding:22px;border:1px solid #1A1A1A;transition:border-color 0.2s;cursor:pointer}
-.country-card:hover{border-color:#FFD400}
-.scenario-btn{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:8px 16px;cursor:pointer;background:#000;color:rgba(255,255,255,0.4);border:1px solid #2A2A2A;transition:all 0.2s}
-.scenario-btn.active{border-color:#FFD400;color:#FFD400}
-.chart-bar-wrap{display:flex;align-items:flex-end;gap:6px;height:140px;padding-top:20px}
-.chart-bar{flex:1;background:#FFD400;opacity:0.8;position:relative;transition:height 0.5s ease}
-.chart-bar.planned{background:#1B39C0;opacity:0.6}
-.chart-bar span{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:9px;font-family:'Barlow Condensed',sans-serif;color:rgba(255,255,255,0.5);white-space:nowrap}
-.chart-x{display:flex;gap:6px;margin-top:6px}
-.chart-x span{flex:1;text-align:center;font-size:9px;color:rgba(255,255,255,0.3);font-family:'Barlow Condensed',sans-serif}
-.trend-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
-.trend-label{font-size:12px;color:rgba(255,255,255,0.5);width:60px}
-.trend-bar-bg{flex:1;height:6px;background:#1A1A1A;border-radius:0;overflow:hidden}
-.trend-bar-fill{height:100%;background:#FFD400;transition:width 1s ease}
-.trend-val{font-family:'Bebas Neue',sans-serif;font-size:14px;color:#FFD400;width:60px;text-align:right}
-</style>
+/* ── Responsive Design ── */
 
-  <!-- HERO -->
-  <div style="padding-top:72px;background:#000;min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden">
-    <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,212,0,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,212,0,0.025) 1px,transparent 1px);background-size:60px 60px"></div>
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(0,200,122,0.06) 0%,transparent 70%)"></div>
-    <div style="position:relative;z-index:2;max-width:900px;padding:0 40px">
-      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(0,200,122,0.1);border:1px solid rgba(0,200,122,0.3);padding:8px 16px;margin-bottom:28px;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#00C87A">⚡ Live Impact View</div>
-      <h1 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,8vw,110px);line-height:0.9;letter-spacing:2px;margin-bottom:24px">AFRICA'S TRANSPORT<br><em style="color:#FFD400;font-style:normal">TRANSITION, QUANTIFIED</em></h1>
-      <p style="font-size:17px;font-weight:300;color:rgba(255,255,255,0.6);line-height:1.7;max-width:680px;margin:0 auto 40px">A live view of fuel spend, emissions, and electrification opportunity across freight and consumer transport markets.</p>
-
-    </div>
-  </div>
-
-  <!-- SECTION 1: Pan-African KPI Cards -->
-  <div style="padding:60px 80px 0">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#FFD400;margin-bottom:24px;display:flex;align-items:center;gap:16px">Pan-African Impact Summary<span style="flex:1;height:1px;background:#2A2A2A;display:block"></span></div>
-    <div id="kpi-grid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:2px;background:#2A2A2A">
-      <div class="imp-kpi"><div class="imp-kpi-num" id="k-vehicles">28.4M</div><div class="imp-kpi-lbl">Vehicles in Scope</div><div class="imp-kpi-sub">Freight + Consumer</div></div>
-      <div class="imp-kpi"><div class="imp-kpi-num" id="k-fuelspend">$94B</div><div class="imp-kpi-lbl">Annual Fuel Spend</div><div class="imp-kpi-sub">USD, est. 2024</div></div>
-      <div class="imp-kpi"><div class="imp-kpi-num" id="k-emissions">218Mt</div><div class="imp-kpi-lbl">Annual CO₂ Emissions</div><div class="imp-kpi-sub">Transport sector</div></div>
-      <div class="imp-kpi"><div class="imp-kpi-num" id="k-imported">87%</div><div class="imp-kpi-lbl">Fuel Imported</div><div class="imp-kpi-sub">Avg. SSA import share</div></div>
-      <div class="imp-kpi"><div class="imp-kpi-num" id="k-newsales">2.1M</div><div class="imp-kpi-lbl">New Vehicle Sales/yr</div><div class="imp-kpi-sub">All categories</div></div>
-      <div class="imp-kpi"><div class="imp-kpi-num" id="k-evshare">1.2%</div><div class="imp-kpi-lbl">EV Share New Sales</div><div class="imp-kpi-sub">Africa avg. 2024</div></div>
-    </div>
-  </div>
-
-  <!-- SECTION 2: Before vs After -->
-  <div style="padding:60px 80px 0">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#FFD400;margin-bottom:24px;display:flex;align-items:center;gap:16px">Before vs After — Kabisa Deployment<span style="flex:1;height:1px;background:#2A2A2A;display:block"></span></div>
-    <div class="before-after">
-      <div class="ba-card before">
-        <div class="ba-label" style="color:#888">● Diesel Status Quo — East Africa Freight</div>
-        <div class="ba-row"><span class="ba-row-lbl">Annual Fuel Spend</span><span class="ba-row-val" style="color:#888">$4.2B</span></div>
-        <div class="ba-row"><span class="ba-row-lbl">CO₂ Emissions / yr</span><span class="ba-row-val" style="color:#888">11.4 Mt</span></div>
-        <div class="ba-row"><span class="ba-row-lbl">Vehicles Electrified</span><span class="ba-row-val" style="color:#888">0</span></div>
-        <div class="ba-row"><span class="ba-row-lbl">Fuel Consumed</span><span class="ba-row-val" style="color:#888">1.6B litres</span></div>
-        <div class="ba-row" style="border:none"><span class="ba-row-lbl">Operating Cost / km</span><span class="ba-row-val" style="color:#888">$0.38</span></div>
-      </div>
-      <div class="ba-card after">
-        <div class="ba-label" style="color:#00C87A">⚡ Kabisa EV Transition — East Africa Freight</div>
-        <div class="ba-row"><span class="ba-row-lbl">Annual Fuel Spend</span><span class="ba-row-val" style="color:#00C87A">$0.9B</span><span style="font-size:11px;color:#00C87A;margin-left:8px">↓78%</span></div>
-        <div class="ba-row"><span class="ba-row-lbl">CO₂ Emissions / yr</span><span class="ba-row-val" style="color:#00C87A">2.1 Mt</span><span style="font-size:11px;color:#00C87A;margin-left:8px">↓82%</span></div>
-        <div class="ba-row"><span class="ba-row-lbl">Vehicles Electrified</span><span class="ba-row-val" style="color:#FFD400">38,000</span></div>
-        <div class="ba-row"><span class="ba-row-lbl">Fuel Consumed</span><span class="ba-row-val" style="color:#00C87A">0.3B litres</span><span style="font-size:11px;color:#00C87A;margin-left:8px">↓81%</span></div>
-        <div class="ba-row" style="border:none"><span class="ba-row-lbl">Operating Cost / km</span><span class="ba-row-val" style="color:#00C87A">$0.14</span><span style="font-size:11px;color:#00C87A;margin-left:8px">↓63%</span></div>
-      </div>
-    </div>
-    <div style="background:#0a1a0a;border:1px solid rgba(0,200,122,0.2);padding:20px 32px;display:flex;align-items:center;gap:32px;flex-wrap:wrap">
-      <div style="font-size:12px;color:rgba(0,200,122,0.7);font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase">Kabisa Scenario Impact</div>
-      <div style="display:flex;gap:40px;flex-wrap:wrap">
-        <div><span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#00C87A">$3.3B</span><span style="font-size:11px;color:rgba(255,255,255,0.4);margin-left:8px">fuel spend avoided / yr</span></div>
-        <div><span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#00C87A">9.3 Mt</span><span style="font-size:11px;color:rgba(255,255,255,0.4);margin-left:8px">CO₂ avoided / yr</span></div>
-        <div><span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#FFD400">38,000</span><span style="font-size:11px;color:rgba(255,255,255,0.4);margin-left:8px">vehicles electrified</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECTION 3: Freight segment detail (Ampersand-inspired) -->
-  <div style="padding:60px 80px 0">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#FFD400;margin-bottom:24px;display:flex;align-items:center;gap:16px">Freight Transport — Electrification Opportunity<span style="flex:1;height:1px;background:#2A2A2A;display:block"></span></div>
-
-    <!-- Big freight numbers -->
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:2px;background:#2A2A2A;margin-bottom:3px">
-      <div style="background:#000;padding:28px 24px;border-top:2px solid #FFD400">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:#FFD400;line-height:1">3.2M</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px">Commercial Trucks</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:3px">East & South Africa</div>
-      </div>
-      <div style="background:#000;padding:28px 24px;border-top:2px solid #FFD400">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:#FFD400;line-height:1">$28B</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px">Annual Diesel Spend</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:3px">Freight sector</div>
-      </div>
-      <div style="background:#000;padding:28px 24px;border-top:2px solid #FFD400">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:#FFD400;line-height:1">62Mt</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px">CO₂ / Year</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:3px">Freight transport</div>
-      </div>
-      <div style="background:#000;padding:28px 24px;border-top:2px solid #FFD400">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:#FFD400;line-height:1">280K</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px">Corridor Vehicles</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:3px">Northern + Central</div>
-      </div>
-      <div style="background:#000;padding:28px 24px;border-top:2px solid #FFD400">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:#FFD400;line-height:1">63%</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px">Cost Reduction Potential</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:3px">Diesel → EV TCO</div>
-      </div>
-    </div>
-
-    <!-- Kabisa active metrics -->
-    <div style="background:#0a0f1a;border:1px solid rgba(27,57,192,0.3);padding:32px 40px;margin-bottom:40px">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#4561DE;margin-bottom:20px">Kabisa Live — Freight Network</div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:32px">
-        <div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:#FFD400;line-height:1">350</div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-top:4px">EVs Sold, Rwanda</div>
-          <div style="margin-top:10px;height:3px;background:#2A2A2A;border-radius:0"><div style="width:18%;height:100%;background:#FFD400"></div></div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:4px">18% of 2025 target</div>
-        </div>
-        <div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:#FFD400;line-height:1">2,000+</div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-top:4px">EVs on Network</div>
-          <div style="margin-top:10px;height:3px;background:#2A2A2A;border-radius:0"><div style="width:32%;height:100%;background:#FFD400"></div></div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:4px">32% of 2025 target</div>
-        </div>
-        <div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:#FFD400;line-height:1">40K+</div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-top:4px">Charging Sessions</div>
-          <div style="margin-top:10px;height:3px;background:#2A2A2A;border-radius:0"><div style="width:54%;height:100%;background:#FFD400"></div></div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:4px">54% of 2025 target</div>
-        </div>
-        <div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:#00C87A;line-height:1">63%</div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-top:4px">TCO Savings vs Diesel</div>
-          <div style="margin-top:10px;height:3px;background:#2A2A2A;border-radius:0"><div style="width:63%;height:100%;background:#00C87A"></div></div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:4px">Per-vehicle operating cost</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- SECTION 5: Country Explorer -->
-  <div style="padding:60px 80px 0">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#FFD400;margin-bottom:24px;display:flex;align-items:center;gap:16px">Country Explorer<span style="flex:1;height:1px;background:#2A2A2A;display:block"></span></div>
-
-    <div style="display:flex;align-items:center;gap:20px;margin-bottom:32px;flex-wrap:wrap">
-      <select id="country-select" onchange="updateCountry()" style="background:#111;border:1px solid #2A2A2A;color:#fff;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:1px;outline:none;cursor:pointer;min-width:200px">
-        <option value="rwanda">Rwanda</option>
-        <option value="kenya">Kenya</option>
-        <option value="tanzania">Tanzania</option>
-        <option value="uganda">Uganda</option>
-        <option value="ethiopia">Ethiopia</option>
-        <option value="southafrica">South Africa</option>
-        <option value="zambia">Zambia</option>
-        <option value="drc">DR Congo</option>
-        <option value="ghana">Ghana</option>
-        <option value="nigeria">Nigeria</option>
-      </select>
-      <div id="country-name-label" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#FFD400">Rwanda</div>
-    </div>
-
-    <div id="country-dashboard" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:#2A2A2A;margin-bottom:32px">
-      <!-- Filled by JS -->
-    </div>
-
-    <!-- Year trend bars -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;background:#2A2A2A;margin-bottom:40px">
-      <div style="background:#000;padding:28px">
-        <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;font-family:'Barlow Condensed',sans-serif;margin-bottom:8px">New Vehicle Sales Trend</div>
-        <div class="chart-bar-wrap" id="sales-chart"></div>
-        <div class="chart-x" id="sales-x"></div>
-      </div>
-      <div style="background:#000;padding:28px">
-        <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;font-family:'Barlow Condensed',sans-serif;margin-bottom:8px">EV Share of New Sales</div>
-        <div class="chart-bar-wrap" id="ev-chart"></div>
-        <div class="chart-x" id="ev-x"></div>
-      </div>
-      <div style="background:#000;padding:28px">
-        <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;font-family:'Barlow Condensed',sans-serif;margin-bottom:12px">Fuel Spend Trend ($M/yr)</div>
-        <div id="fuel-trend"></div>
-      </div>
-      <div style="background:#000;padding:28px">
-        <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;font-family:'Barlow Condensed',sans-serif;margin-bottom:12px">Emissions Trend (ktCO₂/yr)</div>
-        <div id="emissions-trend"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECTION 6: Scenario modeler -->
-  <div style="padding:0 80px">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#FFD400;margin-bottom:24px;display:flex;align-items:center;gap:16px">Kabisa Scenario Modeller<span style="flex:1;height:1px;background:#2A2A2A;display:block"></span></div>
-    <div style="display:flex;gap:4px;margin-bottom:24px">
-      <button class="scenario-btn active" id="sc-baseline" onclick="setScenario('baseline')">Current Baseline</button>
-      <button class="scenario-btn" id="sc-kabisa" onclick="setScenario('kabisa')">Kabisa Deployment</button>
-      <button class="scenario-btn" id="sc-2030" onclick="setScenario('2030')">Accelerated 2030</button>
-    </div>
-    <div id="scenario-output" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:#2A2A2A;margin-bottom:24px">
-    </div>
-    <div style="background:#0a0a0a;border:1px solid #2A2A2A;padding:24px 32px;margin-bottom:60px">
-      <div style="font-size:11px;color:rgba(255,255,255,0.35);font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Sliders — Adjust Assumptions</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;flex-wrap:wrap">
-        <div><label style="font-size:11px;color:rgba(255,255,255,0.4);display:block;margin-bottom:6px">Fuel Price ($/litre): <span id="fuel-price-val">1.30</span></label><input type="range" min="0.8" max="2.5" step="0.1" value="1.30" oninput="document.getElementById('fuel-price-val').textContent=parseFloat(this.value).toFixed(2);refreshScenario()" style="width:100%;accent-color:#FFD400"></div>
-        <div><label style="font-size:11px;color:rgba(255,255,255,0.4);display:block;margin-bottom:6px">EV Adoption Rate (%): <span id="ev-adopt-val">15</span></label><input type="range" min="5" max="80" step="5" value="15" oninput="document.getElementById('ev-adopt-val').textContent=this.value;refreshScenario()" style="width:100%;accent-color:#FFD400"></div>
-        <div><label style="font-size:11px;color:rgba(255,255,255,0.4);display:block;margin-bottom:6px">Annual Mileage (km): <span id="mileage-val">80,000</span></label><input type="range" min="30000" max="200000" step="10000" value="80000" oninput="document.getElementById('mileage-val').textContent=parseInt(this.value).toLocaleString();refreshScenario()" style="width:100%;accent-color:#FFD400"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECTION 7: Methodology -->
-  <div style="padding:0 80px 80px">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#FFD400;margin-bottom:24px;display:flex;align-items:center;gap:16px">Data Methodology<span style="flex:1;height:1px;background:#2A2A2A;display:block"></span></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;background:#2A2A2A">
-      <div style="background:#000;padding:28px">
-        <h4 style="font-family:'Bebas Neue',sans-serif;font-size:20px;margin-bottom:12px;color:#FFD400">Data Sources</h4>
-        <p style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.7">This page combines observed market data where available, and modeled estimates where direct data is limited. Country analysis draws on vehicle parc estimates, annual new vehicle sales (AAAM, NAAMSA, local transport ministries), EV penetration rates, and fuel consumption assumptions from IEA and World Bank transport datasets.</p>
-      </div>
-      <div style="background:#000;padding:28px">
-        <h4 style="font-family:'Bebas Neue',sans-serif;font-size:20px;margin-bottom:12px;color:#FFD400">Model Assumptions</h4>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <div style="font-size:12px;color:rgba(255,255,255,0.45);display:flex;gap:8px"><span style="color:#FFD400">·</span>Freight: 80,000 km/yr avg · 28L/100km diesel</div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.45);display:flex;gap:8px"><span style="color:#FFD400">·</span>Consumer: 18,000 km/yr avg · 8L/100km petrol</div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.45);display:flex;gap:8px"><span style="color:#FFD400">·</span>EV: 1.8 kWh/km (freight) · 0.18 kWh/km (consumer)</div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.45);display:flex;gap:8px"><span style="color:#FFD400">·</span>CO₂: 2.68 kg/litre diesel · 2.31 kg/litre petrol</div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.45);display:flex;gap:8px"><span style="color:#FFD400">·</span>Grid intensity: 0.4 kg CO₂/kWh SSA avg</div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.45);display:flex;gap:8px"><span style="color:#FFD400">·</span>Fuel price: $1.30/litre avg (regional weighted)</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <footer class="site-footer"><div class="footer-bottom"><p>© 2025 Kabisa Group · <a onclick="showPage('home')" style="color:inherit;cursor:pointer">kabisa.africa</a></p></div></footer>
-</div>
-
-<script>
-// ── Impact page data ──
-const COUNTRY_DATA = {
-  rwanda:      { name:'Rwanda',      cars:130000, cvs:42000, trucks:18000, newCars:8200, newTrucks:1800, evCars:310, evTrucks:40, fuelSpend:420, emissions:1140, evShareCars:'3.8%', evShareTrucks:'2.2%',
-    sales:[6800,7200,7600,7900,8200], evPct:[0.8,1.2,1.9,2.8,3.8], fuel:[380,395,405,412,420], ems:[1040,1070,1090,1110,1140] },
-  kenya:       { name:'Kenya',       cars:1200000,cvs:380000,trucks:140000,newCars:65000,newTrucks:12000,evCars:950,evTrucks:120,fuelSpend:4200,emissions:11400,evShareCars:'1.5%',evShareTrucks:'1.0%',
-    sales:[55000,58000,61000,63000,65000], evPct:[0.3,0.5,0.8,1.2,1.5], fuel:[3800,3950,4050,4120,4200], ems:[10400,10700,10900,11100,11400] },
-  tanzania:    { name:'Tanzania',    cars:820000, cvs:260000,trucks:90000, newCars:42000,newTrucks:8000, evCars:210,evTrucks:30, fuelSpend:2800,emissions:7600, evShareCars:'0.5%',evShareTrucks:'0.4%',
-    sales:[36000,38000,39500,41000,42000], evPct:[0.1,0.2,0.3,0.4,0.5], fuel:[2500,2600,2680,2740,2800], ems:[6800,7000,7200,7400,7600] },
-  uganda:      { name:'Uganda',      cars:680000, cvs:210000,trucks:72000, newCars:35000,newTrucks:6500, evCars:140,evTrucks:20, fuelSpend:2100,emissions:5700, evShareCars:'0.4%',evShareTrucks:'0.3%',
-    sales:[30000,31500,33000,34000,35000], evPct:[0.1,0.2,0.2,0.3,0.4], fuel:[1900,1970,2010,2060,2100], ems:[5100,5300,5450,5580,5700] },
-  ethiopia:    { name:'Ethiopia',    cars:480000, cvs:155000,trucks:55000, newCars:28000,newTrucks:5200, evCars:420,evTrucks:65, fuelSpend:1650,emissions:4500, evShareCars:'1.5%',evShareTrucks:'1.3%',
-    sales:[22000,23500,25000,26500,28000], evPct:[0.4,0.7,1.0,1.3,1.5], fuel:[1450,1510,1560,1600,1650], ems:[3900,4050,4200,4350,4500] },
-  southafrica: { name:'South Africa',cars:9200000,cvs:1800000,trucks:620000,newCars:340000,newTrucks:52000,evCars:3400,evTrucks:180,fuelSpend:28000,emissions:76000,evShareCars:'1.0%',evShareTrucks:'0.4%',
-    sales:[295000,310000,320000,332000,340000], evPct:[0.2,0.4,0.6,0.8,1.0], fuel:[25000,26200,27000,27600,28000], ems:[68000,70500,72800,74500,76000] },
-  zambia:      { name:'Zambia',      cars:420000, cvs:135000,trucks:48000, newCars:18000,newTrucks:3400, evCars:45, evTrucks:8,  fuelSpend:1100,emissions:3000, evShareCars:'0.3%',evShareTrucks:'0.2%',
-    sales:[15000,15800,16500,17200,18000], evPct:[0.1,0.1,0.2,0.2,0.3], fuel:[980,1010,1040,1070,1100], ems:[2650,2720,2800,2900,3000] },
-  drc:         { name:'DR Congo',    cars:580000, cvs:190000,trucks:68000, newCars:24000,newTrucks:4500, evCars:30, evTrucks:5,  fuelSpend:1450,emissions:3950, evShareCars:'0.1%',evShareTrucks:'0.1%',
-    sales:[20000,21000,22000,23000,24000], evPct:[0.05,0.07,0.08,0.1,0.1], fuel:[1300,1340,1380,1420,1450], ems:[3540,3640,3740,3850,3950] },
-  ghana:       { name:'Ghana',       cars:760000, cvs:240000,trucks:84000, newCars:38000,newTrucks:7200, evCars:190,evTrucks:25, fuelSpend:1950,emissions:5300, evShareCars:'0.5%',evShareTrucks:'0.3%',
-    sales:[33000,34500,36000,37000,38000], evPct:[0.1,0.2,0.3,0.4,0.5], fuel:[1750,1800,1850,1900,1950], ems:[4750,4900,5000,5150,5300] },
-  nigeria:     { name:'Nigeria',     cars:8400000,cvs:1600000,trucks:550000,newCars:280000,newTrucks:45000,evCars:840,evTrucks:45,fuelSpend:22000,emissions:60000,evShareCars:'0.3%',evShareTrucks:'0.1%',
-    sales:[240000,252000,262000,271000,280000], evPct:[0.1,0.1,0.2,0.2,0.3], fuel:[19800,20500,21100,21600,22000], ems:[53800,55500,57200,58800,60000] }
-};
-
-const YEARS = [2020,2021,2022,2023,2024];
-let currentCountry = 'rwanda';
-let currentScenario = 'baseline';
-let currentMode = 'combined';
-
-const MODE_DATA = {
-  combined: { vehicles:'28.4M', fuelspend:'$94B', emissions:'218Mt', imported:'87%', newsales:'2.1M', evshare:'1.2%' },
-  freight:  { vehicles:'3.2M', fuelspend:'$28B', emissions:'62Mt', imported:'91%', newsales:'185K', evshare:'0.4%' },
-  consumer: { vehicles:'25.2M', fuelspend:'$66B', emissions:'156Mt', imported:'85%', newsales:'1.9M', evshare:'1.4%' }
-};
-
-function setMode(m) {
-  currentMode = m;
-  ['combined','freight','consumer'].forEach(x => {
-    document.getElementById('mode-'+x).classList.toggle('active', x===m);
-  });
-  const d = MODE_DATA[m];
-  document.getElementById('k-vehicles').textContent = d.vehicles;
-  document.getElementById('k-fuelspend').textContent = d.fuelspend;
-  document.getElementById('k-emissions').textContent = d.emissions;
-  document.getElementById('k-imported').textContent = d.imported;
-  document.getElementById('k-newsales').textContent = d.newsales;
-  document.getElementById('k-evshare').textContent = d.evshare;
+/* Tablet landscape */
+@media(max-width:1100px){
+  .home-hero{min-height:90vh}
+  .hero-h1{font-size:clamp(60px,9vw,120px)!important}
 }
 
-function fmt(n) { return n >= 1000000 ? (n/1000000).toFixed(1)+'M' : n >= 1000 ? (n/1000).toFixed(0)+'K' : n; }
-
-function updateCountry() {
-  const sel = document.getElementById('country-select');
-  currentCountry = sel.value;
-  const d = COUNTRY_DATA[currentCountry];
-  document.getElementById('country-name-label').textContent = d.name;
-
-  const dash = document.getElementById('country-dashboard');
-  dash.innerHTML = [
-    ['Passenger Cars', fmt(d.cars), 'Vehicle stock'],
-    ['Commercial Vehicles', fmt(d.cvs), 'Vehicle stock'],
-    ['Trucks', fmt(d.trucks), 'Vehicle stock'],
-    ['Annual Fuel Spend', '$'+fmt(d.fuelSpend)+'M', 'All transport'],
-    ['Transport Emissions', fmt(d.emissions)+'kt CO₂', 'Annual'],
-    ['New Car Sales', fmt(d.newCars)+'/yr', 'Latest year'],
-    ['New Truck Sales', fmt(d.newTrucks)+'/yr', 'Latest year'],
-    ['EV Share — Cars', d.evShareCars, 'Of new sales'],
-    ['EV Share — Trucks', d.evShareTrucks, 'Of new sales'],
-  ].map(([lbl,val,sub]) => `<div style="background:#000;padding:22px 20px;border-top:2px solid ${lbl.includes('EV')?'#00C87A':'#FFD400'}"><div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:${lbl.includes('EV')?'#00C87A':'#FFD400'};line-height:1">${val}</div><div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-top:4px">${lbl}</div><div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:2px">${sub}</div></div>`).join('');
-
-  // Sales bar chart
-  const maxSales = Math.max(...d.sales);
-  document.getElementById('sales-chart').innerHTML = d.sales.map((v,i) =>
-    `<div class="chart-bar" style="height:${Math.round(v/maxSales*100)}%"><span>${fmt(v)}</span></div>`).join('');
-  document.getElementById('sales-x').innerHTML = YEARS.map(y => `<span>${y}</span>`).join('');
-
-  // EV share bars
-  const maxEv = Math.max(...d.evPct) || 1;
-  document.getElementById('ev-chart').innerHTML = d.evPct.map((v,i) =>
-    `<div class="chart-bar planned" style="height:${Math.round(v/maxEv*100)}%"><span>${v}%</span></div>`).join('');
-  document.getElementById('ev-x').innerHTML = YEARS.map(y => `<span>${y}</span>`).join('');
-
-  // Trend bars
-  const maxFuel = Math.max(...d.fuel);
-  document.getElementById('fuel-trend').innerHTML = d.fuel.map((v,i) =>
-    `<div class="trend-row"><span class="trend-label">${YEARS[i]}</span><div class="trend-bar-bg"><div class="trend-bar-fill" style="width:${Math.round(v/maxFuel*100)}%"></div></div><span class="trend-val">$${v}M</span></div>`).join('');
-
-  const maxEms = Math.max(...d.ems);
-  document.getElementById('emissions-trend').innerHTML = d.ems.map((v,i) =>
-    `<div class="trend-row"><span class="trend-label">${YEARS[i]}</span><div class="trend-bar-bg"><div class="trend-bar-fill" style="width:${Math.round(v/maxEms*100)}%;background:#4561DE"></div></div><span class="trend-val" style="color:#4561DE">${v}kt</span></div>`).join('');
-
-  refreshScenario();
+/* Tablet / small desktop */
+@media(max-width:900px){
+  .home-hero .hero-content{padding:0 20px}
+  .hero-sub{font-size:16px!important;max-width:90%!important}
+  .stats-strip{padding:16px 20px!important;gap:16px!important;flex-wrap:wrap;justify-content:center}
+  .stats-strip .divider{display:none}
+  .stats-strip .stat{flex:0 0 auto;gap:8px}
+  .stats-strip .num{font-size:26px!important}
+  .stats-strip .lbl{font-size:10px!important}
 }
 
-function setScenario(s) {
-  currentScenario = s;
-  ['baseline','kabisa','2030'].forEach(x => {
-    document.getElementById('sc-'+x).classList.toggle('active', x===s);
-  });
-  refreshScenario();
-}
-
-function refreshScenario() {
-  const d = COUNTRY_DATA[currentCountry];
-  const fuelPrice = parseFloat(document.querySelector('input[oninput*="fuel-price"]').value) || 1.30;
-  const evAdopt = parseInt(document.querySelector('input[oninput*="ev-adopt"]').value) || 15;
-  const mileage = parseInt(document.querySelector('input[oninput*="mileage"]').value) || 80000;
-
-  const totalTrucks = d.trucks + d.cvs;
-  const baseline_fuel = (totalTrucks * mileage * 0.28 * fuelPrice / 1000000).toFixed(0);
-  const baseline_co2  = (totalTrucks * mileage * 0.28 * 2.68 / 1000000).toFixed(1);
-  const ev_count = Math.round(totalTrucks * evAdopt / 100);
-  const saved_fuel = (ev_count * mileage * 0.28 * fuelPrice / 1000000).toFixed(0);
-  const saved_co2  = (ev_count * mileage * 0.28 * 2.68 / 1000000).toFixed(1);
-  const chargers_needed = Math.round(ev_count / 8);
-  const op_saving_pct = currentScenario === '2030' ? 68 : currentScenario === 'kabisa' ? 63 : 0;
-
-  const multiplier = currentScenario === '2030' ? 2.5 : currentScenario === 'kabisa' ? 1 : 0;
-  const sc_color = currentScenario === 'baseline' ? '#888' : '#FFD400';
-
-  const scenarios_data = currentScenario === 'baseline' ? [
-    ['Fuel Spend / yr', '$'+Number(baseline_fuel).toLocaleString()+'M', 'Current total'],
-    ['CO₂ Emissions / yr', baseline_co2+'Mt', 'Transport sector'],
-    ['Electrifiable Vehicles', fmt(ev_count*0), 'No EV program'],
-    ['Chargers Required', '0', 'No deployment'],
-    ['Operating Cost Saving', '0%', 'vs diesel baseline'],
-    ['Charging Demand Created', '0 GWh/yr', 'No EV transition'],
-  ] : [
-    ['Fuel Spend Avoided', '$'+Math.round(saved_fuel*multiplier).toLocaleString()+'M/yr', currentScenario==='2030'?'Accelerated 2030':'Kabisa scenario'],
-    ['CO₂ Avoided', (saved_co2*multiplier).toFixed(1)+'Mt/yr', 'vs diesel baseline'],
-    ['Vehicles Electrified', fmt(Math.round(ev_count*multiplier)), currentScenario==='2030'?'Full fleet scenario':'Year 1 deployment'],
-    ['Chargers Required', fmt(Math.round(chargers_needed*multiplier)), 'DC fast chargers'],
-    ['Operating Cost Saving', op_saving_pct+'%', 'Per vehicle vs diesel'],
-    ['Charging Demand', Math.round(ev_count*multiplier*mileage*1.8/1000000)+'GWh/yr', 'Total network demand'],
-  ];
-
-  document.getElementById('scenario-output').innerHTML = scenarios_data.map(([lbl,val,sub]) =>
-    `<div style="background:#000;padding:24px;border-top:2px solid ${currentScenario==='baseline'?'#333':currentScenario==='2030'?'#00C87A':'#FFD400'}"><div style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:${currentScenario==='baseline'?'#555':currentScenario==='2030'?'#00C87A':'#FFD400'};line-height:1">${val}</div><div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-top:4px">${lbl}</div><div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:2px">${sub}</div></div>`).join('');
-}
-
-// Init on page show
-document.addEventListener('DOMContentLoaded', function() {
-  updateCountry();
-});
-// Also init when navigated to
-window._origShowPageImpact = window.showPage;
-</script>
-
-
-<style>
-/* Mobile responsiveness improvements */
+/* Mobile */
 @media(max-width:768px){
   .global-nav{padding:0 16px;height:60px}
   .global-nav .nav-links{display:none!important}
-  .page-hero{padding:100px 24px 40px!important}
+  .nav-mobile-btn{display:flex!important}
+
+  /* Page layout */
+  .page-hero{padding:100px 20px 36px!important}
   .page-title{font-size:clamp(40px,10vw,80px)!important}
+  .page-subtitle{font-size:15px!important;line-height:1.6!important}
   .hub-subnav{padding:0 16px!important}
-  .hubs-row{grid-template-columns:1fr 1fr!important;margin:0!important}
+
+  /* Padding overrides for inline styles */
   [style*="padding:0 80px"]{padding-left:20px!important;padding-right:20px!important}
   [style*="padding:60px 80px"]{padding:40px 20px!important}
-  [style*="padding:0 80px 80px"]{padding:0 20px 48px!important}
+  [style*="padding:0 80px 80px"]{padding:0 20px 40px!important}
+
+  /* ── HOME PAGE ── */
+  .home-hero{min-height:auto!important;height:auto!important;padding-bottom:0!important}
+  .home-hero .hero-content{padding:0 16px}
+  .hero-h1{font-size:clamp(48px,11vw,90px)!important}
+  .hero-sub{font-size:14px!important;max-width:100%!important;margin-bottom:24px!important}
+  .hero-eyebrow{font-size:10px!important;padding:6px 12px!important}
+  .home-pillars{grid-template-columns:1fr!important;gap:2px!important;margin:0 16px}
+  .pillar-card{padding:28px 24px!important}
+  .pillar-title{font-size:28px!important}
+  .pillar-desc{font-size:12px!important}
+  .stats-strip{padding:14px 16px!important;gap:12px!important;flex-wrap:wrap;justify-content:center}
+  .stats-strip .divider{display:none}
+  .stats-strip .stat{flex:0 0 auto;min-width:0;gap:6px}
+  .stats-strip .num{font-size:22px!important}
+  .stats-strip .lbl{font-size:9px!important;letter-spacing:0.5px!important}
+
+  /* Map section */
+  [style*="grid-template-columns:55% 45%"]{grid-template-columns:1fr!important}
+  #map-home,#map-corridors{min-height:280px!important}
+  .map-split [style*="padding:52px 60px"]{padding:32px 20px!important}
+
+  /* ── GRID OVERRIDES ── */
+  /* 3-col → 1-col */
+  [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr 1fr!important}
+  /* 4-col → 2-col (team, brands, connected systems) */
+  [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr 1fr!important}
+  /* 6-col → 2-col */
+  [style*="grid-template-columns:repeat(6,1fr)"]{grid-template-columns:1fr 1fr!important}
+  /* 2-col explore-by-hub → stack */
+  .map-split{grid-template-columns:1fr!important}
+
+  /* Hubs */
+  .hubs-row{grid-template-columns:1fr 1fr!important;margin:0!important}
+
+  /* Before/after */
+  .before-after{grid-template-columns:1fr!important}
+  .vision-stats{grid-template-columns:1fr 1fr!important}
+
+  /* ── VEHICLES PAGE ── */
+  #page-vehicles [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+  #page-vehicles [style*="padding:36px 40px"]{padding:24px 20px!important}
+
+  /* ── TEAM PAGE — always 2 columns ── */
+  #page-team [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr 1fr!important}
+  #page-team [style*="padding:20px 20px 24px"]{padding:14px 12px 18px!important}
+  #page-team [style*="font-size:19px"]{font-size:16px!important}
+  #page-team [style*="font-size:12px"]{font-size:11px!important}
+}
+
+/* Small mobile */
+@media(max-width:480px){
+  .page-title{font-size:clamp(36px,12vw,60px)!important}
+  .hero-h1{font-size:clamp(40px,12vw,70px)!important}
+  .hero-sub{font-size:13px!important}
+
+  .hubs-row{grid-template-columns:1fr!important}
+
+  /* Vehicles: categories stay 2-col, brands go 2-col */
   [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr!important}
   [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr 1fr!important}
-  [style*="grid-template-columns:55% 45%"]{grid-template-columns:1fr!important}
-  [style*="grid-template-columns:1fr 1fr"]:not(.stats-strip){grid-template-columns:1fr!important}
-  #map-home,#map-corridors{min-height:300px!important}
-  .home-pillars{grid-template-columns:1fr!important}
-  .stats-strip{padding:16px!important;gap:20px!important;flex-wrap:wrap}
-  .stats-strip .num{font-size:24px!important}
-  .before-after{grid-template-columns:1fr!important}
-  [style*="grid-template-columns:repeat(6,1fr)"]{grid-template-columns:1fr 1fr!important}
-  .vision-stats{grid-template-columns:1fr 1fr!important}
-  /* Mobile hamburger */
-  .nav-mobile-btn{display:flex!important}
+
+  /* Team stays 2 columns even on small screens */
+  #page-team [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr 1fr!important}
+
+  /* Stats strip compact */
+  .stats-strip{gap:8px!important;padding:12px!important}
+  .stats-strip .num{font-size:18px!important}
+  .stats-strip .lbl{font-size:8px!important}
+  .stats-strip .stat{gap:4px}
+
+  /* Smaller section headings */
+  .section-heading{font-size:clamp(28px,8vw,42px)!important}
 }
-@media(max-width:480px){
-  .hubs-row{grid-template-columns:1fr!important}
-  [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr!important}
-  .page-title{font-size:clamp(36px,12vw,60px)!important}
+
+/* Extra small */
+@media(max-width:360px){
+  .page-hero{padding:90px 14px 28px!important}
+  .hero-h1{font-size:clamp(36px,13vw,56px)!important}
+  .stats-strip .num{font-size:16px!important}
+  .pillar-card{padding:22px 18px!important}
+  #page-team [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr 1fr!important}
 }
 /* Mobile hamburger button */
 .nav-mobile-btn{
