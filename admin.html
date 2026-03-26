@@ -126,7 +126,9 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
 <script>
 const API_BASE = 'https://investors-api.gokabisa.com/api/v1';
 let currentFilter = '';
-let clerkToken = '';
+async function getToken() {
+  return await window.Clerk.session.getToken();
+}
 
 async function checkAdminAccess() {
   if (!window.Clerk) { document.getElementById('admin-loading').textContent = 'Clerk failed to load.'; return false; }
@@ -154,7 +156,6 @@ async function checkAdminAccess() {
   }
 
   document.getElementById('admin-user').textContent = window.Clerk.user.primaryEmailAddress?.emailAddress || '';
-  clerkToken = await window.Clerk.session.getToken();
   return true;
 }
 
@@ -246,7 +247,7 @@ let allRequests = [];
 
 async function loadRequests() {
   const url = currentFilter ? API_BASE + '/admin/requests?status=' + currentFilter : API_BASE + '/admin/requests';
-  const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + clerkToken } });
+  const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + await getToken() } });
   if (!res.ok) { console.error('Failed to load requests'); return; }
   const requests = await res.json();
   allRequests = requests;
@@ -269,7 +270,7 @@ async function approveRequest(id) {
   if (!confirm('Approve this request? An NDA will be sent via DocuSeal.')) return;
   const res = await fetch(API_BASE + '/admin/requests/' + id + '/approve', {
     method: 'PATCH',
-    headers: { 'Authorization': 'Bearer ' + clerkToken }
+    headers: { 'Authorization': 'Bearer ' + await getToken() }
   });
   if (res.ok) { await loadRequests(); }
   else { const d = await res.json(); alert(d.error || 'Failed to approve'); }
@@ -279,7 +280,7 @@ async function rejectRequest(id) {
   if (!confirm('Reject this request?')) return;
   const res = await fetch(API_BASE + '/admin/requests/' + id + '/reject', {
     method: 'PATCH',
-    headers: { 'Authorization': 'Bearer ' + clerkToken }
+    headers: { 'Authorization': 'Bearer ' + await getToken() }
   });
   if (res.ok) { await loadRequests(); }
   else { const d = await res.json(); alert(d.error || 'Failed to reject'); }
@@ -289,7 +290,7 @@ async function makeAdmin(id, email) {
   if (!confirm('Promote ' + email + ' to admin? They will no longer need an NDA and will have full admin access.')) return;
   const res = await fetch(API_BASE + '/admin/requests/' + id + '/make-admin', {
     method: 'PATCH',
-    headers: { 'Authorization': 'Bearer ' + clerkToken }
+    headers: { 'Authorization': 'Bearer ' + await getToken() }
   });
   if (res.ok) { await loadRequests(); }
   else { const d = await res.json(); alert(d.error || 'Failed to promote user'); }
@@ -299,7 +300,7 @@ async function makeAdmin(id, email) {
 
 async function loadNdaSettings() {
   var res = await fetch(API_BASE + '/admin/settings/nda', {
-    headers: { 'Authorization': 'Bearer ' + clerkToken }
+    headers: { 'Authorization': 'Bearer ' + await getToken() }
   });
   if (!res.ok) return;
   var data = await res.json();
@@ -335,7 +336,7 @@ async function saveCosigner() {
 
   var res = await fetch(API_BASE + '/admin/settings/nda-cosigner', {
     method: 'PUT',
-    headers: { 'Authorization': 'Bearer ' + clerkToken, 'Content-Type': 'application/json' },
+    headers: { 'Authorization': 'Bearer ' + await getToken(), 'Content-Type': 'application/json' },
     body: JSON.stringify({ email: email })
   });
   if (res.ok) {
