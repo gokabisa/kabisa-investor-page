@@ -255,8 +255,10 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
       <a style="cursor:pointer;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:rgba(255,212,0,0.15);border:1px solid rgba(255,212,0,0.3);transition:background 0.2s" onmouseover="this.style.background='rgba(255,212,0,0.3)'" onmouseout="this.style.background='rgba(255,212,0,0.15)'">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFD400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </a>
-      <div id="profile-dropdown" style="display:none;position:absolute;top:100%;right:0;background:#111;border:1px solid #2A2A2A;min-width:140px;z-index:200;margin-top:4px">
+      <div id="profile-dropdown" style="display:none;position:absolute;top:100%;right:0;min-width:140px;z-index:200;padding-top:4px">
+        <div style="background:#111;border:1px solid #2A2A2A">
         <a onclick="handleSignOut()" style="display:block;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);cursor:pointer" onmouseover="this.style.color='#FFD400'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Sign Out</a>
+        </div>
       </div>
     </li>
   </ul>
