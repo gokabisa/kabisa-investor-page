@@ -246,9 +246,11 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
     </li>
     <li id="nav-investor-wrap" style="position:relative" onmouseenter="showInvestorDropdown()" onmouseleave="hideInvestorDropdown()">
       <a onclick="handleInvestorNav()" id="nav-investors" class="nav-cta">Investor Access</a>
-      <div id="investor-dropdown" style="display:none;position:absolute;top:100%;left:0;background:#111;border:1px solid #2A2A2A;min-width:180px;z-index:200;margin-top:4px">
+      <div id="investor-dropdown" style="display:none;position:absolute;top:100%;left:0;min-width:180px;z-index:200;padding-top:4px">
+        <div style="background:#111;border:1px solid #2A2A2A">
         <a onclick="window.location.href='investor-portal.html';hideInvestorDropdown()" style="display:block;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);cursor:pointer;border-bottom:1px solid #2A2A2A" onmouseover="this.style.color='#FFD400'" onmouseout="this.style.color='rgba(255,255,255,0.7)'" id="nav-portal-link">Investor Portal</a>
         <a onclick="window.location.href='admin.html';hideInvestorDropdown()" style="display:block;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);cursor:pointer" onmouseover="this.style.color='#FFD400'" onmouseout="this.style.color='rgba(255,255,255,0.7)'" id="nav-admin-link">Admin Panel</a>
+        </div>
       </div>
     </li>
     <li id="nav-profile-wrap" style="display:none;position:relative" onmouseenter="document.getElementById('profile-dropdown').style.display='block'" onmouseleave="document.getElementById('profile-dropdown').style.display='none'">
