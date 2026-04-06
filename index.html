@@ -1060,7 +1060,7 @@ function handleInvestorNav() {
   if (window.Clerk && window.Clerk.user) {
     var role = window.Clerk.user.publicMetadata && window.Clerk.user.publicMetadata.role;
     if (role === 'admin') {
-      window.location.href = 'admin.html';
+      window.location.href = 'investor-portal.html';
     } else if (role === 'investor') {
       window.location.href = 'investor-portal.html';
     } else {
