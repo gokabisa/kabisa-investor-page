@@ -265,6 +265,7 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
   </div>
   <ul class="nav-links">
     <li><a id="nav-portal" class="active" onclick="showTab('portal')">Overview</a></li>
+    <li><a id="nav-dashboard" onclick="showTab('dashboard')">Dashboard</a></li>
     <li><a id="nav-corridors" onclick="showTab('corridors')">Corridors</a></li>
     <li><a id="nav-architecture" onclick="showTab('architecture')">Architecture</a></li>
     <li><a id="nav-faq" onclick="showTab('faq')">FAQ</a></li>
@@ -474,7 +475,7 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
 
 
 <!-- DASHBOARD REMOVED -->
-<div id="dashboard-removed" style="display:none">
+<div id="dashboard" class="section">
   <div style="padding:56px 60px" class="section-pad">
     <div class="sh">
       <div class="sub">Live Network Performance</div>
@@ -485,18 +486,13 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
     <!-- NETWORK KPIs -->
     <div class="stats-strip" style="margin-bottom:3px">
       <div class="stat-cell">
-        <div class="stat-number">300<span class="stat-unit">+</span></div>
-        <div class="stat-label">EVs Sold — Rwanda</div>
-        <div class="stat-delta">↑ 3× vs 2024</div>
-      </div>
-      <div class="stat-cell">
         <div class="stat-number">2,000<span class="stat-unit">+</span></div>
         <div class="stat-label">EVs on Network</div>
         <div class="stat-delta">↑ 10–15% month-on-month</div>
       </div>
       <div class="stat-cell">
         <div class="stat-number">25<span class="stat-unit">k</span></div>
-        <div class="stat-label">Charging Sessions YTD</div>
+        <div class="stat-label">Charging Sessions</div>
         <div class="stat-delta">↑ 15% MoM growth</div>
       </div>
     </div>
@@ -505,9 +501,6 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
     <div style="margin-top:3px;margin-bottom:56px">
       <div class="impact-grid">
         <div class="i-card"><div class="i-icon"></div><div class="i-val">15<span class="unit"> trucks</span></div><div class="i-label">Medium &amp; Heavy Duty Trucks Active</div><div class="i-trend">↑ Scaling to 100 by end-2026</div><div class="i-bar"><div class="i-fill" data-w="15"></div></div></div>
-        <div class="i-card"><div class="i-icon"></div><div class="i-val">300,000<span class="unit"> km</span></div><div class="i-label">Total EV Kilometres Driven</div><div class="i-trend">↑ 3 corridors proven across borders</div><div class="i-bar"><div class="i-fill" data-w="22"></div></div></div>
-        <div class="i-card"><div class="i-icon"></div><div class="i-val">142<span class="unit"> tCO₂</span></div><div class="i-label">Carbon Emissions Offset</div><div class="i-trend">↑ Equivalent to 61 cars off road / yr</div><div class="i-bar"><div class="i-fill" data-w="14"></div></div></div>
-        <div class="i-card"><div class="i-icon"></div><div class="i-val">1.24<span class="unit"> GWh</span></div><div class="i-label">Clean Energy Dispensed</div><div class="i-trend">↑ 100% hydro + solar sourced</div><div class="i-bar"><div class="i-fill" data-w="18"></div></div></div>
         <div class="i-card"><div class="i-icon"></div><div class="i-val">80<span class="unit">%</span></div><div class="i-label">Fuel Savings vs Diesel</div><div class="i-trend">↑ Fleet operators cash-flow positive Day 1</div><div class="i-bar"><div class="i-fill" data-w="80"></div></div></div>
         <div class="i-card"><div class="i-icon"></div><div class="i-val">150<span class="unit">+</span></div><div class="i-label">Commercial Customers</div><div class="i-trend">↑ US Embassy, NGOs, logistics, fleets</div><div class="i-bar"><div class="i-fill" data-w="45"></div></div></div>
       </div>
@@ -532,7 +525,7 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
           <div class="hm-block"><div class="hm-val">2,000+</div><div class="hm-key">Cars Served on Network</div></div>
           <div class="hm-block green"><div class="hm-val">2,400+</div><div class="hm-key">Monthly Sessions</div></div>
           <div class="hm-block blue"><div class="hm-val">60</div><div class="hm-key">Charging Points (35 AC + 25 DC)</div></div>
-          <div class="hm-block" style="grid-column:span 2"><div class="hm-val" style="font-size:16px">249 <span style="font-size:13px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;font-weight:400">/ yr</span></div><div class="hm-key">EV Maintenance Tickets</div></div>
+          <div class="hm-block" style="grid-column:span 2"><div class="hm-val" style="font-size:16px">298 <span style="font-size:13px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;font-weight:400">/ yr</span></div><div class="hm-key">EV Maintenance Tickets</div></div>
         </div>
       </div>
 
@@ -656,7 +649,7 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
       </div>
     </div>
   </div>
-</div><!-- end dashboard-removed -->
+</div><!-- end dashboard -->
 
 
 <!-- ════════════════ CORRIDORS ════════════════ -->
@@ -1078,7 +1071,7 @@ var mapInitialized = false;
 // ── TAB NAVIGATION ──
 function showTab(id) {
   document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
-  ['portal','corridors','architecture','faq','dataroom'].forEach(function(t){
+  ['portal','dashboard','corridors','architecture','faq','dataroom'].forEach(function(t){
     var el = document.getElementById('nav-' + t);
     if (el) el.classList.remove('active');
   });
