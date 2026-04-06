@@ -560,7 +560,6 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
           <div class="hm-block"><div class="hm-val">~20</div><div class="hm-key">Cars Served</div></div>
           <div class="hm-block green"><div class="hm-val">5×40kW</div><div class="hm-key">Chargers Active</div></div>
           <div class="hm-block blue"><div class="hm-val">5</div><div class="hm-key">Charging Points</div></div>
-          <div class="hm-block" style="grid-column:span 2"><div class="hm-val" style="font-size:16px">~$2K</div><div class="hm-key">Monthly Revenue</div></div>
         </div>
       </div>
 
@@ -666,46 +665,6 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
       <div class="desc">Three corridors tested across East Africa — all anchored in Kigali. Station-by-station implementation status below. <span style="color:rgba(255,255,255,.45)">Updated monthly · Last updated: <strong style="color:rgba(255,255,255,.65)">March 2026</strong></span></div>
     </div>
 
-    <!-- Northern Corridor -->
-    <div class="corridor-card">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:20px">
-        <div>
-          <div class="corr-name">Northern Corridor</div>
-          <p style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.65;max-width:560px;margin-top:5px">Mombasa → Kigali. The most traded corridor in sub-Saharan Africa — 1,850 km via the Kenya highlands and Uganda. 3 stations active (Mombasa &amp; Nairobi partner stations + Kigali Hub). <strong style="color:rgba(255,255,255,.8)">1 test trip completed.</strong> DRC extension underway from Kigali.</p>
-        </div>
-        <span class="badge tested" style="flex-shrink:0">Testing Phase</span>
-      </div>
-      <div class="corr-stats">
-        <div class="cs"><div class="n">1,850<span style="font-size:12px;color:rgba(255,212,0,.45)">km</span></div><div class="l">Total Length</div></div>
-        <div class="cs"><div class="n">14</div><div class="l">Total Stations</div></div>
-        <div class="cs"><div class="n">3</div><div class="l">Currently Active</div></div>
-        <div class="cs"><div class="n">1</div><div class="l">Trip Completed</div></div>
-        <div class="cs"><div class="n">6</div><div class="l">Countries</div></div>
-      </div>
-      <div class="route-row">
-        <span class="r-dot"></span><span>Mombasa</span><div class="r-line"></div><span>Voi</span><div class="r-line"></div><span>Kibwezi</span><div class="r-line"></div><span>Sultan Hamud</span><div class="r-line"></div><span style="color:var(--voltage-3)">Nairobi</span><div class="r-line"></div><span>Nakuru</span><div class="r-line"></div><span>Eldoret</span><div class="r-line"></div><span>Kisumu</span><div class="r-line"></div><span>Busia</span><div class="r-line"></div><span>Jinja</span><div class="r-line"></div><span>Kampala</span><div class="r-line"></div><span>Masaka</span><div class="r-line"></div><span>Mbarara</span><div class="r-line"></div><span style="color:var(--solar)">Kigali</span><div class="r-line" style="background:repeating-linear-gradient(to right,rgba(241,161,32,.5) 0 4px,transparent 4px 8px)"></div><span style="color:rgba(241,161,32,.7)">→ DRC</span>
-      </div>
-      <table class="impl-table" style="margin-top:20px">
-        <thead><tr><th>Station</th><th>Country</th><th>Status</th><th>Capacity</th><th>Progress</th></tr></thead>
-        <tbody>
-          <tr><td><div class="station-name" style="color:var(--solar)">Mombasa</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">Partner station</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--solar);font-size:12px;font-weight:700">Partner</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
-          <tr><td><div class="station-name">Voi</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:10%"></div></div></td></tr>
-          <tr><td><div class="station-name">Kibwezi</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:10%"></div></div></td></tr>
-          <tr><td><div class="station-name">Sultan Hamud</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
-          <tr><td><div class="station-name" style="color:var(--solar)">NBO Truck Park</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">Nairobi · Partner station</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--solar);font-size:12px;font-weight:700">Partner</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
-          <tr><td><div class="station-name">Nakuru</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
-          <tr><td><div class="station-name">Eldoret</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
-          <tr><td><div class="station-name">Kisumu</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
-          <tr><td><div class="station-name">Busia</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya/Uganda</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
-          <tr><td><div class="station-name">Jinja</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Uganda</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
-          <tr><td><div class="station-name" style="color:var(--solar)">Kampala</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">Uganda · Partner station</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Uganda</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--solar);font-size:12px;font-weight:700">Partner</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
-          <tr><td><div class="station-name">Masaka</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Uganda</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
-          <tr><td><div class="station-name">Mbarara</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Uganda</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
-          <tr><td><div class="station-name" style="color:var(--solar)">Kigali — SP Kanombe</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">Hub · East Africa's first 240kW fast charger</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Rwanda</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--solar);font-size:12px;font-weight:700">240kW</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
-        </tbody>
-      </table>
-    </div>
-
     <!-- Central Corridor -->
     <div class="corridor-card" style="border-color:rgba(69,97,222,.18)">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:20px">
@@ -720,7 +679,7 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
         <div class="cs" style="border-color:var(--voltage-3)"><div class="n" style="color:var(--voltage-3)">13</div><div class="l">Total Stations</div></div>
         <div class="cs" style="border-color:var(--voltage-3)"><div class="n" style="color:var(--voltage-3)">4</div><div class="l">Currently Active</div></div>
         <div class="cs" style="border-color:var(--voltage-3)"><div class="n" style="color:var(--voltage-3)">12</div><div class="l">Trips Completed</div></div>
-        <div class="cs" style="border-color:var(--voltage-3)"><div class="n" style="color:var(--voltage-3)">40kW</div><div class="l">Active Chargers</div></div>
+        <div class="cs" style="border-color:var(--voltage-3)"><div class="n" style="color:var(--voltage-3)">RW + TZ</div><div class="l">Countries</div></div>
       </div>
       <div class="route-row">
         <span class="r-dot" style="border-color:var(--voltage-3)"></span><span>Dar es Salaam</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Visiga</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Chalinze</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Gairo</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Dodoma</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Manyoni</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Singida</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Igunga</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Nzega</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Kahama</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Ushirombo</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Nyakanazi</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span>Rusumo</span><div class="r-line" style="background:repeating-linear-gradient(to right,var(--voltage-3) 0 4px,transparent 4px 8px)"></div><span style="color:var(--solar)">Kigali</span>
@@ -742,6 +701,38 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
           <tr><td><div class="station-name">Nyakanazi</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
           <tr><td><div class="station-name">Rusumo</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">Lease Secured · TZ border</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Tanzania/Rwanda</td><td><span class="badge dev">Lease Secured</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">0kW</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:35%"></div></div></td></tr>
           <tr><td><div class="station-name" style="color:var(--solar)">Kigali — SP Kanombe</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">East Africa's first 240kW fast charger</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Rwanda</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--solar);font-size:12px;font-weight:700">240kW</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Northern Corridor -->
+    <div class="corridor-card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:20px">
+        <div>
+          <div class="corr-name">Northern Corridor</div>
+          <p style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.65;max-width:560px;margin-top:5px">Nairobi → Kigali. The most traded corridor in sub-Saharan Africa — via the Kenya highlands. <strong style="color:rgba(255,255,255,.8)">1 test trip completed.</strong> DRC extension underway from Kigali.</p>
+        </div>
+        <span class="badge tested" style="flex-shrink:0">Testing Phase</span>
+      </div>
+      <div class="corr-stats">
+        <div class="cs"><div class="n">1,850<span style="font-size:12px;color:rgba(255,212,0,.45)">km</span></div><div class="l">Total Length</div></div>
+        <div class="cs"><div class="n">9</div><div class="l">Total Stations</div></div>
+        <div class="cs"><div class="n">2</div><div class="l">Currently Active</div></div>
+        <div class="cs"><div class="n">1</div><div class="l">Trip Completed</div></div>
+        <div class="cs"><div class="n">KE + UG</div><div class="l">Countries</div></div>
+      </div>
+      <div class="route-row">
+        <span class="r-dot"></span><span style="color:var(--voltage-3)">Nairobi</span><div class="r-line"></div><span>Nakuru</span><div class="r-line"></div><span>Eldoret</span><div class="r-line"></div><span>Kisumu</span><div class="r-line"></div><span>Busia</span><div class="r-line"></div><span style="color:var(--solar)">Kigali</span><div class="r-line" style="background:repeating-linear-gradient(to right,rgba(241,161,32,.5) 0 4px,transparent 4px 8px)"></div><span style="color:rgba(241,161,32,.7)">→ DRC</span>
+      </div>
+      <table class="impl-table" style="margin-top:20px">
+        <thead><tr><th>Station</th><th>Country</th><th>Status</th><th>Capacity</th><th>Progress</th></tr></thead>
+        <tbody>
+          <tr><td><div class="station-name" style="color:var(--solar)">NBO Sichey</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">Nairobi · Partner station</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--solar);font-size:12px;font-weight:700">Partner</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
+          <tr><td><div class="station-name">Nakuru</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
+          <tr><td><div class="station-name">Eldoret</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
+          <tr><td><div class="station-name">Kisumu</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
+          <tr><td><div class="station-name">Busia</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge dev">Under Dev</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div></td></tr>
+          <tr><td><div class="station-name" style="color:var(--solar)">Kigali — SP Kanombe</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">Hub · East Africa's first 240kW fast charger</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Rwanda</td><td><span class="badge active">Active ✓</span></td><td style="color:var(--solar);font-size:12px;font-weight:700">240kW</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:var(--green)"></div></div></td></tr>
         </tbody>
       </table>
     </div>
@@ -776,7 +767,7 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
           <tr><td><div class="station-name">Marsabit</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge planned">Planned</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
           <tr><td><div class="station-name">Isiolo</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge planned">Planned</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
           <tr><td><div class="station-name">Nanyuki</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge planned">Planned</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
-          <tr><td><div class="station-name">NBO Truck Park</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge planned">Planned</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
+          <tr><td><div class="station-name">NBO Sichey</div></td><td style="color:rgba(255,255,255,.45);font-size:11px">Kenya</td><td><span class="badge planned">Planned</span></td><td style="color:rgba(255,255,255,.4);font-size:11px">TBD</td><td><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:5%"></div></div></td></tr>
         </tbody>
       </table>
     </div>
