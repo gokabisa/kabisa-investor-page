@@ -1017,90 +1017,16 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
       <div class="desc">All documents are available below. Click any document to download or view.</div>
     </div>
 
-    <!-- FOLDER TABS -->
-    <div style="border-bottom:1px solid rgba(255,255,255,.08);display:flex;flex-wrap:wrap;margin-bottom:28px">
-      <div class="dr-tab active" data-folder="f01" onclick="switchDRFolder('f01')">01 · Company Overview</div>
-      <div class="dr-tab" data-folder="f02" onclick="switchDRFolder('f02')">02 · Investment Memos</div>
-      <div class="dr-tab" data-folder="f03" onclick="switchDRFolder('f03')">03 · Financials</div>
-      <div class="dr-tab" data-folder="f04" onclick="switchDRFolder('f04')">04 · Legal &amp; Term Sheets</div>
-      <div class="dr-tab" data-folder="f05" onclick="switchDRFolder('f05')">05 · Operations</div>
+    <div style="background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.2);padding:12px 20px;margin-bottom:24px;display:flex;align-items:center;gap:10px">
+      <span style="color:var(--solar);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Confidential</span>
+      <span style="font-size:12px;color:rgba(255,255,255,.35)">For credentialed investors with portal access</span>
     </div>
 
-    <!-- 01 Company Overview -->
-    <div class="dr-folder active" id="f01">
-      <div class="dr-folder-header">
-        <div style="background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.2);color:var(--solar);padding:3px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Confidential</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.35)">For credentialed investors with portal access</div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📊</div><div class="dr-doc-body"><div class="dr-doc-title">Investor Pitch Deck</div><div class="dr-doc-meta">PDF · 28 slides · Mar 2026</div><div class="dr-doc-desc">Full company overview, market thesis, traction, team, and ask. Best starting point for any investor.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📄</div><div class="dr-doc-body"><div class="dr-doc-title">Kabisa One-Pager</div><div class="dr-doc-meta">PDF · 2 pages · Feb 2026</div><div class="dr-doc-desc">Snapshot of the business: traction, structure, investment ask and contact.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">👥</div><div class="dr-doc-body"><div class="dr-doc-title">Team &amp; Advisors</div><div class="dr-doc-meta">PDF · 4 pages</div><div class="dr-doc-desc">Full team bios, advisory board, and key operational partners across East Africa.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="https://docs.google.com/presentation/d/1RxxbpSxH0TCSpJQ2BKL_1hdv6_r_E0m8-WyOKnmJzbo/export?format=pptx"><div class="dr-doc-icon">📰</div><div class="dr-doc-body"><div class="dr-doc-title">FY2025 Investor Update</div><div class="dr-doc-meta">PPTX · Google Slides · Dec 2025</div><div class="dr-doc-desc">Full year performance report: revenue, network growth, corridor milestones, and 2026 priorities.</div></div><div class="dr-doc-action">↓ PPTX</div></a>
-        <a class="dr-doc" href="map.html" target="_blank"><div class="dr-doc-icon">🗺️</div><div class="dr-doc-body"><div class="dr-doc-title">Network Map &amp; Station List</div><div class="dr-doc-meta">Interactive · Live Map</div><div class="dr-doc-desc">All active, development, and planned stations with coordinates, capacity, and status.</div></div><div class="dr-doc-action">→ View Map</div></a>
-      </div>
-    </div>
-
-    <!-- 02 Investment Memos -->
-    <div class="dr-folder" id="f02">
-      <div class="dr-folder-header">
-        <div style="background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.2);color:var(--solar);padding:3px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Confidential</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.35)">Investment memoranda for qualified investors with portal access</div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📋</div><div class="dr-doc-body"><div class="dr-doc-title">TopCo SAFE — Investment Memo</div><div class="dr-doc-meta">PDF · 18 pages</div><div class="dr-doc-desc">Full IM for the TopCo SAFE round. Cap table, valuation, terms, and investor rights.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📋</div><div class="dr-doc-body"><div class="dr-doc-title">Corridors Ltd — SPV Memo</div><div class="dr-doc-meta">PDF · 22 pages</div><div class="dr-doc-desc">IM for Kabisa Corridors Ltd. HoldCo structure, SPV mechanics, returns waterfall.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🇷🇼</div><div class="dr-doc-body"><div class="dr-doc-title">Rwanda SPV — Investment Brief</div><div class="dr-doc-meta">PDF · 14 pages</div><div class="dr-doc-desc">Station-level revenue data, debt/equity split, security package. Debt fully committed.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🇰🇪</div><div class="dr-doc-body"><div class="dr-doc-title">Kenya SPV — Investment Brief</div><div class="dr-doc-meta">PDF · 10 pages</div><div class="dr-doc-desc">Nairobi Hub metrics, scaling plan, and SPV structure for Kenya market entry.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🇹🇿</div><div class="dr-doc-body"><div class="dr-doc-title">Tanzania SPV — Investment Brief</div><div class="dr-doc-meta">PDF · 12 pages</div><div class="dr-doc-desc">Central Corridor buildout, existing traction (12 trips), and 2026 station plan.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🇺🇬</div><div class="dr-doc-body"><div class="dr-doc-title">Uganda SPV — Investment Brief</div><div class="dr-doc-meta">PDF · 10 pages</div><div class="dr-doc-desc">Uganda market entry via Northern Corridor. Station plan and early commitments.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-      </div>
-    </div>
-
-    <!-- 03 Financials -->
-    <div class="dr-folder" id="f03">
-      <div class="dr-folder-header">
-        <div style="background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.2);color:var(--solar);padding:3px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Confidential</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.35)">Financial models and audited accounts for qualified investors</div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">💹</div><div class="dr-doc-body"><div class="dr-doc-title">3-Year Financial Model</div><div class="dr-doc-meta">Excel · Multi-tab · Q1 2026</div><div class="dr-doc-desc">Bottom-up model covering all markets, stations, revenue streams, EBITDA, and returns by vehicle.</div></div><div class="dr-doc-action">↓ XLSX</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📒</div><div class="dr-doc-body"><div class="dr-doc-title">Rwanda — Audited Accounts FY2024</div><div class="dr-doc-meta">PDF · Certified auditor</div><div class="dr-doc-desc">Audited P&amp;L, balance sheet, and cash flow for Rwanda OpCo FY2024.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📒</div><div class="dr-doc-body"><div class="dr-doc-title">Management Accounts — All Markets</div><div class="dr-doc-meta">PDF · Q4 2025 · Unaudited</div><div class="dr-doc-desc">Consolidated management accounts: Rwanda, Tanzania, Kenya. Monthly revenue, cost, margin detail.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📡</div><div class="dr-doc-body"><div class="dr-doc-title">Live KPI Dashboard Access</div><div class="dr-doc-meta">Web · Real-time</div><div class="dr-doc-desc">Station-by-station sessions, kWh, revenue and uptime. Updated daily from the network.</div></div><div class="dr-doc-action">→ Open</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📈</div><div class="dr-doc-body"><div class="dr-doc-title">Revenue Waterfall &amp; Cap Table</div><div class="dr-doc-meta">Excel · Confidential</div><div class="dr-doc-desc">Investor returns waterfall by vehicle, pre/post-round cap table, dilution analysis.</div></div><div class="dr-doc-action">↓ XLSX</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🏦</div><div class="dr-doc-body"><div class="dr-doc-title">Use of Proceeds — All Vehicles</div><div class="dr-doc-meta">PDF · 4 pages</div><div class="dr-doc-desc">Breakdown of how capital raised under each vehicle will be deployed: CapEx, working capital, fees.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-      </div>
-    </div>
-
-    <!-- 04 Legal -->
-    <div class="dr-folder" id="f04">
-      <div class="dr-folder-header">
-        <div style="background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.2);color:var(--solar);padding:3px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Confidential</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.35)">Legal documentation and term sheets</div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📝</div><div class="dr-doc-body"><div class="dr-doc-title">TopCo SAFE Agreement — Draft</div><div class="dr-doc-meta">PDF · Mauritius law</div><div class="dr-doc-desc">Draft SAFE note. Conversion mechanics, 20% discount, investor rights, and valuation cap.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📝</div><div class="dr-doc-body"><div class="dr-doc-title">Corridors SPV — Term Sheet</div><div class="dr-doc-meta">PDF · Draft · Confidential</div><div class="dr-doc-desc">Indicative term sheet for investment into Kabisa Corridors Ltd or country SPVs. Debt and equity variants.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🤝</div><div class="dr-doc-body"><div class="dr-doc-title">Shareholders Agreement — Framework</div><div class="dr-doc-meta">PDF · Draft</div><div class="dr-doc-desc">SHA framework: governance, information rights, tag/drag, exit provisions for SPV investors.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🏛️</div><div class="dr-doc-body"><div class="dr-doc-title">Mauritius Entity Certificates</div><div class="dr-doc-meta">PDF · Official documents</div><div class="dr-doc-desc">Certificate of incorporation, registered office, and GBL licence for TopCo and Corridors Ltd.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📜</div><div class="dr-doc-body"><div class="dr-doc-title">Rwanda OpCo Legal Pack</div><div class="dr-doc-meta">PDF · RDB certified</div><div class="dr-doc-desc">RDB incorporation, operating licences, and lease agreements for active stations.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🔐</div><div class="dr-doc-body"><div class="dr-doc-title">Security Package — Debt Instruments</div><div class="dr-doc-meta">PDF · Confidential</div><div class="dr-doc-desc">Security and collateral details for all debt instruments. Priority waterfall and enforcement rights.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-      </div>
-    </div>
-
-    <!-- 05 Operations -->
-    <div class="dr-folder" id="f05">
-      <div class="dr-folder-header">
-        <div style="background:rgba(255,212,0,.08);border:1px solid rgba(255,212,0,.2);color:var(--solar);padding:3px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Confidential</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.35)">Operational data and site documentation</div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">⚡</div><div class="dr-doc-body"><div class="dr-doc-title">Station Performance Data</div><div class="dr-doc-meta">Excel · All active stations · Dec 2025</div><div class="dr-doc-desc">Per-station: sessions, kWh dispensed, uptime, revenue, and monthly trends.</div></div><div class="dr-doc-action">↓ XLSX</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🚛</div><div class="dr-doc-body"><div class="dr-doc-title">Corridor Trip Logs</div><div class="dr-doc-meta">PDF · 12 verified trips</div><div class="dr-doc-desc">Documentation of 12 full EV truck trips on the Dar–Kigali Central Corridor including load and energy data.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">🛠️</div><div class="dr-doc-body"><div class="dr-doc-title">Technical Specs — Charging Equipment</div><div class="dr-doc-meta">PDF · Per station type</div><div class="dr-doc-desc">Specs for 240kW, 120kW, and 40kW stations. OEM details, warranty, and service agreements.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-        <a class="dr-doc" href="#" onclick="return false"><div class="dr-doc-icon">📍</div><div class="dr-doc-body"><div class="dr-doc-title">Site Lease &amp; Land Agreements</div><div class="dr-doc-meta">PDF · All secured sites</div><div class="dr-doc-desc">Lease documentation for all stations with secured or active land rights.</div></div><div class="dr-doc-action">↓ PDF</div></a>
-      </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+      <a class="dr-doc" href="https://docs.google.com/presentation/d/1RxxbpSxH0TCSpJQ2BKL_1hdv6_r_E0m8-WyOKnmJzbo/export?format=pptx"><div class="dr-doc-icon">📰</div><div class="dr-doc-body"><div class="dr-doc-title">FY2025 Investor Update</div><div class="dr-doc-meta">PPTX · Google Slides · Dec 2025</div><div class="dr-doc-desc">Full year performance report: revenue, network growth, corridor milestones, and 2026 priorities.</div></div><div class="dr-doc-action">↓ PPTX</div></a>
+      <a class="dr-doc" href="map.html" target="_blank"><div class="dr-doc-icon">🗺️</div><div class="dr-doc-body"><div class="dr-doc-title">Network Map &amp; Station List</div><div class="dr-doc-meta">Interactive · Live Map</div><div class="dr-doc-desc">All active, development, and planned stations with coordinates, capacity, and status.</div></div><div class="dr-doc-action">→ View Map</div></a>
+      <a class="dr-doc" href="https://kpi.gokabisa.com" target="_blank"><div class="dr-doc-icon">📡</div><div class="dr-doc-body"><div class="dr-doc-title">Live KPI Dashboard Access</div><div class="dr-doc-meta">Web · Real-time</div><div class="dr-doc-desc">Station-by-station sessions, kWh, revenue and uptime. Updated daily from the network.</div></div><div class="dr-doc-action">→ Open</div></a>
+      <a class="dr-doc" href="https://docs.google.com/spreadsheets/d/15Hdj6ccV2X2-abrP21MA5XBGEwKbHJ8QME8jhvKqA6A/export?format=xlsx" target="_blank"><div class="dr-doc-icon">⚡</div><div class="dr-doc-body"><div class="dr-doc-title">Station Performance Data</div><div class="dr-doc-meta">Excel · All active stations · Dec 2025</div><div class="dr-doc-desc">Per-station: sessions, kWh dispensed, uptime, revenue, and monthly trends.</div></div><div class="dr-doc-action">↓ XLSX</div></a>
     </div>
 
     <!-- Contact strip -->
