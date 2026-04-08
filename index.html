@@ -1253,6 +1253,10 @@ window.addEventListener('load', async () => {
         window.location.href = 'admin.html';
         return;
       }
+      if (signInRole === 'investor' && (h === '#sign-up' || h === '#sign-in' || h === '#investor-status')) {
+        window.location.href = 'investor-portal.html';
+        return;
+      }
       if (h === '#sign-up' || h === '#sign-in') {
         window.location.hash = 'investor-status';
         return;
@@ -1277,6 +1281,7 @@ window.addEventListener('hashchange', async () => {
     if (window.Clerk.user) {
       var hashRole = window.Clerk.user.publicMetadata && window.Clerk.user.publicMetadata.role;
       if (hashRole === 'admin' && (h === '#sign-up' || h === '#sign-in' || h === '#investor-status')) { window.location.href = 'admin.html'; return; }
+      if (hashRole === 'investor' && (h === '#sign-up' || h === '#sign-in' || h === '#investor-status')) { window.location.href = 'investor-portal.html'; return; }
       if (h === '#sign-up' || h === '#sign-in') { window.location.hash = 'investor-status'; return; }
       if (h === '#investor-status') { loadInvestorStatus(); }
     } else {
