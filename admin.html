@@ -47,6 +47,8 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);m
 .badge-approved,.badge-nda-sent{background:rgba(0,200,122,.15);color:var(--green)}
 .badge-nda-signed,.badge-access-granted{background:rgba(0,200,122,.25);color:var(--green)}
 .badge-rejected{background:rgba(255,71,87,.15);color:var(--red)}
+.badge-force-approved{background:rgba(230,126,34,.15);color:#e67e22}
+.badge-revoked{background:rgba(255,71,87,.25);color:var(--red)}
 
 .action-btn{background:none;border:1px solid;padding:4px 12px;font-size:11px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
 .btn-approve{border-color:var(--green);color:var(--green)}
@@ -55,6 +57,12 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);m
 .btn-reject:hover{background:var(--red);color:#fff}
 .btn-admin{border-color:#9b59b6;color:#9b59b6;margin-left:6px}
 .btn-admin:hover{background:#9b59b6;color:#fff}
+.btn-force-approve{border-color:#e67e22;color:#e67e22;margin-left:6px}
+.btn-force-approve:hover{background:#e67e22;color:#fff}
+.btn-revoke{border-color:var(--red);color:var(--red);margin-left:6px}
+.btn-revoke:hover{background:var(--red);color:#fff}
+.btn-reinstate{border-color:#2ecc71;color:#2ecc71;margin-left:6px}
+.btn-reinstate:hover{background:#2ecc71;color:#fff}
 .badge-admin{background:rgba(155,89,182,.2);color:#9b59b6}
 
 .empty-state{text-align:center;padding:60px;color:rgba(255,255,255,.3);font-size:14px}
@@ -179,7 +187,9 @@ function badgeClass(status) {
     'NDA_SENT': 'badge-nda-sent',
     'NDA_SIGNED': 'badge-nda-signed',
     'ACCESS_GRANTED': 'badge-access-granted',
-    'REJECTED': 'badge-rejected'
+    'REJECTED': 'badge-rejected',
+    'FORCE_APPROVED': 'badge-force-approved',
+    'REVOKED': 'badge-revoked'
   };
   return map[status] || 'badge-pending';
 }
@@ -198,7 +208,9 @@ function renderStats(requests) {
     { label: 'Signed Up', value: counts['CLERK_SIGNED_UP'] || 0 },
     { label: 'NDA Sent', value: counts['NDA_SENT'] || 0 },
     { label: 'Access Granted', value: counts['ACCESS_GRANTED'] || 0 },
-    { label: 'Rejected', value: counts['REJECTED'] || 0 }
+    { label: 'Force Approved', value: counts['FORCE_APPROVED'] || 0 },
+    { label: 'Rejected', value: counts['REJECTED'] || 0 },
+    { label: 'Revoked', value: counts['REVOKED'] || 0 }
   ];
   document.getElementById('stats-row').innerHTML = stats.map(s =>
     '<div class="stat-card"><div class="stat-label">' + s.label + '</div><div class="stat-value">' + s.value + '</div></div>'
@@ -206,8 +218,8 @@ function renderStats(requests) {
 }
 
 function renderFilters() {
-  const statuses = ['', 'PENDING', 'CLERK_SIGNED_UP', 'APPROVED', 'NDA_SENT', 'NDA_SIGNED', 'ACCESS_GRANTED', 'REJECTED'];
-  const labels = ['All', 'Pending', 'Signed Up', 'Approved', 'NDA Sent', 'NDA Signed', 'Access Granted', 'Rejected'];
+  const statuses = ['', 'PENDING', 'CLERK_SIGNED_UP', 'APPROVED', 'NDA_SENT', 'NDA_SIGNED', 'ACCESS_GRANTED', 'FORCE_APPROVED', 'REJECTED', 'REVOKED'];
+  const labels = ['All', 'Pending', 'Signed Up', 'Approved', 'NDA Sent', 'NDA Signed', 'Access Granted', 'Force Approved', 'Rejected', 'Revoked'];
   document.getElementById('filter-bar').innerHTML = statuses.map((s, i) =>
     '<button class="filter-btn' + (currentFilter === s ? ' active' : '') + '" onclick="setFilter(\'' + s + '\')">' + labels[i] + '</button>'
   ).join('');
@@ -225,14 +237,26 @@ function renderTable(requests) {
   empty.style.display = 'none';
 
   tbody.innerHTML = requests.map(r => {
+    const isAdmin = r.clerkRole === 'admin';
     let actions = '';
     if (r.status === 'PENDING' || r.status === 'CLERK_SIGNED_UP') {
-      actions = '<button class="action-btn btn-approve" onclick="approveRequest(\'' + r.id + '\')">Approve</button>' +
-                '<button class="action-btn btn-reject" onclick="rejectRequest(\'' + r.id + '\')">Reject</button>';
+      actions += '<button class="action-btn btn-approve" onclick="approveRequest(\'' + r.id + '\')">Approve</button>';
+      actions += '<button class="action-btn btn-force-approve" onclick="forceApproveRequest(\'' + r.id + '\')">Force Approve</button>';
+      actions += '<button class="action-btn btn-reject" onclick="rejectRequest(\'' + r.id + '\')">Reject</button>';
     }
-    const isAdmin = r.clerkRole === 'admin';
-    if (!isAdmin && r.status !== 'PENDING' && r.status !== 'REJECTED') {
-      actions += '<button class="action-btn btn-admin" onclick="makeAdmin(\'' + r.id + '\', \'' + r.email + '\')">Make Admin</button>';
+    if (r.status === 'APPROVED' || r.status === 'NDA_SENT' || r.status === 'NDA_SIGNED') {
+      actions += '<button class="action-btn btn-force-approve" onclick="forceApproveRequest(\'' + r.id + '\')">Force Approve</button>';
+    }
+    if (r.status === 'ACCESS_GRANTED' || r.status === 'FORCE_APPROVED') {
+      if (!isAdmin) {
+        actions += '<button class="action-btn btn-revoke" onclick="revokeAccess(\'' + r.id + '\')">Revoke</button>';
+      }
+      if (!isAdmin) {
+        actions += '<button class="action-btn btn-admin" onclick="makeAdmin(\'' + r.id + '\', \'' + r.email + '\')">Make Admin</button>';
+      }
+    }
+    if (r.status === 'REJECTED' || r.status === 'REVOKED') {
+      actions += '<button class="action-btn btn-reinstate" onclick="reinstateRequest(\'' + r.id + '\')">Reinstate</button>';
     }
     const roleBadge = isAdmin
       ? '<span class="badge badge-admin">ADMIN</span>'
@@ -301,6 +325,36 @@ async function makeAdmin(id, email) {
   });
   if (res.ok) { await loadRequests(); }
   else { const d = await res.json(); alert(d.error || 'Failed to promote user'); }
+}
+
+async function forceApproveRequest(id) {
+  if (!confirm('Grant portal access WITHOUT NDA? This user will get immediate access.')) return;
+  const res = await fetch(API_BASE + '/admin/requests/' + id + '/force-approve', {
+    method: 'PATCH',
+    headers: { 'Authorization': 'Bearer ' + await getToken() }
+  });
+  if (res.ok) { await loadRequests(); }
+  else { const d = await res.json(); alert(d.error || 'Failed to force approve'); }
+}
+
+async function revokeAccess(id) {
+  if (!confirm('Revoke portal access? The user will immediately lose access.')) return;
+  const res = await fetch(API_BASE + '/admin/requests/' + id + '/revoke', {
+    method: 'PATCH',
+    headers: { 'Authorization': 'Bearer ' + await getToken() }
+  });
+  if (res.ok) { await loadRequests(); }
+  else { const d = await res.json(); alert(d.error || 'Failed to revoke access'); }
+}
+
+async function reinstateRequest(id) {
+  if (!confirm('Reinstate this user? Their portal access will be restored.')) return;
+  const res = await fetch(API_BASE + '/admin/requests/' + id + '/reinstate', {
+    method: 'PATCH',
+    headers: { 'Authorization': 'Bearer ' + await getToken() }
+  });
+  if (res.ok) { await loadRequests(); }
+  else { const d = await res.json(); alert(d.error || 'Failed to reinstate'); }
 }
 
 // --- NDA Settings ---

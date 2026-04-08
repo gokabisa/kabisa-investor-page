@@ -1077,7 +1077,13 @@ async function loadInvestorStatus() {
       return;
     }
     const s = await res.json();
-    const steps = [
+    // For force-approved users, show simplified steps (no NDA step)
+    const steps = s.status === 'FORCE_APPROVED' ? [
+      { label: 'Request Submitted', done: true },
+      { label: 'Account Created', done: true },
+      { label: 'Approved by IR', done: true },
+      { label: 'Portal Access', done: true }
+    ] : [
       { label: 'Request Submitted', done: true },
       { label: 'Account Created', done: ['CLERK_SIGNED_UP','APPROVED','NDA_SENT','NDA_SIGNED','ACCESS_GRANTED'].includes(s.status) },
       { label: 'Approved by IR', done: ['APPROVED','NDA_SENT','NDA_SIGNED','ACCESS_GRANTED'].includes(s.status) },
@@ -1094,11 +1100,14 @@ async function loadInvestorStatus() {
       html += '</div>';
     });
     html += '</div>';
-    if (s.status === 'ACCESS_GRANTED') {
+    if (s.status === 'ACCESS_GRANTED' || s.status === 'FORCE_APPROVED') {
       html += '<div style="text-align:center;margin-top:24px"><a href="investor-portal.html" style="display:inline-block;background:var(--solar);color:#000;padding:14px 32px;font-family:\'Bebas Neue\',sans-serif;font-size:16px;letter-spacing:2px;text-decoration:none">ENTER PORTAL</a></div>';
     }
     if (s.status === 'REJECTED') {
       html = '<div style="text-align:center;padding:20px"><p style="color:rgba(255,255,255,0.5)">Your application was not approved at this time.</p><p style="font-size:13px;color:rgba(255,255,255,0.3);margin-top:8px">Contact <a href="mailto:investors@kabisa.africa" style="color:var(--solar)">investors@kabisa.africa</a> for details.</p></div>';
+    }
+    if (s.status === 'REVOKED') {
+      html = '<div style="text-align:center;padding:20px"><p style="color:rgba(255,255,255,0.5)">Your portal access has been revoked.</p><p style="font-size:13px;color:rgba(255,255,255,0.3);margin-top:8px">Contact <a href="mailto:investors@kabisa.africa" style="color:var(--solar)">investors@kabisa.africa</a> for more information.</p></div>';
     }
     el.innerHTML = html;
   } catch(err) {
@@ -1244,6 +1253,10 @@ window.addEventListener('load', async () => {
         window.location.href = 'admin.html';
         return;
       }
+      if (signInRole === 'investor' && (h === '#sign-up' || h === '#sign-in' || h === '#investor-status')) {
+        window.location.href = 'investor-portal.html';
+        return;
+      }
       if (h === '#sign-up' || h === '#sign-in') {
         window.location.hash = 'investor-status';
         return;
@@ -1268,6 +1281,7 @@ window.addEventListener('hashchange', async () => {
     if (window.Clerk.user) {
       var hashRole = window.Clerk.user.publicMetadata && window.Clerk.user.publicMetadata.role;
       if (hashRole === 'admin' && (h === '#sign-up' || h === '#sign-in' || h === '#investor-status')) { window.location.href = 'admin.html'; return; }
+      if (hashRole === 'investor' && (h === '#sign-up' || h === '#sign-in' || h === '#investor-status')) { window.location.href = 'investor-portal.html'; return; }
       if (h === '#sign-up' || h === '#sign-in') { window.location.hash = 'investor-status'; return; }
       if (h === '#investor-status') { loadInvestorStatus(); }
     } else {
