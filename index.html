@@ -1070,7 +1070,7 @@ async function loadInvestorStatus() {
         '<p style="color:rgba(255,255,255,0.55);font-size:14px;line-height:1.6;max-width:360px;margin:0 auto 24px">Your account is set up. Our investor relations team is reviewing your application.</p>' +
         '<div style="background:rgba(255,255,255,0.04);padding:20px;text-align:left;max-width:360px;margin:0 auto">' +
         '<div style="font-size:11px;color:rgba(255,255,255,0.35);font-family:Barlow Condensed,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">What happens next</div>' +
-        '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:2">1. 24/7 review of your profile<br>2. NDA sent for e-signature<br>3. Portal access granted</div>' +
+        '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:2">1. NDA sent for e-signature<br>2. Sign the NDA<br>3. Portal access granted immediately</div>' +
         '</div>' +
         '<p style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:16px">Questions? <a href="mailto:investors@kabisa.africa" style="color:var(--solar);text-decoration:none">investors@kabisa.africa</a></p>' +
         '</div>';
@@ -1086,7 +1086,6 @@ async function loadInvestorStatus() {
     ] : [
       { label: 'Request Submitted', done: true },
       { label: 'Account Created', done: ['CLERK_SIGNED_UP','APPROVED','NDA_SENT','NDA_SIGNED','ACCESS_GRANTED'].includes(s.status) },
-      { label: 'Approved by IR', done: ['APPROVED','NDA_SENT','NDA_SIGNED','ACCESS_GRANTED'].includes(s.status) },
       { label: 'NDA Signed', done: ['NDA_SIGNED','ACCESS_GRANTED'].includes(s.status) },
       { label: 'Portal Access', done: s.status === 'ACCESS_GRANTED' }
     ];
