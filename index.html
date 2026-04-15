@@ -249,7 +249,7 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
         <a onclick="showPage('team');closeAbout()" style="display:block;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);cursor:pointer;border-bottom:1px solid #2A2A2A" onmouseover="this.style.color='#FFD400'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Team</a>
         <a onclick="showPage('careers');closeAbout()" style="display:block;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);cursor:pointer;border-bottom:1px solid #2A2A2A" onmouseover="this.style.color='#FFD400'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Careers</a>
         <a onclick="showPage('news');closeAbout()" style="display:block;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);cursor:pointer;border-bottom:1px solid #2A2A2A" onmouseover="this.style.color='#FFD400'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">News</a>
-        <a href="mailto:hello@kabisa.africa" onclick="event.stopPropagation();setTimeout(closeAbout,200)" style="display:block;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);cursor:pointer" onmouseover="this.style.color='#FFD400'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Contact</a>
+        <a href="mailto:hello@kabisa.africa" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();setTimeout(closeAbout,200)" style="display:block;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);cursor:pointer;text-decoration:none" onmouseover="this.style.color='#FFD400'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Contact</a>
       </div>
     </li>
     <li id="nav-investor-wrap" style="position:relative" onmouseenter="showInvestorDropdown()" onmouseleave="hideInvestorDropdown()">
@@ -288,7 +288,7 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
   <a onclick="showPage('team');closeMobileMenu()">Team</a>
   <a onclick="showPage('careers');closeMobileMenu()">Careers</a>
   <a onclick="showPage('news');closeMobileMenu()">News</a>
-  <a href="mailto:hello@kabisa.africa" onclick="closeMobileMenu()">Contact</a>
+  <a href="mailto:hello@kabisa.africa" target="_blank" rel="noopener noreferrer" onclick="closeMobileMenu()">Contact</a>
   <a onclick="handleInvestorNav();closeMobileMenu()" id="mobile-nav-investors" style="color:#FFD400;font-weight:700;margin-top:8px">Investor Access</a>
 </div>
 
@@ -1072,37 +1072,40 @@ async function loadInvestorStatus() {
       return;
     }
     const s = await res.json();
-    // For force-approved users, show simplified steps (no NDA step)
-    const steps = s.status === 'FORCE_APPROVED' ? [
-      { label: 'Request Submitted', done: true },
-      { label: 'Account Created', done: true },
-      { label: 'Approved by IR', done: true },
-      { label: 'Portal Access', done: true }
-    ] : [
-      { label: 'Request Submitted', done: true },
-      { label: 'Account Created', done: ['CLERK_SIGNED_UP','APPROVED','NDA_SENT','NDA_SIGNED','ACCESS_GRANTED'].includes(s.status) },
-      { label: 'Approved by IR', done: ['APPROVED','NDA_SENT','NDA_SIGNED','ACCESS_GRANTED'].includes(s.status) },
-      { label: 'NDA Signed', done: ['NDA_SIGNED','ACCESS_GRANTED'].includes(s.status) },
-      { label: 'Portal Access', done: s.status === 'ACCESS_GRANTED' }
-    ];
-    let html = '<div style="max-width:320px;margin:0 auto">';
-    steps.forEach((step, i) => {
-      const color = step.done ? 'var(--solar)' : 'rgba(255,255,255,0.2)';
-      const icon = step.done ? '&#10003;' : (i + 1);
-      html += '<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06)">';
-      html += '<div style="width:32px;height:32px;border-radius:50%;background:' + color + ';display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:' + (step.done ? '#000' : 'rgba(255,255,255,0.4)') + '">' + icon + '</div>';
-      html += '<span style="font-size:14px;color:' + (step.done ? '#fff' : 'rgba(255,255,255,0.4)') + '">' + step.label + '</span>';
-      html += '</div>';
-    });
-    html += '</div>';
-    if (s.status === 'ACCESS_GRANTED' || s.status === 'FORCE_APPROVED') {
-      html += '<div style="text-align:center;margin-top:24px"><a href="investor-portal.html" style="display:inline-block;background:var(--solar);color:#000;padding:14px 32px;font-family:\'Bebas Neue\',sans-serif;font-size:16px;letter-spacing:2px;text-decoration:none">ENTER PORTAL</a></div>';
-    }
+    let html = '';
     if (s.status === 'REJECTED') {
       html = '<div style="text-align:center;padding:20px"><p style="color:rgba(255,255,255,0.5)">Your application was not approved at this time.</p><p style="font-size:13px;color:rgba(255,255,255,0.3);margin-top:8px">Contact <a href="mailto:investors@kabisa.africa" style="color:var(--solar)">investors@kabisa.africa</a> for details.</p></div>';
-    }
-    if (s.status === 'REVOKED') {
+    } else if (s.status === 'REVOKED') {
       html = '<div style="text-align:center;padding:20px"><p style="color:rgba(255,255,255,0.5)">Your portal access has been revoked.</p><p style="font-size:13px;color:rgba(255,255,255,0.3);margin-top:8px">Contact <a href="mailto:investors@kabisa.africa" style="color:var(--solar)">investors@kabisa.africa</a> for more information.</p></div>';
+    } else if (s.status === 'ACCESS_GRANTED' || s.status === 'FORCE_APPROVED') {
+      html = '<div style="text-align:center;padding:20px">' +
+        '<div style="font-size:48px;margin-bottom:16px">&#10003;</div>' +
+        '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;margin-bottom:12px;letter-spacing:2px">ACCESS GRANTED</div>' +
+        '<p style="color:rgba(255,255,255,0.55);font-size:14px;margin-bottom:24px">Your investor portal is ready.</p>' +
+        '<a href="investor-portal.html" style="display:inline-block;background:var(--solar);color:#000;padding:14px 32px;font-family:\'Bebas Neue\',sans-serif;font-size:16px;letter-spacing:2px;text-decoration:none">ENTER PORTAL</a>' +
+        '</div>';
+    } else if (s.status === 'PENDING' || s.status === 'CLERK_SIGNED_UP') {
+      html = '<div style="text-align:center;padding:20px">' +
+        '<div style="font-size:48px;margin-bottom:16px">&#128196;</div>' +
+        '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;margin-bottom:12px;letter-spacing:2px">APPLICATION UNDER REVIEW</div>' +
+        '<p style="color:rgba(255,255,255,0.55);font-size:14px;line-height:1.6;max-width:360px;margin:0 auto 24px">Our team is reviewing your request. You\'ll receive an email once a decision has been made.</p>' +
+        '<div style="background:rgba(255,255,255,0.04);padding:20px;text-align:left;max-width:360px;margin:0 auto">' +
+        '<div style="font-size:11px;color:rgba(255,255,255,0.35);font-family:Barlow Condensed,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">What happens next</div>' +
+        '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:2">1. Our team reviews your application<br>2. If approved, you\'ll receive an NDA to sign<br>3. Once signed, portal access is granted immediately</div>' +
+        '</div>' +
+        '<p style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:16px">Questions? <a href="mailto:investors@kabisa.africa" style="color:var(--solar);text-decoration:none">investors@kabisa.africa</a></p>' +
+        '</div>';
+    } else {
+      html = '<div style="text-align:center;padding:20px">' +
+        '<div style="font-size:48px;margin-bottom:16px">&#9993;</div>' +
+        '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;margin-bottom:12px;letter-spacing:2px">CHECK YOUR EMAIL</div>' +
+        '<p style="color:rgba(255,255,255,0.55);font-size:14px;line-height:1.6;max-width:360px;margin:0 auto 24px">An NDA has been sent to your email via DocuSeal. Please sign it to get access to the investor portal.</p>' +
+        '<div style="background:rgba(255,255,255,0.04);padding:20px;text-align:left;max-width:360px;margin:0 auto">' +
+        '<div style="font-size:11px;color:rgba(255,255,255,0.35);font-family:Barlow Condensed,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">What happens next</div>' +
+        '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:2">1. Check your inbox for the DocuSeal NDA<br>2. Sign the NDA electronically<br>3. Portal access granted immediately</div>' +
+        '</div>' +
+        '<p style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:16px">Didn\'t receive it? <a href="mailto:investors@kabisa.africa" style="color:var(--solar);text-decoration:none">investors@kabisa.africa</a></p>' +
+        '</div>';
     }
     el.innerHTML = html;
   } catch(err) {
@@ -1395,7 +1398,7 @@ window.addEventListener('load', function() {
 
   <div style="padding:0 80px 80px">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px;background:#2A2A2A" class="reveal">
-      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+      <a href="https://www.linkedin.com/in/nicholasghu/" target="_blank" style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A;text-decoration:none;color:inherit;display:block">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
           <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/26a285cd-4120-499a-4337-ca9dde753100/public" alt="Nick Hu" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
@@ -1405,8 +1408,8 @@ window.addEventListener('load', function() {
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Co-Founder</div>
           <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Building Africa's EV charging backbone from the ground up.</p>
         </div>
-      </div>
-      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+      </a>
+      <a href="https://www.linkedin.com/in/lukas-lukoschek/" target="_blank" style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A;text-decoration:none;color:inherit;display:block">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
           <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/5754b170-156b-48c6-db43-857b21c43900/public" alt="Lukas Lukochek" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
@@ -1416,8 +1419,8 @@ window.addEventListener('load', function() {
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Co-Founder</div>
           <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Co-founding Kabisa and driving the vision for Africa's EV future.</p>
         </div>
-      </div>
-      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+      </a>
+      <a href="https://www.linkedin.com/in/pophia-muhoza-629038a8/" target="_blank" style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A;text-decoration:none;color:inherit;display:block">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
           <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/c1e059f9-c005-43fe-7bfc-e4ed612d6400/public" alt="Pophia Muhoza" style="width:90%;height:90%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
@@ -1427,8 +1430,8 @@ window.addEventListener('load', function() {
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Rwanda Managing Director</div>
           <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Leading Kabisa's operations and strategic growth in Rwanda.</p>
         </div>
-      </div>
-      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+      </a>
+      <a href="https://www.linkedin.com/in/karangwa-fidelis-8505ab10a/" target="_blank" style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A;text-decoration:none;color:inherit;display:block">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
           <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/906cf964-d448-4d2b-d9d1-515ac10ff600/public" alt="Fidelis Karangwa" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
@@ -1438,8 +1441,8 @@ window.addEventListener('load', function() {
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Rwanda Fleet & Tender Sales</div>
           <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Leading fleet partnerships and government tender relationships in Rwanda.</p>
         </div>
-      </div>
-      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+      </a>
+      <a href="https://www.linkedin.com/in/msingo-john-33597b82/" target="_blank" style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A;text-decoration:none;color:inherit;display:block">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
           <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/a09d0d87-da50-4972-a270-11382d1f0400/public" alt="John Msingo" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
@@ -1449,8 +1452,8 @@ window.addEventListener('load', function() {
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Kenya Expansion Lead</div>
           <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Driving Kabisa's growth across Kenya and the Northern Corridor.</p>
         </div>
-      </div>
-      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+      </a>
+      <a href="https://www.linkedin.com/in/iliiza-k-urbanist/" target="_blank" style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A;text-decoration:none;color:inherit;display:block">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
           <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/c6486c92-3e8f-42db-13ea-b109231c7200/public" alt="Iliiza Karangwa" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
@@ -1460,8 +1463,8 @@ window.addEventListener('load', function() {
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Marketing & Partnerships</div>
           <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Shaping Kabisa's brand and building strategic partnerships across East Africa.</p>
         </div>
-      </div>
-      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+      </a>
+      <a href="https://www.linkedin.com/in/remy-ruberambuga-1140701a6/" target="_blank" style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A;text-decoration:none;color:inherit;display:block">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
           <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/95ff9ecd-067a-4d4f-8e5f-56ab74c12e00/public" alt="Remy Reberambuga" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
@@ -1471,8 +1474,8 @@ window.addEventListener('load', function() {
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Rwanda Sales Lead</div>
           <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Growing Kabisa's EV sales and customer relationships in Rwanda.</p>
         </div>
-      </div>
-      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+      </a>
+      <a href="https://www.linkedin.com/in/ira-rutazinda-0362a0262/" target="_blank" style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A;text-decoration:none;color:inherit;display:block">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
           <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/af63aa69-ad2d-451a-83b3-ae6e64ac1300/public" alt="Ira Rutazinda" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
@@ -1482,8 +1485,8 @@ window.addEventListener('load', function() {
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Rwanda Systems</div>
           <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Building and maintaining Kabisa's technology infrastructure.</p>
         </div>
-      </div>
-      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+      </a>
+      <a href="https://www.linkedin.com/in/happy-tr%C3%A9sor-ineza-529473212/" target="_blank" style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A;text-decoration:none;color:inherit;display:block">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
           <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/bf075e8a-b8a2-498f-6394-d206c43dcf00/public" alt="Happy Ineza" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
@@ -1493,22 +1496,19 @@ window.addEventListener('load', function() {
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Rwanda Charging Lead</div>
           <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Leading Kabisa's charging infrastructure deployment across Rwanda.</p>
         </div>
-      </div>
-      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+      </a>
+      <a href="https://www.linkedin.com/in/marius-eustache-rusanganwa-937402158/" target="_blank" style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A;text-decoration:none;color:inherit;display:block">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
-          <img src="https://ui-avatars.com/api/?name=Marius+Voiture&background=111111&color=FFD400&bold=true&size=400&format=png" alt="Marius Voiture" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
+          <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/16fe68b6-8877-4e6e-e7eb-bece3b77e200/public" alt="Marius Voiture" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
-            <div style="width:100px;height:100px;border-radius:50%;border:2px solid #FFD400;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:32px;color:#FFD400;letter-spacing:2px;background:rgba(0,0,0,0.6)">MV</div>
-          </div>
         </div>
         <div style="padding:20px 20px 24px">
           <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;margin-bottom:3px;letter-spacing:1px">Marius Voiture</div>
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Rwanda Maintenance</div>
           <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Keeping Kabisa's EV fleet running at peak performance.</p>
         </div>
-      </div>
-      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+      </a>
+      <a href="https://www.linkedin.com/in/mucyo-rodrigue-4578b5209/" target="_blank" style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A;text-decoration:none;color:inherit;display:block">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
           <img src="https://imagedelivery.net/yWUWTkY-ZBUuFCZ3kvIo6A/850433c3-33d6-4668-3f2a-6c6d634b9c00/public" alt="Rodrigue Mucyo" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
@@ -1518,8 +1518,8 @@ window.addEventListener('load', function() {
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Rwanda Taxi</div>
           <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Leading Kabisa's taxi and ride-hailing EV operations.</p>
         </div>
-      </div>
-      <div style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A">
+      </a>
+      <a href="https://www.linkedin.com/in/kagame-david-337888183/" target="_blank" style="background:#000;overflow:hidden;text-align:center;border:1px solid #1A1A1A;text-decoration:none;color:inherit;display:block">
         <div style="width:100%;aspect-ratio:1/1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
           <img src="https://ui-avatars.com/api/?name=David+Kagame&background=111111&color=FFD400&bold=true&size=400&format=png" alt="David Kagame" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(20deg) saturate(3);mix-blend-mode:luminosity"/>
           <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,212,0,0.06) 0%,rgba(0,0,0,0.7) 100%)"></div>
@@ -1532,7 +1532,7 @@ window.addEventListener('load', function() {
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#FFD400;margin-bottom:10px">Finance</div>
           <p style="font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.6">Managing Kabisa's financial operations and investor relations.</p>
         </div>
-      </div>
+      </a>
     </div>
 
   </div>
