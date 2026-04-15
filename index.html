@@ -914,8 +914,7 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
       <!-- Step 1: Investor details -->
       <div class="gate-form" id="gate-step-1">
         <div class="form-group"><label>Organisation</label><input type="text" placeholder="Fund / firm name" id="f-org"></div>
-        <div class="form-group"><label>Investor Type</label><select id="f-type"><option value="">Select type…</option><option>Family Office</option><option>Development Finance Institution</option><option>Sovereign Wealth Fund</option><option>Angel / HNW Individual</option><option>Corporate Strategic</option><option>Other</option></select></div>
-        <div class="form-group"><label>Typical Ticket Size</label><select id="f-ticket"><option value="">Select range…</option><option>Under $250K</option><option>$250K – $1M</option><option>$1M – $5M</option><option>$5M – $25M</option><option>$25M+</option></select></div>
+        <div class="form-group"><label>Investor Type</label><select id="f-type"><option value="">Select type…</option><option>Family Office</option><option>Development Finance Institution</option><option>Sovereign Wealth Fund</option><option>Angel / HNW Individual</option><option>Corporate Strategic</option><option>Verture Capital</option><option>Other</option></select></div>
         <button class="btn-primary" onclick="showGateStep2()">Continue</button>
         <p class="form-note">Your information is shared only with Kabisa's investor relations team.</p>
         <p style="text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4)">Already have an account? <a href="#sign-in" style="color:var(--solar);text-decoration:none;cursor:pointer">Sign in</a></p>
@@ -990,12 +989,10 @@ var _gateData = {};
 async function showGateStep2() {
   var org = document.getElementById('f-org').value.trim();
   var investorType = document.getElementById('f-type').value;
-  var ticketSize = document.getElementById('f-ticket').value;
   if (!org) { alert('Please enter your organisation.'); return; }
   if (!investorType) { alert('Please select an investor type.'); return; }
-  if (!ticketSize) { alert('Please select a ticket size.'); return; }
 
-  _gateData = { organisation: org, investorType: investorType, ticketSize: ticketSize };
+  _gateData = { organisation: org, investorType: investorType };
 
   document.getElementById('gate-step-1').style.display = 'none';
   document.getElementById('gate-step-2').style.display = 'block';
@@ -1030,8 +1027,7 @@ async function submitInvestorRequest() {
         firstName: firstName,
         email: email,
         organisation: _gateData.organisation || '',
-        investorType: _gateData.investorType || '',
-        ticketSize: _gateData.ticketSize || ''
+        investorType: _gateData.investorType || ''
       })
     });
 
