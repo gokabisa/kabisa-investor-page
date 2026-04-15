@@ -948,7 +948,6 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
 <div class="page" id="page-investor-status">
   <div class="investors-gate">
     <div class="gate-card" style="max-width:500px">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;margin-bottom:24px;letter-spacing:2px">APPLICATION STATUS</div>
       <div id="investor-status-content">
         <p style="text-align:center;color:rgba(255,255,255,0.5)">Loading your status...</p>
       </div>
@@ -1061,12 +1060,12 @@ async function loadInvestorStatus() {
     });
     if (!res.ok) {
       el.innerHTML = '<div style="text-align:center;padding:20px">' +
-        '<div style="font-size:48px;margin-bottom:16px">&#9989;</div>' +
-        '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;margin-bottom:12px;letter-spacing:2px">ACCOUNT CREATED</div>' +
-        '<p style="color:rgba(255,255,255,0.55);font-size:14px;line-height:1.6;max-width:360px;margin:0 auto 24px">Your account is set up. Our investor relations team is reviewing your application.</p>' +
+        '<div style="font-size:48px;margin-bottom:16px">&#128196;</div>' +
+        '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;margin-bottom:12px;letter-spacing:2px">APPLICATION UNDER REVIEW</div>' +
+        '<p style="color:rgba(255,255,255,0.55);font-size:14px;line-height:1.6;max-width:360px;margin:0 auto 24px">Our team is reviewing your request. You\'ll receive an email once a decision has been made.</p>' +
         '<div style="background:rgba(255,255,255,0.04);padding:20px;text-align:left;max-width:360px;margin:0 auto">' +
         '<div style="font-size:11px;color:rgba(255,255,255,0.35);font-family:Barlow Condensed,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">What happens next</div>' +
-        '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:2">1. 24/7 review of your profile<br>2. NDA sent for e-signature<br>3. Portal access granted</div>' +
+        '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:2">1. Our team reviews your application<br>2. If approved, you\'ll receive an NDA to sign<br>3. Once signed, portal access is granted immediately</div>' +
         '</div>' +
         '<p style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:16px">Questions? <a href="mailto:investors@kabisa.africa" style="color:var(--solar);text-decoration:none">investors@kabisa.africa</a></p>' +
         '</div>';
