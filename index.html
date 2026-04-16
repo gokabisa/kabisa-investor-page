@@ -1007,7 +1007,7 @@ async function showGateStep2() {
   }
 }
 
-async function submitInvestorRequest() {
+async function submitInvestorRequest(gateData) {
   // Called after Clerk sign-up completes — user is now signed in
   if (!window.Clerk || !window.Clerk.user) return;
 
@@ -1017,6 +1017,9 @@ async function submitInvestorRequest() {
 
   if (!firstName || !email) return;
 
+  var org = (gateData && gateData.organisation) || '';
+  var investorType = (gateData && gateData.investorType) || '';
+
   try {
     var token = await window.Clerk.session.getToken();
     var res = await fetch(API_BASE + '/investor-requests', {
@@ -1025,8 +1028,8 @@ async function submitInvestorRequest() {
       body: JSON.stringify({
         firstName: firstName,
         email: email,
-        organisation: _gateData.organisation || '',
-        investorType: _gateData.investorType || ''
+        organisation: org,
+        investorType: investorType
       })
     });
 
@@ -1237,8 +1240,11 @@ window.addEventListener('load', async () => {
     // When user signs up via embedded form, submit investor request with stored gate data
     window.Clerk.addListener(function(event) {
       if (event.user && _gateData.organisation) {
-        submitInvestorRequest();
+        // Snapshot before clearing — submitInvestorRequest reads gate data after an await,
+        // so without this copy _gateData would already be empty by the time the fetch body is built.
+        var snapshot = _gateData;
         _gateData = {};
+        submitInvestorRequest(snapshot);
       }
     });
 
