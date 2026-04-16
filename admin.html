@@ -104,17 +104,17 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
     <div id="nda-settings" style="background:var(--gray2);border:1px solid rgba(255,255,255,.06);padding:24px;margin-bottom:24px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
         <div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px">NDA CO-SIGNER</div>
-          <p style="font-size:12px;color:rgba(255,255,255,.35);margin-top:4px">This email will be the company co-signer on all investor NDAs</p>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px">APPROVAL EMAIL</div>
+          <p style="font-size:12px;color:rgba(255,255,255,.35);margin-top:4px">This email receives notifications when new investors sign up and need review</p>
         </div>
         <div id="nda-stats-inline" style="display:flex;gap:16px;font-size:12px;color:rgba(255,255,255,.4)"></div>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
-        <input type="email" id="cosigner-email" placeholder="e.g. legal@gokabisa.com" style="flex:1;background:var(--gray3);border:1px solid rgba(255,255,255,.08);color:#fff;padding:10px 14px;font-size:13px;font-family:'Inter',sans-serif;outline:none">
-        <button onclick="saveCosigner()" style="background:var(--solar);color:#000;border:none;padding:10px 20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">Save</button>
+        <input type="email" id="approval-email" placeholder="e.g. legal@gokabisa.com" style="flex:1;background:var(--gray3);border:1px solid rgba(255,255,255,.08);color:#fff;padding:10px 14px;font-size:13px;font-family:'Inter',sans-serif;outline:none">
+        <button onclick="saveApprovalEmail()" style="background:var(--solar);color:#000;border:none;padding:10px 20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">Save</button>
       </div>
-      <div id="cosigner-status" style="font-size:12px;margin-top:8px;color:rgba(255,255,255,.35)"></div>
-      <div id="cosigner-audit" style="margin-top:12px"></div>
+      <div id="approval-status" style="font-size:12px;margin-top:8px;color:rgba(255,255,255,.35)"></div>
+      <div id="approval-audit" style="margin-top:12px"></div>
     </div>
 
     <div class="stats-row" id="stats-row"></div>
@@ -135,11 +135,36 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
       <tbody id="req-tbody"></tbody>
     </table>
     <div id="empty-state" class="empty-state" style="display:none">No requests found.</div>
+
+    <!-- Approval Popup Modal -->
+    <div id="approval-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center">
+      <div style="background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);max-width:480px;width:90%;padding:32px;position:relative">
+        <button onclick="closeApprovalModal()" style="position:absolute;top:12px;right:16px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;cursor:pointer">&times;</button>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;margin-bottom:20px">REVIEW APPLICATION</div>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
+          <tr><td style="padding:8px 0;color:rgba(255,255,255,0.4);font-size:13px;width:120px">Name</td><td style="padding:8px 0;font-size:14px" id="modal-name">—</td></tr>
+          <tr><td style="padding:8px 0;color:rgba(255,255,255,0.4);font-size:13px">Email</td><td style="padding:8px 0;font-size:14px" id="modal-email">—</td></tr>
+          <tr><td style="padding:8px 0;color:rgba(255,255,255,0.4);font-size:13px">Organisation</td><td style="padding:8px 0;font-size:14px" id="modal-org">—</td></tr>
+          <tr><td style="padding:8px 0;color:rgba(255,255,255,0.4);font-size:13px">Investor Type</td><td style="padding:8px 0;font-size:14px" id="modal-type">—</td></tr>
+          <tr><td style="padding:8px 0;color:rgba(255,255,255,0.4);font-size:13px">Ticket Size</td><td style="padding:8px 0;font-size:14px" id="modal-ticket">—</td></tr>
+          <tr><td style="padding:8px 0;color:rgba(255,255,255,0.4);font-size:13px">Submitted</td><td style="padding:8px 0;font-size:14px" id="modal-date">—</td></tr>
+          <tr><td style="padding:8px 0;color:rgba(255,255,255,0.4);font-size:13px">Status</td><td style="padding:8px 0;font-size:14px" id="modal-status">—</td></tr>
+        </table>
+        <div id="modal-actions" style="display:flex;gap:12px">
+          <button id="modal-btn-approve" onclick="modalApprove()" style="flex:1;background:#22c55e;color:#000;border:none;padding:12px;font-weight:600;font-size:13px;cursor:pointer">Approve & Send NDA</button>
+          <button id="modal-btn-reject" onclick="modalReject()" style="flex:1;background:#ef4444;color:#fff;border:none;padding:12px;font-weight:600;font-size:13px;cursor:pointer">Reject</button>
+        </div>
+        <div id="modal-done" style="display:none;text-align:center;padding:12px;font-size:14px;color:var(--solar)"></div>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-const API_BASE = 'https://investors-api.gokabisa.com/api/v1';
+// __API_BASE__ is substituted at build time by build.sh from the API_BASE env var
+// (set per-environment in Vercel). It's the backend host only; the /api/v1 prefix
+// stays in code so a version bump doesn't require an env-var change.
+const API_BASE = '__API_BASE__' + '/api/v1';
 let currentFilter = '';
 async function getToken() {
   return await window.Clerk.session.getToken();
@@ -262,7 +287,7 @@ function renderTable(requests) {
       ? '<span class="badge badge-admin">ADMIN</span>'
       : '<span class="badge badge-pending">' + (r.clerkRole || 'USER') + '</span>';
     return '<tr>' +
-      '<td><strong>' + r.firstName + '</strong></td>' +
+      '<td><strong style="cursor:pointer;text-decoration:underline;text-decoration-color:rgba(255,255,255,0.2)" onclick="openApprovalModalById(\'' + r.id + '\')">' + r.firstName + '</strong></td>' +
       '<td>' + r.email + '</td>' +
       '<td>' + r.organisation + '</td>' +
       '<td><span class="badge ' + badgeClass(r.status) + '">' + r.status.replace(/_/g, ' ') + '</span></td>' +
@@ -366,17 +391,17 @@ async function loadNdaSettings() {
   if (!res.ok) return;
   var data = await res.json();
 
-  var input = document.getElementById('cosigner-email');
-  if (data.cosignerEmail) input.value = data.cosignerEmail;
+  var input = document.getElementById('approval-email');
+  if (data.approvalEmail) input.value = data.approvalEmail;
 
   var statsEl = document.getElementById('nda-stats-inline');
   statsEl.innerHTML =
     '<span>Sent: <strong style="color:var(--solar)">' + data.totalSent + '</strong></span>' +
     '<span>Pending: <strong style="color:var(--solar)">' + data.pending + '</strong></span>' +
-    '<span>Awaiting Co-sign: <strong style="color:var(--solar)">' + data.awaitingCosigner + '</strong></span>' +
+    '<span>Awaiting Signing: <strong style="color:var(--solar)">' + data.awaitingSigning + '</strong></span>' +
     '<span>Completed: <strong style="color:var(--solar)">' + data.completed + '</strong></span>';
 
-  var auditEl = document.getElementById('cosigner-audit');
+  var auditEl = document.getElementById('approval-audit');
   if (data.audit && data.audit.length > 0) {
     var rows = data.audit.slice(0, 5).map(function(a) {
       var date = new Date(a.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -388,14 +413,14 @@ async function loadNdaSettings() {
   }
 }
 
-async function saveCosigner() {
-  var email = document.getElementById('cosigner-email').value.trim();
+async function saveApprovalEmail() {
+  var email = document.getElementById('approval-email').value.trim();
   if (!email) { alert('Please enter an email'); return; }
-  var statusEl = document.getElementById('cosigner-status');
+  var statusEl = document.getElementById('approval-status');
   statusEl.textContent = 'Saving...';
   statusEl.style.color = 'rgba(255,255,255,.35)';
 
-  var res = await fetch(API_BASE + '/admin/settings/nda-cosigner', {
+  var res = await fetch(API_BASE + '/admin/settings/approval-email', {
     method: 'PUT',
     headers: { 'Authorization': 'Bearer ' + await getToken(), 'Content-Type': 'application/json' },
     body: JSON.stringify({ email: email })
@@ -411,12 +436,120 @@ async function saveCosigner() {
   }
 }
 
+// --- Approval Modal ---
+
+var modalRequestId = null;
+
+function openApprovalModal(request) {
+  modalRequestId = request.id;
+  document.getElementById('modal-name').textContent = request.firstName || '—';
+  document.getElementById('modal-email').textContent = request.email || '—';
+  document.getElementById('modal-org').textContent = request.organisation || '—';
+  document.getElementById('modal-type').textContent = request.investorType || '—';
+  document.getElementById('modal-ticket').textContent = request.ticketSize || '—';
+  document.getElementById('modal-date').textContent = formatDate(request.createdAt);
+  document.getElementById('modal-status').innerHTML = '<span class="badge ' + badgeClass(request.status) + '">' + request.status.replace(/_/g, ' ') + '</span>';
+
+  var canApprove = (request.status === 'PENDING' || request.status === 'CLERK_SIGNED_UP');
+  document.getElementById('modal-actions').style.display = canApprove ? 'flex' : 'none';
+  document.getElementById('modal-done').style.display = canApprove ? 'none' : 'block';
+  document.getElementById('modal-done').textContent = canApprove ? '' : 'This request has already been processed.';
+
+  var modal = document.getElementById('approval-modal');
+  modal.style.display = 'flex';
+}
+
+function openApprovalModalById(id) {
+  var request = allRequests.find(function(r) { return r.id === id; });
+  if (request) openApprovalModal(request);
+}
+
+function closeApprovalModal() {
+  document.getElementById('approval-modal').style.display = 'none';
+  modalRequestId = null;
+}
+
+async function modalApprove() {
+  if (!modalRequestId) return;
+  document.getElementById('modal-btn-approve').disabled = true;
+  document.getElementById('modal-btn-approve').textContent = 'Sending NDA...';
+  try {
+    var res = await fetch(API_BASE + '/admin/requests/' + modalRequestId + '/approve', {
+      method: 'PATCH',
+      headers: { 'Authorization': 'Bearer ' + await getToken() }
+    });
+    if (res.ok) {
+      document.getElementById('modal-actions').style.display = 'none';
+      document.getElementById('modal-done').style.display = 'block';
+      document.getElementById('modal-done').textContent = 'Approved! NDA has been sent.';
+      await loadRequests();
+    } else {
+      var d = await res.json();
+      alert(d.error || 'Failed to approve');
+      document.getElementById('modal-btn-approve').disabled = false;
+      document.getElementById('modal-btn-approve').textContent = 'Approve & Send NDA';
+    }
+  } catch(err) {
+    alert('Error: ' + err.message);
+    document.getElementById('modal-btn-approve').disabled = false;
+    document.getElementById('modal-btn-approve').textContent = 'Approve & Send NDA';
+  }
+}
+
+async function modalReject() {
+  if (!modalRequestId) return;
+  document.getElementById('modal-btn-reject').disabled = true;
+  document.getElementById('modal-btn-reject').textContent = 'Rejecting...';
+  try {
+    var res = await fetch(API_BASE + '/admin/requests/' + modalRequestId + '/reject', {
+      method: 'PATCH',
+      headers: { 'Authorization': 'Bearer ' + await getToken() }
+    });
+    if (res.ok) {
+      document.getElementById('modal-actions').style.display = 'none';
+      document.getElementById('modal-done').style.display = 'block';
+      document.getElementById('modal-done').textContent = 'Request rejected.';
+      await loadRequests();
+    } else {
+      var d = await res.json();
+      alert(d.error || 'Failed to reject');
+      document.getElementById('modal-btn-reject').disabled = false;
+      document.getElementById('modal-btn-reject').textContent = 'Reject';
+    }
+  } catch(err) {
+    alert('Error: ' + err.message);
+    document.getElementById('modal-btn-reject').disabled = false;
+    document.getElementById('modal-btn-reject').textContent = 'Reject';
+  }
+}
+
+document.addEventListener('click', function(e) {
+  var modal = document.getElementById('approval-modal');
+  if (e.target === modal) closeApprovalModal();
+});
+
 window.addEventListener('load', async function() {
   var ok = await checkAdminAccess();
   if (!ok) return;
   document.getElementById('admin-loading').style.display = 'none';
   document.getElementById('admin-content').style.display = 'block';
   await Promise.all([loadRequests(), loadNdaSettings()]);
+
+  var params = new URLSearchParams(window.location.search);
+  var requestId = params.get('request');
+  if (requestId) {
+    try {
+      var res = await fetch(API_BASE + '/admin/requests/' + requestId, {
+        headers: { 'Authorization': 'Bearer ' + await getToken() }
+      });
+      if (res.ok) {
+        var request = await res.json();
+        openApprovalModal(request);
+      }
+    } catch(err) {
+      console.error('Failed to load request for popup:', err);
+    }
+  }
 });
 </script>
 </body>
