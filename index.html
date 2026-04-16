@@ -1249,17 +1249,25 @@ window.addEventListener('load', async () => {
     // When user signs up via embedded form, submit investor request with stored gate data
     window.Clerk.addListener(async function(event) {
       if (event.user && _gateData.organisation) {
-        // Snapshot before clearing — submitInvestorRequest reads gate data after an await,
-        // so without this copy _gateData would already be empty by the time the fetch body is built.
         var snapshot = _gateData;
         _gateData = {};
-        // Show the status page immediately so the user sees something while we work.
+        // Show static "under review" immediately — no need to fetch status,
+        // we know they just signed up.
         showPage('investor-status');
-        // Await the POST so the DB record exists before we GET /investor/status;
-        // otherwise the status fetch races the create and the page can hang on the
-        // "Loading your status..." default text until a manual reload.
-        await submitInvestorRequest(snapshot);
-        loadInvestorStatus();
+        document.getElementById('investor-status-content').innerHTML =
+          '<div style="text-align:center;padding:20px">' +
+          '<div style="font-size:48px;margin-bottom:16px">&#128196;</div>' +
+          '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;margin-bottom:12px;letter-spacing:2px">APPLICATION UNDER REVIEW</div>' +
+          '<p style="color:rgba(255,255,255,0.55);font-size:14px;line-height:1.6;max-width:360px;margin:0 auto 24px">Our team is reviewing your request. You\'ll receive an email once a decision has been made.</p>' +
+          '<div style="background:rgba(255,255,255,0.04);padding:20px;text-align:left;max-width:360px;margin:0 auto">' +
+          '<div style="font-size:11px;color:rgba(255,255,255,0.35);font-family:Barlow Condensed,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">What happens next</div>' +
+          '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:2">1. Our team reviews your application<br>2. If approved, you\'ll receive an NDA to sign<br>3. Once signed, portal access is granted immediately</div>' +
+          '</div>' +
+          '<p style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:16px">Questions? <a href="mailto:investors@kabisa.africa" style="color:var(--solar);text-decoration:none">investors@kabisa.africa</a></p>' +
+          '</div>';
+        document.getElementById('btn-sign-out').style.display = 'inline-block';
+        // Fire the POST in the background — don't need to wait for it
+        submitInvestorRequest(snapshot);
       }
     });
 
