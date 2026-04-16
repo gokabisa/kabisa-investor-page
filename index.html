@@ -959,7 +959,8 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
 </div>
 
 <script>
-const API_BASE = 'https://investors-api.gokabisa.com/api/v1';
+// Replaced at build time by build.sh using the API_BASE env var set in Vercel.
+const API_BASE = '__API_BASE__';
 
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
