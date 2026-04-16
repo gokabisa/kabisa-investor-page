@@ -1,5 +1,6 @@
 {
   "buildCommand": "bash build.sh",
+  "outputDirectory": ".",
   "rewrites": [
     { "source": "/investor-portal.html", "destination": "/investor-portal.html" },
     { "source": "/admin.html", "destination": "/admin.html" },
