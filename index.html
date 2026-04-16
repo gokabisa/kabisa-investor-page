@@ -976,7 +976,7 @@ function showPage(id) {
 }
 function routeFromHash(){
   var h = window.location.hash.replace('#','') || 'home';
-  // Keep sign-in page visible during Clerk internal navigation (e.g. /factor-one, /factor-two)
+  // Keep sign-in page visible during Clerk internal navigation (e.g. /factor-one, /factor-two) words
   if (h.startsWith('/')) return;
   showPage(h);
 }
