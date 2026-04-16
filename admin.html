@@ -161,8 +161,10 @@ div:has(> a[href*="clerk.com"][aria-label="Clerk logo"]){display:none !important
 </div>
 
 <script>
-// Replaced at build time by build.sh using the API_BASE env var set in Vercel.
-const API_BASE = '__API_BASE__';
+// __API_BASE__ is substituted at build time by build.sh from the API_BASE env var
+// (set per-environment in Vercel). It's the backend host only; the /api/v1 prefix
+// stays in code so a version bump doesn't require an env-var change.
+const API_BASE = '__API_BASE__' + '/api/v1';
 let currentFilter = '';
 async function getToken() {
   return await window.Clerk.session.getToken();
