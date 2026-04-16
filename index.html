@@ -1245,6 +1245,13 @@ window.addEventListener('load', async () => {
         var snapshot = _gateData;
         _gateData = {};
         submitInvestorRequest(snapshot);
+        // Route the newly signed-up user to the status page so they see
+        // "APPLICATION UNDER REVIEW" while waiting for admin approval.
+        if (window.location.hash !== '#investor-status') {
+          window.location.hash = 'investor-status';
+        } else {
+          loadInvestorStatus();
+        }
       }
     });
 
