@@ -1005,7 +1005,11 @@ async function showGateStep2() {
     var el = document.getElementById('clerk-gate-sign-up');
     window.Clerk.mountSignUp(el, {
       appearance: clerkAppearance,
-      afterSignUpUrl: window.location.href.split('#')[0] + '#investor-status'
+      afterSignUpUrl: window.location.href.split('#')[0] + '#investor-status',
+      unsafeMetadata: {
+        organisation: _gateData.organisation,
+        investorType: _gateData.investorType
+      }
     });
   }
 }
@@ -1020,8 +1024,10 @@ async function submitInvestorRequest(gateData) {
 
   if (!firstName || !email) return;
 
-  var org = (gateData && gateData.organisation) || '';
-  var investorType = (gateData && gateData.investorType) || '';
+  // Prefer gate form data, fall back to unsafeMetadata stored on the Clerk user
+  var meta = (user.unsafeMetadata) || {};
+  var org = (gateData && gateData.organisation) || meta.organisation || '';
+  var investorType = (gateData && gateData.investorType) || meta.investorType || '';
 
   try {
     var token = await window.Clerk.session.getToken();
