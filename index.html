@@ -1238,20 +1238,19 @@ window.addEventListener('load', async () => {
     updateNavForAuth();
 
     // When user signs up via embedded form, submit investor request with stored gate data
-    window.Clerk.addListener(function(event) {
+    window.Clerk.addListener(async function(event) {
       if (event.user && _gateData.organisation) {
         // Snapshot before clearing — submitInvestorRequest reads gate data after an await,
         // so without this copy _gateData would already be empty by the time the fetch body is built.
         var snapshot = _gateData;
         _gateData = {};
-        submitInvestorRequest(snapshot);
-        // Route the newly signed-up user to the status page so they see
-        // "APPLICATION UNDER REVIEW" while waiting for admin approval.
-        if (window.location.hash !== '#investor-status') {
-          window.location.hash = 'investor-status';
-        } else {
-          loadInvestorStatus();
-        }
+        // Show the status page immediately so the user sees something while we work.
+        showPage('investor-status');
+        // Await the POST so the DB record exists before we GET /investor/status;
+        // otherwise the status fetch races the create and the page can hang on the
+        // "Loading your status..." default text until a manual reload.
+        await submitInvestorRequest(snapshot);
+        loadInvestorStatus();
       }
     });
 
